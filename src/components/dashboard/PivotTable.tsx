@@ -6,7 +6,7 @@ import {
   cellCriticality,
   type Filters,
   applyFilters,
-  ALL_OS,
+  useDataset,
   getPivot,
 } from "@/lib/mock-data";
 
@@ -24,11 +24,13 @@ const critClasses: Record<Criticality, string> = {
 interface Props {
   filters: Filters;
   onCellClick: (city: string, dateLabel: string, items: OS[]) => void;
+  fullHeight?: boolean;
 }
 
-export function PivotTable({ filters, onCellClick }: Props) {
-  const data = useMemo(() => applyFilters(ALL_OS, filters), [filters]);
-  const { cities, dates, matrix } = useMemo(() => getPivot(data), [data]);
+export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) {
+  const { all, dates: storeDates } = useDataset();
+  const data = useMemo(() => applyFilters(all, filters), [all, filters]);
+  const { cities, dates, matrix } = useMemo(() => getPivot(data, storeDates), [data, storeDates]);
 
   const totalsByCity = cities.map((c) =>
     dates.reduce((acc, d) => acc + (matrix[c]?.[d.label]?.length ?? 0), 0),
