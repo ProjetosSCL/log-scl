@@ -31,6 +31,7 @@ function TabelaOperacionalPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [capturing, setCapturing] = useState(false);
+  const [zoom, setZoom] = useState<100 | 110 | 120>(100);
   const containerRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
 
@@ -113,6 +114,24 @@ function TabelaOperacionalPage() {
           <div className="flex-1 min-w-0">
             <FiltersBar filters={filters} setFilters={setFilters} />
           </div>
+          <div className="flex items-center gap-1 rounded-full border border-border/60 bg-secondary/50 p-0.5 shrink-0">
+            {([100, 110, 120] as const).map((z) => (
+              <button
+                key={z}
+                type="button"
+                onClick={() => setZoom(z)}
+                className={
+                  "px-2.5 h-8 rounded-full text-xs font-medium transition-colors " +
+                  (zoom === z
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent/40")
+                }
+                title={`Zoom da tabela ${z}%`}
+              >
+                {z}%
+              </button>
+            ))}
+          </div>
           <Button
             variant="outline"
             size="sm"
@@ -145,7 +164,7 @@ function TabelaOperacionalPage() {
         </div>
 
         <div ref={tableRef} className="flex-1 min-h-0">
-          <PivotTable filters={filters} onCellClick={openDrawer} fullHeight />
+          <PivotTable filters={filters} onCellClick={openDrawer} fullHeight zoom={zoom} />
         </div>
 
         <OsDrawer

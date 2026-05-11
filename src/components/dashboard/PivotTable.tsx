@@ -25,9 +25,10 @@ interface Props {
   filters: Filters;
   onCellClick: (city: string, dateLabel: string, items: OS[]) => void;
   fullHeight?: boolean;
+  zoom?: number;
 }
 
-export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) {
+export function PivotTable({ filters, onCellClick, fullHeight = false, zoom = 100 }: Props) {
   const { all, dates: storeDates } = useDataset();
   const data = useMemo(() => applyFilters(all, filters), [all, filters]);
   const { cities, dates, matrix } = useMemo(() => getPivot(data, storeDates), [data, storeDates]);
@@ -57,8 +58,8 @@ export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) 
         </div>
       </div>
 
-      <div className={cn("overflow-auto", fullHeight ? "flex-1 min-h-0" : "max-h-[520px]")}>
-        <table className="w-full text-sm border-collapse">
+      <div className={cn("overflow-auto", fullHeight ? "flex-1 min-h-0" : "max-h-[520px]")} style={{ fontSize: `${zoom}%` }}>
+        <table className="w-full border-collapse">
           <thead className="sticky top-0 z-10 bg-muted/40 backdrop-blur">
             <tr className="border-b border-border">
               <th className="text-left font-semibold px-3 py-2 text-foreground sticky left-0 bg-muted/60 backdrop-blur z-20 min-w-[180px] border-r border-border">
