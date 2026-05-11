@@ -38,10 +38,10 @@ export function OsByCityBar({ data }: { data: { name: string; value: number }[] 
               <stop offset="100%" stopColor="oklch(0.78 0.21 148)" stopOpacity={0.5} />
             </linearGradient>
           </defs>
-          <CartesianGrid stroke="oklch(1 0 0 / 0.05)" vertical={false} />
+          <CartesianGrid stroke={gridStroke} vertical={false} />
           <XAxis
             dataKey="name"
-            tick={{ fill: "oklch(0.7 0.02 155)", fontSize: 10 }}
+            tick={axisTick}
             axisLine={false}
             tickLine={false}
             interval={0}
@@ -49,8 +49,8 @@ export function OsByCityBar({ data }: { data: { name: string; value: number }[] 
             textAnchor="end"
             height={50}
           />
-          <YAxis tick={{ fill: "oklch(0.7 0.02 155)", fontSize: 10 }} axisLine={false} tickLine={false} />
-          <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "oklch(1 0 0 / 0.05)" }} />
+          <YAxis tick={axisTick} axisLine={false} tickLine={false} />
+          <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "oklch(0.5 0.02 150 / 0.06)" }} />
           <Bar dataKey="value" fill="url(#barGrad)" radius={[6, 6, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
@@ -63,14 +63,14 @@ export function DueByDayLine({ data }: { data: { name: string; value: number }[]
     <ChartCard title="Vencimentos por dia" subtitle="Linha temporal · 7 dias">
       <ResponsiveContainer width="100%" height={220}>
         <LineChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
-          <CartesianGrid stroke="oklch(1 0 0 / 0.05)" vertical={false} />
+          <CartesianGrid stroke={gridStroke} vertical={false} />
           <XAxis
             dataKey="name"
-            tick={{ fill: "oklch(0.7 0.02 155)", fontSize: 10 }}
+            tick={axisTick}
             axisLine={false}
             tickLine={false}
           />
-          <YAxis tick={{ fill: "oklch(0.7 0.02 155)", fontSize: 10 }} axisLine={false} tickLine={false} />
+          <YAxis tick={axisTick} axisLine={false} tickLine={false} />
           <Tooltip contentStyle={tooltipStyle} />
           <Line
             type="monotone"
@@ -107,7 +107,7 @@ export function StatusDonut({ data }: { data: { name: string; value: number }[] 
             innerRadius={55}
             outerRadius={85}
             paddingAngle={3}
-            stroke="oklch(0.16 0.025 155)"
+            stroke="oklch(1 0 0)"
             strokeWidth={2}
           >
             {data.map((_, i) => (
