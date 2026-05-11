@@ -9,8 +9,44 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SlaRouteImport } from './routes/sla'
+import { Route as RelatoriosRouteImport } from './routes/relatorios'
+import { Route as PrestadoresRouteImport } from './routes/prestadores'
+import { Route as OsCriticasRouteImport } from './routes/os-criticas'
+import { Route as IndicadoresRouteImport } from './routes/indicadores'
+import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SlaRoute = SlaRouteImport.update({
+  id: '/sla',
+  path: '/sla',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RelatoriosRoute = RelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrestadoresRoute = PrestadoresRouteImport.update({
+  id: '/prestadores',
+  path: '/prestadores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OsCriticasRoute = OsCriticasRouteImport.update({
+  id: '/os-criticas',
+  path: '/os-criticas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndicadoresRoute = IndicadoresRouteImport.update({
+  id: '/indicadores',
+  path: '/indicadores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +55,116 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/indicadores': typeof IndicadoresRoute
+  '/os-criticas': typeof OsCriticasRoute
+  '/prestadores': typeof PrestadoresRoute
+  '/relatorios': typeof RelatoriosRoute
+  '/sla': typeof SlaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/indicadores': typeof IndicadoresRoute
+  '/os-criticas': typeof OsCriticasRoute
+  '/prestadores': typeof PrestadoresRoute
+  '/relatorios': typeof RelatoriosRoute
+  '/sla': typeof SlaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/indicadores': typeof IndicadoresRoute
+  '/os-criticas': typeof OsCriticasRoute
+  '/prestadores': typeof PrestadoresRoute
+  '/relatorios': typeof RelatoriosRoute
+  '/sla': typeof SlaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/configuracoes'
+    | '/indicadores'
+    | '/os-criticas'
+    | '/prestadores'
+    | '/relatorios'
+    | '/sla'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/configuracoes'
+    | '/indicadores'
+    | '/os-criticas'
+    | '/prestadores'
+    | '/relatorios'
+    | '/sla'
+  id:
+    | '__root__'
+    | '/'
+    | '/configuracoes'
+    | '/indicadores'
+    | '/os-criticas'
+    | '/prestadores'
+    | '/relatorios'
+    | '/sla'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConfiguracoesRoute: typeof ConfiguracoesRoute
+  IndicadoresRoute: typeof IndicadoresRoute
+  OsCriticasRoute: typeof OsCriticasRoute
+  PrestadoresRoute: typeof PrestadoresRoute
+  RelatoriosRoute: typeof RelatoriosRoute
+  SlaRoute: typeof SlaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sla': {
+      id: '/sla'
+      path: '/sla'
+      fullPath: '/sla'
+      preLoaderRoute: typeof SlaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/relatorios': {
+      id: '/relatorios'
+      path: '/relatorios'
+      fullPath: '/relatorios'
+      preLoaderRoute: typeof RelatoriosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prestadores': {
+      id: '/prestadores'
+      path: '/prestadores'
+      fullPath: '/prestadores'
+      preLoaderRoute: typeof PrestadoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/os-criticas': {
+      id: '/os-criticas'
+      path: '/os-criticas'
+      fullPath: '/os-criticas'
+      preLoaderRoute: typeof OsCriticasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/indicadores': {
+      id: '/indicadores'
+      path: '/indicadores'
+      fullPath: '/indicadores'
+      preLoaderRoute: typeof IndicadoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/configuracoes': {
+      id: '/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof ConfiguracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +177,12 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConfiguracoesRoute: ConfiguracoesRoute,
+  IndicadoresRoute: IndicadoresRoute,
+  OsCriticasRoute: OsCriticasRoute,
+  PrestadoresRoute: PrestadoresRoute,
+  RelatoriosRoute: RelatoriosRoute,
+  SlaRoute: SlaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
