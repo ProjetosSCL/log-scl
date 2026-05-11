@@ -1,7 +1,8 @@
-// Operational data layer — backed by the real CSV the user uploaded
-// (src/data/os-data.json). All UI components keep the same shape.
+// Operational data layer — initial seed from src/data/os-data.json,
+// can be overridden at runtime via CSV import (persisted to localStorage).
 
-import raw from "@/data/os-data.json";
+import { useSyncExternalStore } from "react";
+import seed from "@/data/os-data.json";
 
 export type Status = string;
 export type Criticality = "vencido" | "vence_hoje" | "proximo" | "saudavel";
