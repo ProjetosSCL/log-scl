@@ -111,19 +111,29 @@ function computeRefToday(rows: RawRow[]): Date {
   return d;
 }
 
-function buildDates(refToday: Date) {
+function buildDates(refToday: Date, rows: RawRow[]) {
+  const limites = rows
+    .map((r) => (r.dataLimite ? new Date(r.dataLimite).getTime() : 0))
+    .filter((t) => t > 0);
+  let min = limites.length ? Math.min(...limites) : refToday.getTime();
+  let max = limites.length ? Math.max(...limites) : refToday.getTime();
+  // Garante que "hoje" (refToday) sempre apareça e mostre pelo menos 1 dia antes
+  const minD = startOfDay(new Date(Math.min(min, refToday.getTime() - 86400000)));
+  const maxD = startOfDay(new Date(Math.max(max, refToday.getTime())));
   const arr: { iso: string; label: string; offset: number }[] = [];
-  for (let i = -1; i <= 5; i++) {
-    const d = new Date(refToday);
-    d.setDate(d.getDate() + i);
-    arr.push({ iso: d.toISOString(), label: fmtBR(d), offset: i });
+  for (let d = new Date(minD); d.getTime() <= maxD.getTime(); d.setDate(d.getDate() + 1)) {
+    arr.push({
+      iso: new Date(d).toISOString(),
+      label: fmtBR(new Date(d)),
+      offset: dayDiff(d, refToday),
+    });
   }
   return arr;
 }
 
 export function normalizeRows(rows: RawRow[]): { all: OS[]; refToday: Date; dates: { iso: string; label: string; offset: number }[] } {
   const refToday = computeRefToday(rows);
-  const dates = buildDates(refToday);
+  const dates = buildDates(refToday, rows);
   const all: OS[] = rows.map((r) => {
     const abertura = r.dataAbertura ? new Date(r.dataAbertura) : new Date(refToday);
     const limite = r.dataLimite ? new Date(r.dataLimite) : new Date(refToday);
