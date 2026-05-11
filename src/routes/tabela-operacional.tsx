@@ -31,7 +31,7 @@ function TabelaOperacionalPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [capturing, setCapturing] = useState(false);
-  const [zoom, setZoom] = useState<100 | 110 | 120>(100);
+  const [zoom, setZoom] = useState<80 | 90 | 100 | 110 | 120>(90);
   const containerRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
 
@@ -115,7 +115,7 @@ function TabelaOperacionalPage() {
             <FiltersBar filters={filters} setFilters={setFilters} />
           </div>
           <div className="flex items-center gap-1 rounded-full border border-border/60 bg-secondary/50 p-0.5 shrink-0">
-            {([100, 110, 120] as const).map((z) => (
+            {([80, 90, 100, 110, 120] as const).map((z) => (
               <button
                 key={z}
                 type="button"
