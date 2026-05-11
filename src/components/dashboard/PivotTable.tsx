@@ -58,8 +58,8 @@ export function PivotTable({ filters, onCellClick, fullHeight = false, zoom = 10
         </div>
       </div>
 
-      <div className={cn("overflow-auto", fullHeight ? "flex-1 min-h-0" : "max-h-[520px]")}>
-        <table className="w-full text-sm border-collapse">
+      <div className={cn("overflow-auto", fullHeight ? "flex-1 min-h-0" : "max-h-[520px]")} style={{ fontSize: `${zoom}%` }}>
+        <table className="w-full border-collapse">
           <thead className="sticky top-0 z-10 bg-muted/40 backdrop-blur">
             <tr className="border-b border-border">
               <th className="text-left font-semibold px-3 py-2 text-foreground sticky left-0 bg-muted/60 backdrop-blur z-20 min-w-[180px] border-r border-border">
