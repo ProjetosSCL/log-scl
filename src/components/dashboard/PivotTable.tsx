@@ -41,15 +41,15 @@ export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) 
   const grandTotal = totalsByCity.reduce((a, b) => a + b, 0);
 
   return (
-    <div className={cn("rounded-2xl glass overflow-hidden flex flex-col", fullHeight && "h-full")}>
-      <div className="flex items-center justify-between p-4 border-b border-border/60">
+    <div className={cn("rounded-xl glass overflow-hidden flex flex-col", fullHeight && "h-full")}>
+      <div className="flex items-center justify-between px-3 py-2 border-b border-border/60">
         <div>
-          <div className="text-sm font-semibold">Tabela operacional</div>
-          <div className="text-[11px] text-muted-foreground">
-            Volume de OS por cidade × data · clique em uma célula para detalhes
+          <div className="text-xs font-semibold leading-tight">Tabela operacional</div>
+          <div className="text-[10px] text-muted-foreground leading-tight">
+            Volume de OS por cidade × data · clique para detalhes
           </div>
         </div>
-        <div className="flex items-center gap-3 text-[11px]">
+        <div className="flex items-center gap-2 text-[10px]">
           <Legend color="status-critical" label="Vencido" />
           <Legend color="status-warning" label="Vence hoje" />
           <Legend color="status-attention" label="Próximo" />
@@ -58,26 +58,26 @@ export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) 
       </div>
 
       <div className={cn("overflow-auto", fullHeight ? "flex-1 min-h-0" : "max-h-[520px]")}>
-        <table className="w-full text-sm">
+        <table className="w-full text-xs table-fixed">
           <thead className="sticky top-0 z-10 backdrop-blur bg-background/40">
             <tr>
-              <th className="text-left font-medium px-4 py-3 text-muted-foreground sticky left-0 bg-background/60 backdrop-blur z-20">
+              <th className="text-left font-medium px-2 py-1.5 text-muted-foreground sticky left-0 bg-background/60 backdrop-blur z-20 w-[120px]">
                 Cidade
               </th>
               {dates.map((d) => (
                 <th
                   key={d.label}
-                  className="font-medium px-3 py-3 text-muted-foreground text-center min-w-[88px] capitalize"
+                  className="font-medium px-1 py-1.5 text-muted-foreground text-center capitalize text-[10px]"
                 >
                   {d.label}
                   {d.offset === 0 && (
-                    <div className="text-[9px] text-primary mt-0.5 font-semibold">
+                    <div className="text-[8px] text-primary font-semibold leading-none">
                       HOJE
                     </div>
                   )}
                 </th>
               ))}
-              <th className="font-medium px-4 py-3 text-foreground text-center">
+              <th className="font-medium px-2 py-1.5 text-foreground text-center w-[52px]">
                 Total
               </th>
             </tr>
@@ -88,20 +88,20 @@ export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) 
                 key={city}
                 className="group/row border-t border-border/40 hover:bg-accent/20 transition-colors"
               >
-                <td className="px-4 py-2.5 sticky left-0 bg-background/40 backdrop-blur z-10 group-hover/row:bg-accent/20">
-                  <div className="font-medium">{city}</div>
+                <td className="px-2 py-0.5 sticky left-0 bg-background/40 backdrop-blur z-10 group-hover/row:bg-accent/20 truncate">
+                  <div className="font-medium truncate text-xs" title={city}>{city}</div>
                 </td>
                 {dates.map((d) => {
                   const items = matrix[city]?.[d.label] ?? [];
                   const crit = cellCriticality(items);
                   return (
-                    <td key={d.label} className="px-2 py-2 text-center">
+                    <td key={d.label} className="px-0.5 py-0.5 text-center">
                       {items.length > 0 ? (
                         <button
                           type="button"
                           onClick={() => onCellClick(city, d.label, items)}
                           className={cn(
-                            "min-w-[52px] px-3 py-1.5 rounded-lg font-semibold tabular-nums transition-all",
+                            "w-full min-w-[28px] px-1 py-0.5 rounded-md font-semibold tabular-nums transition-all text-xs",
                             critClasses[crit],
                             "hover:scale-[1.06]",
                           )}
@@ -115,7 +115,7 @@ export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) 
                     </td>
                   );
                 })}
-                <td className="px-4 py-2.5 text-center font-semibold tabular-nums">
+                <td className="px-2 py-0.5 text-center font-semibold tabular-nums text-xs">
                   {totalsByCity[ci]}
                 </td>
               </tr>
@@ -123,18 +123,18 @@ export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) 
           </tbody>
           <tfoot className="sticky bottom-0 z-10">
             <tr className="border-t border-border/60 bg-background/80 backdrop-blur">
-              <td className="px-4 py-3 font-semibold sticky left-0 bg-background/90 backdrop-blur z-10">
+              <td className="px-2 py-1.5 font-semibold sticky left-0 bg-background/90 backdrop-blur z-10 text-xs">
                 Total
               </td>
               {totalsByDate.map((t, i) => (
                 <td
                   key={i}
-                  className="px-2 py-3 text-center font-semibold tabular-nums text-foreground/90"
+                  className="px-1 py-1.5 text-center font-semibold tabular-nums text-foreground/90 text-xs"
                 >
                   {t}
                 </td>
               ))}
-              <td className="px-4 py-3 text-center font-bold tabular-nums text-primary">
+              <td className="px-2 py-1.5 text-center font-bold tabular-nums text-primary text-xs">
                 {grandTotal}
               </td>
             </tr>
