@@ -25,9 +25,10 @@ interface Props {
   filters: Filters;
   onCellClick: (city: string, dateLabel: string, items: OS[]) => void;
   fullHeight?: boolean;
+  zoom?: number;
 }
 
-export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) {
+export function PivotTable({ filters, onCellClick, fullHeight = false, zoom = 100 }: Props) {
   const { all, dates: storeDates } = useDataset();
   const data = useMemo(() => applyFilters(all, filters), [all, filters]);
   const { cities, dates, matrix } = useMemo(() => getPivot(data, storeDates), [data, storeDates]);
