@@ -4,11 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export function AppHeader({ title = "Central Operacional" }: { title?: string }) {
-  const [now, setNow] = useState(new Date());
-  const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [now, setNow] = useState<Date | null>(null);
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [spinning, setSpinning] = useState(false);
 
   useEffect(() => {
+    setNow(new Date());
+    setLastUpdate(new Date());
     const t = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(t);
   }, []);
@@ -21,22 +23,28 @@ export function AppHeader({ title = "Central Operacional" }: { title?: string })
     }, 600);
   };
 
-  const dateStr = now.toLocaleDateString("pt-BR", {
-    weekday: "short",
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-  const timeStr = now.toLocaleTimeString("pt-BR", {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
+  const dateStr = now
+    ? now.toLocaleDateString("pt-BR", {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+    : "—";
+  const timeStr = now
+    ? now.toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      })
+    : "--:--:--";
 
-  const lastUpdateStr = lastUpdate.toLocaleTimeString("pt-BR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const lastUpdateStr = lastUpdate
+    ? lastUpdate.toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "--:--";
 
   return (
     <header className="glass rounded-2xl mt-3 mx-3 p-3 md:p-4 flex flex-col md:flex-row md:items-center gap-3 md:gap-4">

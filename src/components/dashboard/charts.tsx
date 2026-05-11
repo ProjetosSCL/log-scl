@@ -14,14 +14,18 @@ import {
 } from "recharts";
 
 const tooltipStyle: React.CSSProperties = {
-  background: "oklch(0.18 0.025 155 / 0.92)",
-  border: "1px solid oklch(1 0 0 / 0.1)",
+  background: "oklch(1 0 0 / 0.96)",
+  border: "1px solid oklch(0.86 0.008 150 / 0.7)",
   borderRadius: 10,
   padding: "8px 10px",
   fontSize: 12,
   backdropFilter: "blur(12px)",
-  color: "oklch(0.97 0.01 150)",
+  color: "oklch(0.2 0.02 250)",
+  boxShadow: "0 8px 24px -8px oklch(0.4 0.04 150 / 0.18)",
 };
+
+const axisTick = { fill: "oklch(0.5 0.015 250)", fontSize: 10 };
+const gridStroke = "oklch(0.5 0.02 150 / 0.08)";
 
 export function OsByCityBar({ data }: { data: { name: string; value: number }[] }) {
   return (
