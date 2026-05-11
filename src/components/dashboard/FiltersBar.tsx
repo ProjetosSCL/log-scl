@@ -4,7 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { FACETS, type Filters, type Criticality, type Status } from "@/lib/mock-data";
+import { useDataset, type Filters, type Criticality, type Status } from "@/lib/mock-data";
 
 type Key = keyof Filters;
 
@@ -78,6 +78,7 @@ interface Props {
 }
 
 export function FiltersBar({ filters, setFilters }: Props) {
+  const { facets: FACETS } = useDataset();
   const set = <K extends Key>(k: K, v: Filters[K]) =>
     setFilters({ ...filters, [k]: v });
 

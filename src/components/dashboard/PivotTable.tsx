@@ -6,7 +6,7 @@ import {
   cellCriticality,
   type Filters,
   applyFilters,
-  ALL_OS,
+  useDataset,
   getPivot,
 } from "@/lib/mock-data";
 
@@ -24,11 +24,13 @@ const critClasses: Record<Criticality, string> = {
 interface Props {
   filters: Filters;
   onCellClick: (city: string, dateLabel: string, items: OS[]) => void;
+  fullHeight?: boolean;
 }
 
-export function PivotTable({ filters, onCellClick }: Props) {
-  const data = useMemo(() => applyFilters(ALL_OS, filters), [filters]);
-  const { cities, dates, matrix } = useMemo(() => getPivot(data), [data]);
+export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) {
+  const { all, dates: storeDates } = useDataset();
+  const data = useMemo(() => applyFilters(all, filters), [all, filters]);
+  const { cities, dates, matrix } = useMemo(() => getPivot(data, storeDates), [data, storeDates]);
 
   const totalsByCity = cities.map((c) =>
     dates.reduce((acc, d) => acc + (matrix[c]?.[d.label]?.length ?? 0), 0),
@@ -39,7 +41,7 @@ export function PivotTable({ filters, onCellClick }: Props) {
   const grandTotal = totalsByCity.reduce((a, b) => a + b, 0);
 
   return (
-    <div className="rounded-2xl glass overflow-hidden">
+    <div className={cn("rounded-2xl glass overflow-hidden flex flex-col", fullHeight && "h-full")}>
       <div className="flex items-center justify-between p-4 border-b border-border/60">
         <div>
           <div className="text-sm font-semibold">Tabela operacional</div>
@@ -55,7 +57,7 @@ export function PivotTable({ filters, onCellClick }: Props) {
         </div>
       </div>
 
-      <div className="overflow-auto max-h-[520px]">
+      <div className={cn("overflow-auto", fullHeight ? "flex-1 min-h-0" : "max-h-[520px]")}>
         <table className="w-full text-sm">
           <thead className="sticky top-0 z-10 backdrop-blur bg-background/40">
             <tr>
