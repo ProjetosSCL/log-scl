@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TabelaOperacionalRouteImport } from './routes/tabela-operacional'
 import { Route as SlaRouteImport } from './routes/sla'
 import { Route as RelatoriosRouteImport } from './routes/relatorios'
 import { Route as PrestadoresRouteImport } from './routes/prestadores'
@@ -17,6 +18,11 @@ import { Route as IndicadoresRouteImport } from './routes/indicadores'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TabelaOperacionalRoute = TabelaOperacionalRouteImport.update({
+  id: '/tabela-operacional',
+  path: '/tabela-operacional',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SlaRoute = SlaRouteImport.update({
   id: '/sla',
   path: '/sla',
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/prestadores': typeof PrestadoresRoute
   '/relatorios': typeof RelatoriosRoute
   '/sla': typeof SlaRoute
+  '/tabela-operacional': typeof TabelaOperacionalRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/prestadores': typeof PrestadoresRoute
   '/relatorios': typeof RelatoriosRoute
   '/sla': typeof SlaRoute
+  '/tabela-operacional': typeof TabelaOperacionalRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/prestadores': typeof PrestadoresRoute
   '/relatorios': typeof RelatoriosRoute
   '/sla': typeof SlaRoute
+  '/tabela-operacional': typeof TabelaOperacionalRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/prestadores'
     | '/relatorios'
     | '/sla'
+    | '/tabela-operacional'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/prestadores'
     | '/relatorios'
     | '/sla'
+    | '/tabela-operacional'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/prestadores'
     | '/relatorios'
     | '/sla'
+    | '/tabela-operacional'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,10 +131,18 @@ export interface RootRouteChildren {
   PrestadoresRoute: typeof PrestadoresRoute
   RelatoriosRoute: typeof RelatoriosRoute
   SlaRoute: typeof SlaRoute
+  TabelaOperacionalRoute: typeof TabelaOperacionalRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tabela-operacional': {
+      id: '/tabela-operacional'
+      path: '/tabela-operacional'
+      fullPath: '/tabela-operacional'
+      preLoaderRoute: typeof TabelaOperacionalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sla': {
       id: '/sla'
       path: '/sla'
@@ -183,7 +203,18 @@ const rootRouteChildren: RootRouteChildren = {
   PrestadoresRoute: PrestadoresRoute,
   RelatoriosRoute: RelatoriosRoute,
   SlaRoute: SlaRoute,
+  TabelaOperacionalRoute: TabelaOperacionalRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
