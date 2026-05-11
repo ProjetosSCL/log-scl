@@ -31,6 +31,7 @@ function TabelaOperacionalPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [capturing, setCapturing] = useState(false);
+  const [zoom, setZoom] = useState<100 | 110 | 120>(100);
   const containerRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
 
