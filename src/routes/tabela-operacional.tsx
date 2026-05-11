@@ -7,6 +7,7 @@ import { FiltersBar } from "@/components/dashboard/FiltersBar";
 import { PivotTable } from "@/components/dashboard/PivotTable";
 import { OsDrawer } from "@/components/dashboard/OsDrawer";
 import { applyFilters, useDataset, type Filters, type OS } from "@/lib/mock-data";
+import { PortalContainerProvider } from "@/lib/portal-container";
 
 export const Route = createFileRoute("/tabela-operacional")({
   head: () => ({

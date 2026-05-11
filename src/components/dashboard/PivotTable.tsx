@@ -121,9 +121,9 @@ export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) 
               </tr>
             ))}
           </tbody>
-          <tfoot>
-            <tr className="border-t border-border/60 bg-secondary/30">
-              <td className="px-4 py-3 font-semibold sticky left-0 bg-secondary/60 backdrop-blur">
+          <tfoot className="sticky bottom-0 z-10">
+            <tr className="border-t border-border/60 bg-background/80 backdrop-blur">
+              <td className="px-4 py-3 font-semibold sticky left-0 bg-background/90 backdrop-blur z-10">
                 Total
               </td>
               {totalsByDate.map((t, i) => (
