@@ -41,7 +41,7 @@ export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) 
   const grandTotal = totalsByCity.reduce((a, b) => a + b, 0);
 
   return (
-    <div className="rounded-2xl glass overflow-hidden">
+    <div className={cn("rounded-2xl glass overflow-hidden flex flex-col", fullHeight && "h-full")}>
       <div className="flex items-center justify-between p-4 border-b border-border/60">
         <div>
           <div className="text-sm font-semibold">Tabela operacional</div>
@@ -57,7 +57,7 @@ export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) 
         </div>
       </div>
 
-      <div className="overflow-auto max-h-[520px]">
+      <div className={cn("overflow-auto", fullHeight ? "flex-1 min-h-0" : "max-h-[520px]")}>
         <table className="w-full text-sm">
           <thead className="sticky top-0 z-10 backdrop-blur bg-background/40">
             <tr>
