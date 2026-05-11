@@ -59,6 +59,27 @@ function TabelaOperacionalPage() {
     }
   };
 
+  const handleScreenshot = async () => {
+    if (!tableRef.current) return;
+    setCapturing(true);
+    try {
+      const bg = getComputedStyle(document.body).backgroundColor || "#0b0b0f";
+      const dataUrl = await toPng(tableRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: bg,
+      });
+      const link = document.createElement("a");
+      const ts = new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-");
+      link.download = `tabela-operacional-${ts}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Falha ao gerar imagem", err);
+    } finally {
+      setCapturing(false);
+    }
+  };
   useEffect(() => {
     const onChange = () => setIsFullscreen(!!document.fullscreenElement);
     document.addEventListener("fullscreenchange", onChange);
