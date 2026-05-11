@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Maximize2, Minimize2 } from "lucide-react";
+import { Camera, Maximize2, Minimize2 } from "lucide-react";
+import { toPng } from "html-to-image";
 
 import { Button } from "@/components/ui/button";
 import { FiltersBar } from "@/components/dashboard/FiltersBar";
@@ -29,7 +30,9 @@ function TabelaOperacionalPage() {
   const [drawerItems, setDrawerItems] = useState<OS[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [capturing, setCapturing] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   const { all } = useDataset();
   const filtered = useMemo(() => applyFilters(all, filters), [all, filters]);
@@ -56,6 +59,27 @@ function TabelaOperacionalPage() {
     }
   };
 
+  const handleScreenshot = async () => {
+    if (!tableRef.current) return;
+    setCapturing(true);
+    try {
+      const bg = getComputedStyle(document.body).backgroundColor || "#0b0b0f";
+      const dataUrl = await toPng(tableRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: bg,
+      });
+      const link = document.createElement("a");
+      const ts = new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-");
+      link.download = `tabela-operacional-${ts}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Falha ao gerar imagem", err);
+    } finally {
+      setCapturing(false);
+    }
+  };
   useEffect(() => {
     const onChange = () => setIsFullscreen(!!document.fullscreenElement);
     document.addEventListener("fullscreenchange", onChange);
@@ -92,6 +116,17 @@ function TabelaOperacionalPage() {
           <Button
             variant="outline"
             size="sm"
+            onClick={handleScreenshot}
+            disabled={capturing}
+            className="h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-3 shrink-0"
+            title="Baixar print da tabela (PNG)"
+          >
+            <Camera className="h-3.5 w-3.5" />
+            <span className="text-xs">{capturing ? "Gerando..." : "Print"}</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={toggleFullscreen}
             className="h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-3 shrink-0"
             title={isFullscreen ? "Sair da tela cheia (F)" : "Tela cheia (F)"}
@@ -106,10 +141,10 @@ function TabelaOperacionalPage() {
             <span className="font-semibold text-foreground tabular-nums">{filtered.length}</span> OS visíveis ·
             <span className="ml-1 font-semibold text-foreground tabular-nums">{cidades}</span> cidades
           </div>
-          <div>Pressione <kbd className="px-1.5 py-0.5 rounded border border-border/60 bg-secondary/40 font-mono text-[10px]">F</kbd> para alternar tela cheia · clique em uma célula para detalhes</div>
+          <div>Pressione <kbd className="px-1.5 py-0.5 rounded border border-border/60 bg-secondary/40 font-mono text-[10px]">F</kbd> para tela cheia · <span className="ml-1">botão Print baixa a tabela em PNG</span></div>
         </div>
 
-        <div className="flex-1 min-h-0">
+        <div ref={tableRef} className="flex-1 min-h-0">
           <PivotTable filters={filters} onCellClick={openDrawer} fullHeight />
         </div>
 
