@@ -146,17 +146,6 @@ function TabelaOperacionalPage() {
 
         <div ref={tableRef} className="flex-1 min-h-0">
           <PivotTable filters={filters} onCellClick={openDrawer} fullHeight />
-
-        <div className="flex items-center justify-between text-[11px] text-muted-foreground px-1">
-          <div>
-            <span className="font-semibold text-foreground tabular-nums">{filtered.length}</span> OS visíveis ·
-            <span className="ml-1 font-semibold text-foreground tabular-nums">{cidades}</span> cidades
-          </div>
-          <div>Pressione <kbd className="px-1.5 py-0.5 rounded border border-border/60 bg-secondary/40 font-mono text-[10px]">F</kbd> para alternar tela cheia · clique em uma célula para detalhes</div>
-        </div>
-
-        <div className="flex-1 min-h-0">
-          <PivotTable filters={filters} onCellClick={openDrawer} fullHeight />
         </div>
 
         <OsDrawer
