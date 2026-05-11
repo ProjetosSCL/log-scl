@@ -271,7 +271,11 @@ export function getPivot(data: OS[], dates: { iso: string; label: string; offset
     if (!matrix[o.cidade][lbl]) matrix[o.cidade][lbl] = [];
     matrix[o.cidade][lbl].push(o);
   }
-  return { cities, dates, matrix };
+  // Mantém apenas datas que possuem ao menos 1 OS em alguma cidade
+  const activeDates = dates.filter((d) =>
+    cities.some((c) => (matrix[c]?.[d.label]?.length ?? 0) > 0),
+  );
+  return { cities, dates: activeDates, matrix };
 }
 
 export function cellCriticality(items: OS[]): Criticality {
