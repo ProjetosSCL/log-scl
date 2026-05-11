@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Maximize2, Minimize2 } from "lucide-react";
+import { Camera, Maximize2, Minimize2 } from "lucide-react";
+import { toPng } from "html-to-image";
 
 import { Button } from "@/components/ui/button";
 import { FiltersBar } from "@/components/dashboard/FiltersBar";
