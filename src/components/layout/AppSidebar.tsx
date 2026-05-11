@@ -11,7 +11,14 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const items = [
+type NavItem = {
+  to: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+};
+
+const items: NavItem[] = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/sla", label: "SLA", icon: GaugeCircle },
   { to: "/os-criticas", label: "OS Críticas", icon: AlertTriangle },
@@ -19,7 +26,7 @@ const items = [
   { to: "/relatorios", label: "Relatórios", icon: FileBarChart },
   { to: "/indicadores", label: "Indicadores", icon: Activity },
   { to: "/configuracoes", label: "Configurações", icon: Settings },
-] as const;
+];
 
 export function AppSidebar() {
   const path = useRouterState({ select: (s) => s.location.pathname });
