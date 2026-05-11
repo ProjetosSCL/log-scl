@@ -164,7 +164,7 @@ function TabelaOperacionalPage() {
         </div>
 
         <div ref={tableRef} className="flex-1 min-h-0">
-          <PivotTable filters={filters} onCellClick={openDrawer} fullHeight />
+          <PivotTable filters={filters} onCellClick={openDrawer} fullHeight zoom={zoom} />
         </div>
 
         <OsDrawer
