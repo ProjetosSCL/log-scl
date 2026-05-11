@@ -41,15 +41,15 @@ export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) 
   const grandTotal = totalsByCity.reduce((a, b) => a + b, 0);
 
   return (
-    <div className={cn("rounded-xl glass overflow-hidden flex flex-col", fullHeight && "h-full")}>
-      <div className="flex items-center justify-between px-3 py-2 border-b border-border/60">
+    <div className={cn("rounded-lg glass overflow-hidden flex flex-col", fullHeight && "h-full")}>
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/60">
         <div>
-          <div className="text-xs font-semibold leading-tight">Tabela operacional</div>
-          <div className="text-[10px] text-muted-foreground leading-tight">
+          <div className="text-sm font-semibold leading-tight">Tabela operacional</div>
+          <div className="text-xs text-muted-foreground leading-tight mt-0.5">
             Volume de OS por cidade × data · clique para detalhes
           </div>
         </div>
-        <div className="flex items-center gap-2 text-[10px]">
+        <div className="flex items-center gap-3 text-xs">
           <Legend color="status-critical" label="Vencido" />
           <Legend color="status-warning" label="Vence hoje" />
           <Legend color="status-attention" label="Próximo" />
@@ -58,26 +58,26 @@ export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) 
       </div>
 
       <div className={cn("overflow-auto", fullHeight ? "flex-1 min-h-0" : "max-h-[520px]")}>
-        <table className="w-full text-xs table-fixed">
-          <thead className="sticky top-0 z-10 backdrop-blur bg-background/40">
-            <tr>
-              <th className="text-left font-medium px-2 py-1.5 text-muted-foreground sticky left-0 bg-background/60 backdrop-blur z-20 w-[120px]">
+        <table className="w-full text-sm border-collapse">
+          <thead className="sticky top-0 z-10 bg-muted/40 backdrop-blur">
+            <tr className="border-b border-border">
+              <th className="text-left font-semibold px-3 py-2 text-foreground sticky left-0 bg-muted/60 backdrop-blur z-20 min-w-[180px] border-r border-border">
                 Cidade
               </th>
               {dates.map((d) => (
                 <th
                   key={d.label}
-                  className="font-medium px-1 py-1.5 text-muted-foreground text-center capitalize text-[10px]"
+                  className="font-semibold px-2 py-2 text-foreground text-center capitalize text-xs whitespace-nowrap border-r border-border/40"
                 >
                   {d.label}
                   {d.offset === 0 && (
-                    <div className="text-[8px] text-primary font-semibold leading-none">
+                    <div className="text-[10px] text-primary font-bold leading-none mt-0.5">
                       HOJE
                     </div>
                   )}
                 </th>
               ))}
-              <th className="font-medium px-2 py-1.5 text-foreground text-center w-[52px]">
+              <th className="font-bold px-3 py-2 text-foreground text-center min-w-[70px] bg-muted/60">
                 Total
               </th>
             </tr>
@@ -86,55 +86,55 @@ export function PivotTable({ filters, onCellClick, fullHeight = false }: Props) 
             {cities.map((city, ci) => (
               <tr
                 key={city}
-                className="group/row border-t border-border/40 hover:bg-accent/20 transition-colors"
+                className="group/row border-b border-border/40 hover:bg-accent/20 transition-colors"
               >
-                <td className="px-2 py-0.5 sticky left-0 bg-background/40 backdrop-blur z-10 group-hover/row:bg-accent/20 truncate">
-                  <div className="font-medium truncate text-xs" title={city}>{city}</div>
+                <td className="px-3 py-1.5 sticky left-0 bg-background/80 backdrop-blur z-10 group-hover/row:bg-accent/20 border-r border-border/60">
+                  <div className="font-medium text-sm truncate" title={city}>{city}</div>
                 </td>
                 {dates.map((d) => {
                   const items = matrix[city]?.[d.label] ?? [];
                   const crit = cellCriticality(items);
                   return (
-                    <td key={d.label} className="px-0.5 py-0.5 text-center">
+                    <td key={d.label} className="px-1.5 py-1.5 text-center border-r border-border/30">
                       {items.length > 0 ? (
                         <button
                           type="button"
                           onClick={() => onCellClick(city, d.label, items)}
                           className={cn(
-                            "w-full min-w-[28px] px-1 py-0.5 rounded-md font-semibold tabular-nums transition-all text-xs",
+                            "min-w-[34px] px-2 py-1 rounded-md font-semibold tabular-nums transition-all text-sm",
                             critClasses[crit],
-                            "hover:scale-[1.06]",
+                            "hover:scale-[1.08]",
                           )}
                           title={`${items.length} OS — ${city} · ${d.label}`}
                         >
                           {items.length}
                         </button>
                       ) : (
-                        <span className="text-muted-foreground/40">·</span>
+                        <span className="text-muted-foreground/30">·</span>
                       )}
                     </td>
                   );
                 })}
-                <td className="px-2 py-0.5 text-center font-semibold tabular-nums text-xs">
+                <td className="px-3 py-1.5 text-center font-bold tabular-nums text-sm bg-muted/30">
                   {totalsByCity[ci]}
                 </td>
               </tr>
             ))}
           </tbody>
           <tfoot className="sticky bottom-0 z-10">
-            <tr className="border-t border-border/60 bg-background/80 backdrop-blur">
-              <td className="px-2 py-1.5 font-semibold sticky left-0 bg-background/90 backdrop-blur z-10 text-xs">
-                Total
+            <tr className="border-t-2 border-border bg-muted/60 backdrop-blur">
+              <td className="px-3 py-2 font-bold sticky left-0 bg-muted/80 backdrop-blur z-10 text-sm border-r border-border">
+                Total Geral
               </td>
               {totalsByDate.map((t, i) => (
                 <td
                   key={i}
-                  className="px-1 py-1.5 text-center font-semibold tabular-nums text-foreground/90 text-xs"
+                  className="px-2 py-2 text-center font-bold tabular-nums text-foreground text-sm border-r border-border/40"
                 >
                   {t}
                 </td>
               ))}
-              <td className="px-2 py-1.5 text-center font-bold tabular-nums text-primary text-xs">
+              <td className="px-3 py-2 text-center font-bold tabular-nums text-primary text-base bg-muted/80">
                 {grandTotal}
               </td>
             </tr>
