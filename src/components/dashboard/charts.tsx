@@ -14,14 +14,18 @@ import {
 } from "recharts";
 
 const tooltipStyle: React.CSSProperties = {
-  background: "oklch(0.18 0.025 155 / 0.92)",
-  border: "1px solid oklch(1 0 0 / 0.1)",
+  background: "oklch(1 0 0 / 0.96)",
+  border: "1px solid oklch(0.86 0.008 150 / 0.7)",
   borderRadius: 10,
   padding: "8px 10px",
   fontSize: 12,
   backdropFilter: "blur(12px)",
-  color: "oklch(0.97 0.01 150)",
+  color: "oklch(0.2 0.02 250)",
+  boxShadow: "0 8px 24px -8px oklch(0.4 0.04 150 / 0.18)",
 };
+
+const axisTick = { fill: "oklch(0.5 0.015 250)", fontSize: 10 };
+const gridStroke = "oklch(0.5 0.02 150 / 0.08)";
 
 export function OsByCityBar({ data }: { data: { name: string; value: number }[] }) {
   return (
@@ -34,10 +38,10 @@ export function OsByCityBar({ data }: { data: { name: string; value: number }[] 
               <stop offset="100%" stopColor="oklch(0.78 0.21 148)" stopOpacity={0.5} />
             </linearGradient>
           </defs>
-          <CartesianGrid stroke="oklch(1 0 0 / 0.05)" vertical={false} />
+          <CartesianGrid stroke={gridStroke} vertical={false} />
           <XAxis
             dataKey="name"
-            tick={{ fill: "oklch(0.7 0.02 155)", fontSize: 10 }}
+            tick={axisTick}
             axisLine={false}
             tickLine={false}
             interval={0}
@@ -45,8 +49,8 @@ export function OsByCityBar({ data }: { data: { name: string; value: number }[] 
             textAnchor="end"
             height={50}
           />
-          <YAxis tick={{ fill: "oklch(0.7 0.02 155)", fontSize: 10 }} axisLine={false} tickLine={false} />
-          <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "oklch(1 0 0 / 0.05)" }} />
+          <YAxis tick={axisTick} axisLine={false} tickLine={false} />
+          <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "oklch(0.5 0.02 150 / 0.06)" }} />
           <Bar dataKey="value" fill="url(#barGrad)" radius={[6, 6, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
@@ -59,14 +63,14 @@ export function DueByDayLine({ data }: { data: { name: string; value: number }[]
     <ChartCard title="Vencimentos por dia" subtitle="Linha temporal · 7 dias">
       <ResponsiveContainer width="100%" height={220}>
         <LineChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
-          <CartesianGrid stroke="oklch(1 0 0 / 0.05)" vertical={false} />
+          <CartesianGrid stroke={gridStroke} vertical={false} />
           <XAxis
             dataKey="name"
-            tick={{ fill: "oklch(0.7 0.02 155)", fontSize: 10 }}
+            tick={axisTick}
             axisLine={false}
             tickLine={false}
           />
-          <YAxis tick={{ fill: "oklch(0.7 0.02 155)", fontSize: 10 }} axisLine={false} tickLine={false} />
+          <YAxis tick={axisTick} axisLine={false} tickLine={false} />
           <Tooltip contentStyle={tooltipStyle} />
           <Line
             type="monotone"
@@ -103,7 +107,7 @@ export function StatusDonut({ data }: { data: { name: string; value: number }[] 
             innerRadius={55}
             outerRadius={85}
             paddingAngle={3}
-            stroke="oklch(0.16 0.025 155)"
+            stroke="oklch(1 0 0)"
             strokeWidth={2}
           >
             {data.map((_, i) => (
