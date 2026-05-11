@@ -89,6 +89,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "FieldOps · Central Operacional de OS" },
+      { name: "description", content: "A premium operational dashboard for managing Work Orders (OS) with a modern SaaS enterprise look." },
+      { property: "og:description", content: "A premium operational dashboard for managing Work Orders (OS) with a modern SaaS enterprise look." },
+      { name: "twitter:description", content: "A premium operational dashboard for managing Work Orders (OS) with a modern SaaS enterprise look." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/714e5699-ac78-4123-ab06-15126c6ca74b/id-preview-c465334c--b4d4e8fe-aef2-4036-95d9-87e5d8e0790f.lovable.app-1778540247962.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/714e5699-ac78-4123-ab06-15126c6ca74b/id-preview-c465334c--b4d4e8fe-aef2-4036-95d9-87e5d8e0790f.lovable.app-1778540247962.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
