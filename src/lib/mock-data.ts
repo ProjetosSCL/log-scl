@@ -242,13 +242,11 @@ export function getKpis(data: OS[]) {
   };
 }
 
-export function getPivot(data: OS[]) {
-  // Build the full set of cities present in the filtered data, sorted by total volume desc.
+export function getPivot(data: OS[], dates: { iso: string; label: string; offset: number }[] = getStore().dates) {
   const totals = new Map<string, number>();
   data.forEach((o) => totals.set(o.cidade, (totals.get(o.cidade) || 0) + 1));
   const cities = [...totals.entries()].sort((a, b) => b[1] - a[1]).map(([c]) => c);
 
-  const dates = DATES;
   const matrix: Record<string, Record<string, OS[]>> = {};
   for (const c of cities) {
     matrix[c] = {};
@@ -337,8 +335,9 @@ export function getStatusDistribution(data: OS[]) {
 }
 
 export function getDueByDay(data: OS[]) {
+  const { dates } = getStore();
   const m = new Map<string, number>();
-  for (const d of DATES) m.set(d.label, 0);
+  for (const d of dates) m.set(d.label, 0);
   data.forEach((o) => {
     const lbl = fmtBR(new Date(o.dataLimite));
     m.set(lbl, (m.get(lbl) || 0) + 1);
@@ -375,23 +374,127 @@ export function getRanking(
     .slice(0, 8);
 }
 
-// ---------- Facets (for filter options) ----------
+// ---------- Facets ----------
 function uniq(arr: string[]): string[] {
   return [...new Set(arr.filter(Boolean))].sort();
 }
 
-export const FACETS = {
-  contratantes: uniq(ALL_OS.map((o) => o.contratante)),
-  prestadores: uniq(ALL_OS.map((o) => o.prestador)),
-  cidades: uniq(ALL_OS.map((o) => o.cidade)),
-  estados: uniq(ALL_OS.map((o) => o.estado)),
-  regioes: uniq(ALL_OS.map((o) => o.regiao)),
-  tecnicos: uniq(
-    ALL_OS.map((o) => o.tecnico).filter(
-      (t) => t && t !== "Não atribuído" && t !== "Não Atribuído",
-    ),
-  ),
-  status: uniq(ALL_OS.map((o) => o.status)),
-};
+export interface Facets {
+  contratantes: string[];
+  prestadores: string[];
+  cidades: string[];
+  estados: string[];
+  regioes: string[];
+  tecnicos: string[];
+  status: string[];
+}
 
-export const REFERENCE_TODAY = REF_TODAY.toISOString();
+export function computeFacets(all: OS[]): Facets {
+  return {
+    contratantes: uniq(all.map((o) => o.contratante)),
+    prestadores: uniq(all.map((o) => o.prestador)),
+    cidades: uniq(all.map((o) => o.cidade)),
+    estados: uniq(all.map((o) => o.estado)),
+    regioes: uniq(all.map((o) => o.regiao)),
+    tecnicos: uniq(
+      all
+        .map((o) => o.tecnico)
+        .filter((t) => t && t !== "Não atribuído" && t !== "Não Atribuído"),
+    ),
+    status: uniq(all.map((o) => o.status)),
+  };
+}
+
+// ---------- Reactive store ----------
+const STORAGE_KEY = "fieldops_dataset_v2";
+
+interface Snapshot {
+  all: OS[];
+  facets: Facets;
+  refToday: Date;
+  dates: { iso: string; label: string; offset: number }[];
+  source: "seed" | "import";
+  importedAt?: string;
+  rowCount: number;
+}
+
+function buildSnapshot(rows: RawRow[], source: "seed" | "import", importedAt?: string): Snapshot {
+  const { all, refToday, dates } = normalizeRows(rows);
+  return {
+    all,
+    facets: computeFacets(all),
+    refToday,
+    dates,
+    source,
+    importedAt,
+    rowCount: rows.length,
+  };
+}
+
+function loadStored(): { rows: RawRow[]; importedAt: string } | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as { rows: RawRow[]; importedAt: string };
+    if (!Array.isArray(parsed.rows) || !parsed.rows.length) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+let snapshot: Snapshot = (() => {
+  const stored = loadStored();
+  if (stored) return buildSnapshot(stored.rows, "import", stored.importedAt);
+  return buildSnapshot(seed as RawRow[], "seed");
+})();
+
+const listeners = new Set<() => void>();
+
+function getStore(): Snapshot {
+  return snapshot;
+}
+
+function emit() {
+  listeners.forEach((l) => l());
+}
+
+export function setDataset(rows: RawRow[]) {
+  const importedAt = new Date().toISOString();
+  snapshot = buildSnapshot(rows, "import", importedAt);
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ rows, importedAt }));
+    } catch (e) {
+      console.warn("Falha ao persistir dataset", e);
+    }
+  }
+  emit();
+}
+
+export function resetDataset() {
+  snapshot = buildSnapshot(seed as RawRow[], "seed");
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+  }
+  emit();
+}
+
+function subscribe(l: () => void) {
+  listeners.add(l);
+  return () => listeners.delete(l);
+}
+
+export function useDataset(): Snapshot {
+  return useSyncExternalStore(subscribe, getStore, getStore);
+}
+
+export function getDatasetSnapshot(): Snapshot {
+  return snapshot;
+}
+
