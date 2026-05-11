@@ -24,7 +24,6 @@ import {
   StatusDonut,
 } from "@/components/dashboard/charts";
 import {
-  ALL_OS,
   applyFilters,
   type Filters,
   getDueByDay,
@@ -33,6 +32,7 @@ import {
   getOsByCity,
   getRanking,
   getStatusDistribution,
+  useDataset,
   type OS,
 } from "@/lib/mock-data";
 
@@ -63,7 +63,8 @@ function DashboardPage() {
   const [drawerItems, setDrawerItems] = useState<OS[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const filtered = useMemo(() => applyFilters(ALL_OS, filters), [filters]);
+  const { all } = useDataset();
+  const filtered = useMemo(() => applyFilters(all, filters), [all, filters]);
   const kpis = useMemo(() => getKpis(filtered), [filtered]);
   const insights = useMemo(() => getInsights(filtered), [filtered]);
   const byCity = useMemo(() => getOsByCity(filtered), [filtered]);

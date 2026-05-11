@@ -35,7 +35,7 @@ export interface OS {
   timeline: { ts: string; label: string; by: string }[];
 }
 
-interface RawRow {
+export interface RawRow {
   numero: string;
   status: string;
   contratante: string;
