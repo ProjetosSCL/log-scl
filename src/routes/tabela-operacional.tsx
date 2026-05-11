@@ -30,7 +30,9 @@ function TabelaOperacionalPage() {
   const [drawerItems, setDrawerItems] = useState<OS[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [capturing, setCapturing] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   const { all } = useDataset();
   const filtered = useMemo(() => applyFilters(all, filters), [all, filters]);
