@@ -60,19 +60,7 @@ interface RawRow {
   dataModificacao: string | null;
 }
 
-// ---------- Reference "today" ----------
-// The dataset's window is May 11–18, 2026. We anchor "today" to the
-// most recent "Data Abertura" so criticidade buckets stay meaningful.
-const REF_TODAY: Date = (() => {
-  const aberturas = (raw as RawRow[])
-    .map((r) => (r.dataAbertura ? new Date(r.dataAbertura).getTime() : 0))
-    .filter((t) => t > 0);
-  const max = Math.max(...aberturas);
-  const d = new Date(max);
-  d.setHours(0, 0, 0, 0);
-  return d;
-})();
-
+// ---------- Build-time helpers ----------
 function startOfDay(d: Date) {
   const x = new Date(d);
   x.setHours(0, 0, 0, 0);
@@ -89,19 +77,19 @@ function fmtBR(d: Date) {
     .replace(".", "");
 }
 
-function classifyCriticality(limit: Date, status: string): Criticality {
-  if (status === "CONCLUIDA" || status === "CONCLUÍDA" || status === "FINALIZADA")
-    return "saudavel";
-  const diff = dayDiff(limit, REF_TODAY);
+function classifyCriticality(limit: Date, status: string, refToday: Date): Criticality {
+  const s = (status || "").toUpperCase();
+  if (s === "CONCLUIDA" || s === "CONCLUÍDA" || s === "FINALIZADA") return "saudavel";
+  const diff = dayDiff(limit, refToday);
   if (diff < 0) return "vencido";
   if (diff === 0) return "vence_hoje";
   if (diff <= 2) return "proximo";
   return "saudavel";
 }
 
-function slaFromCrit(c: Criticality, limit: Date, abertura: Date) {
+function slaFromCrit(c: Criticality, limit: Date, abertura: Date, refToday: Date) {
   const total = Math.max(1, dayDiff(limit, abertura));
-  const used = Math.max(0, dayDiff(REF_TODAY, abertura));
+  const used = Math.max(0, dayDiff(refToday, abertura));
   const remaining = Math.max(0, 100 - Math.round((used / total) * 100));
   if (c === "vencido") return Math.min(20, remaining);
   if (c === "vence_hoje") return Math.max(25, Math.min(45, remaining));
@@ -109,70 +97,87 @@ function slaFromCrit(c: Criticality, limit: Date, abertura: Date) {
   return Math.max(80, Math.min(100, remaining));
 }
 
-// ---------- Build the 7-day window (centered on REF_TODAY) ----------
-export const DATES: { iso: string; label: string; offset: number }[] = (() => {
+function computeRefToday(rows: RawRow[]): Date {
+  const aberturas = rows
+    .map((r) => (r.dataAbertura ? new Date(r.dataAbertura).getTime() : 0))
+    .filter((t) => t > 0);
+  if (!aberturas.length) {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+  const d = new Date(Math.max(...aberturas));
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+function buildDates(refToday: Date) {
   const arr: { iso: string; label: string; offset: number }[] = [];
   for (let i = -1; i <= 5; i++) {
-    const d = new Date(REF_TODAY);
+    const d = new Date(refToday);
     d.setDate(d.getDate() + i);
     arr.push({ iso: d.toISOString(), label: fmtBR(d), offset: i });
   }
   return arr;
-})();
+}
 
-// ---------- Normalize the dataset ----------
-export const ALL_OS: OS[] = (raw as RawRow[]).map((r) => {
-  const abertura = r.dataAbertura ? new Date(r.dataAbertura) : new Date(REF_TODAY);
-  const limite = r.dataLimite ? new Date(r.dataLimite) : new Date(REF_TODAY);
-  const crit = classifyCriticality(limite, r.status);
-  const sla = slaFromCrit(crit, limite, abertura);
+export function normalizeRows(rows: RawRow[]): { all: OS[]; refToday: Date; dates: { iso: string; label: string; offset: number }[] } {
+  const refToday = computeRefToday(rows);
+  const dates = buildDates(refToday);
+  const all: OS[] = rows.map((r) => {
+    const abertura = r.dataAbertura ? new Date(r.dataAbertura) : new Date(refToday);
+    const limite = r.dataLimite ? new Date(r.dataLimite) : new Date(refToday);
+    const crit = classifyCriticality(limite, r.status, refToday);
+    const sla = slaFromCrit(crit, limite, abertura, refToday);
 
-  const timeline: OS["timeline"] = [
-    { ts: abertura.toISOString(), label: "OS aberta", by: "Sistema" },
-  ];
-  if (r.dataModificacao) {
-    timeline.push({
-      ts: r.dataModificacao,
-      label: `Status atualizado: ${r.status}`,
-      by: r.prestador || "Operação",
-    });
-  }
-  if (r.dataAtendimento) {
-    timeline.push({
-      ts: r.dataAtendimento,
-      label: "Atendimento realizado",
-      by: r.tecnico || "Técnico",
-    });
-  }
+    const timeline: OS["timeline"] = [
+      { ts: abertura.toISOString(), label: "OS aberta", by: "Sistema" },
+    ];
+    if (r.dataModificacao) {
+      timeline.push({
+        ts: r.dataModificacao,
+        label: `Status atualizado: ${r.status}`,
+        by: r.prestador || "Operação",
+      });
+    }
+    if (r.dataAtendimento) {
+      timeline.push({
+        ts: r.dataAtendimento,
+        label: "Atendimento realizado",
+        by: r.tecnico || "Técnico",
+      });
+    }
 
-  return {
-    id: r.numero,
-    numero: r.numero,
-    cliente: r.cliente,
-    modelo: r.modelo,
-    tipoEquipamento: r.tipoEquipamento,
-    servico: r.servico,
-    grupoServico: r.grupoServico,
-    endereco: r.endereco || `${r.cidade} · ${r.estado}`,
-    cidade: r.cidade,
-    estado: r.estado,
-    regiao: r.regiao,
-    regiaoCode: r.regiaoCode,
-    tecnico: r.tecnico,
-    contratante: r.contratante,
-    prestador: r.prestador,
-    sla,
-    criticidade: crit,
-    status: r.status,
-    emergencial: r.emergencial,
-    agendamento: r.agendamento,
-    observacoes: r.observacoes || "Sem observações registradas.",
-    dataLimite: limite.toISOString(),
-    dataAtendimento: r.dataAtendimento ?? undefined,
-    dataAbertura: abertura.toISOString(),
-    timeline,
-  };
-});
+    return {
+      id: r.numero,
+      numero: r.numero,
+      cliente: r.cliente,
+      modelo: r.modelo,
+      tipoEquipamento: r.tipoEquipamento,
+      servico: r.servico,
+      grupoServico: r.grupoServico,
+      endereco: r.endereco || `${r.cidade} · ${r.estado}`,
+      cidade: r.cidade,
+      estado: r.estado,
+      regiao: r.regiao,
+      regiaoCode: r.regiaoCode,
+      tecnico: r.tecnico,
+      contratante: r.contratante,
+      prestador: r.prestador,
+      sla,
+      criticidade: crit,
+      status: r.status,
+      emergencial: r.emergencial,
+      agendamento: r.agendamento,
+      observacoes: r.observacoes || "Sem observações registradas.",
+      dataLimite: limite.toISOString(),
+      dataAtendimento: r.dataAtendimento ?? undefined,
+      dataAbertura: abertura.toISOString(),
+      timeline,
+    };
+  });
+  return { all, refToday, dates };
+}
 
 // ---------- Filters ----------
 export interface Filters {
