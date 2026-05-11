@@ -112,6 +112,12 @@ export function FiltersBar({ filters, setFilters }: Props) {
         onChange={(v) => set("cidade", v)}
       />
       <MultiFilter
+        label="Estado"
+        options={FACETS.estados}
+        value={filters.estado}
+        onChange={(v) => set("estado", v)}
+      />
+      <MultiFilter
         label="Região"
         options={FACETS.regioes}
         value={filters.regiao}
