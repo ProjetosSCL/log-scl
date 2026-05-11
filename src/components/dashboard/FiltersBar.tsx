@@ -82,7 +82,7 @@ export function FiltersBar({ filters, setFilters }: Props) {
     setFilters({ ...filters, [k]: v });
 
   const activeChips: { key: Key; values: string[] }[] = [];
-  (["contratante", "prestador", "cidade", "regiao", "tecnico", "criticidade", "status"] as Key[]).forEach((k) => {
+  (["contratante", "prestador", "cidade", "estado", "regiao", "tecnico", "criticidade", "status"] as Key[]).forEach((k) => {
     const v = filters[k] as string[] | undefined;
     if (v && v.length) activeChips.push({ key: k, values: v });
   });
@@ -110,6 +110,12 @@ export function FiltersBar({ filters, setFilters }: Props) {
         options={FACETS.cidades}
         value={filters.cidade}
         onChange={(v) => set("cidade", v)}
+      />
+      <MultiFilter
+        label="Estado"
+        options={FACETS.estados}
+        value={filters.estado}
+        onChange={(v) => set("estado", v)}
       />
       <MultiFilter
         label="Região"

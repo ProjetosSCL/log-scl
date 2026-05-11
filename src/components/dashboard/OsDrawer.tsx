@@ -168,10 +168,12 @@ export function OsDrawer({
 
               {/* Grid info */}
               <div className="grid grid-cols-2 gap-3">
-                <Info icon={MapPin} label="Endereço" value={selected.endereco} />
+                <Info icon={MapPin} label="Endereço" value={`${selected.endereco}`} />
+                <Info icon={MapPin} label="Cidade / UF" value={`${selected.cidade} · ${selected.estado}`} />
                 <Info icon={User} label="Técnico" value={selected.tecnico} />
                 <Info icon={Wrench} label="Prestador" value={selected.prestador} />
                 <Info icon={ScrollText} label="Contratante" value={selected.contratante} />
+                <Info icon={ScrollText} label="Serviço" value={`${selected.grupoServico} · ${selected.servico}`} />
                 <Info icon={Calendar} label="Data limite" value={fmt(selected.dataLimite)} />
                 <Info icon={Clock} label="Atendimento" value={fmt(selected.dataAtendimento)} />
               </div>
