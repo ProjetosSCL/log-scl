@@ -7,6 +7,7 @@ import { FiltersBar } from "@/components/dashboard/FiltersBar";
 import { PivotTable } from "@/components/dashboard/PivotTable";
 import { OsDrawer } from "@/components/dashboard/OsDrawer";
 import { applyFilters, useDataset, type Filters, type OS } from "@/lib/mock-data";
+import { PortalContainerProvider } from "@/lib/portal-container";
 
 export const Route = createFileRoute("/tabela-operacional")({
   head: () => ({
@@ -83,43 +84,45 @@ function TabelaOperacionalPage() {
           : "h-[calc(100dvh-7rem)] flex flex-col gap-3 animate-fade-in min-h-0"
       }
     >
-      <div className="flex items-center gap-2">
-        <div className="flex-1 min-w-0">
-          <FiltersBar filters={filters} setFilters={setFilters} />
+      <PortalContainerProvider container={isFullscreen ? containerRef.current : null}>
+        <div className="flex items-center gap-2">
+          <div className="flex-1 min-w-0">
+            <FiltersBar filters={filters} setFilters={setFilters} />
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={toggleFullscreen}
+            className="h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-3 shrink-0"
+            title={isFullscreen ? "Sair da tela cheia (F)" : "Tela cheia (F)"}
+          >
+            {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+            <span className="text-xs">{isFullscreen ? "Sair" : "Tela cheia"}</span>
+          </Button>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={toggleFullscreen}
-          className="h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-3 shrink-0"
-          title={isFullscreen ? "Sair da tela cheia (F)" : "Tela cheia (F)"}
-        >
-          {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
-          <span className="text-xs">{isFullscreen ? "Sair" : "Tela cheia"}</span>
-        </Button>
-      </div>
 
-      <div className="flex items-center justify-between text-[11px] text-muted-foreground px-1">
-        <div>
-          <span className="font-semibold text-foreground tabular-nums">{filtered.length}</span> OS visíveis ·
-          <span className="ml-1 font-semibold text-foreground tabular-nums">{cidades}</span> cidades
+        <div className="flex items-center justify-between text-[11px] text-muted-foreground px-1">
+          <div>
+            <span className="font-semibold text-foreground tabular-nums">{filtered.length}</span> OS visíveis ·
+            <span className="ml-1 font-semibold text-foreground tabular-nums">{cidades}</span> cidades
+          </div>
+          <div>Pressione <kbd className="px-1.5 py-0.5 rounded border border-border/60 bg-secondary/40 font-mono text-[10px]">F</kbd> para alternar tela cheia · clique em uma célula para detalhes</div>
         </div>
-        <div>Pressione <kbd className="px-1.5 py-0.5 rounded border border-border/60 bg-secondary/40 font-mono text-[10px]">F</kbd> para alternar tela cheia · clique em uma célula para detalhes</div>
-      </div>
 
-      <div className="flex-1 min-h-0">
-        <PivotTable filters={filters} onCellClick={openDrawer} fullHeight />
-      </div>
+        <div className="flex-1 min-h-0">
+          <PivotTable filters={filters} onCellClick={openDrawer} fullHeight />
+        </div>
 
-      <OsDrawer
-        open={drawerOpen}
-        onOpenChange={setDrawerOpen}
-        city={drawerCity}
-        dateLabel={drawerDate}
-        items={drawerItems}
-        selectedId={selectedId}
-        setSelectedId={setSelectedId}
-      />
+        <OsDrawer
+          open={drawerOpen}
+          onOpenChange={setDrawerOpen}
+          city={drawerCity}
+          dateLabel={drawerDate}
+          items={drawerItems}
+          selectedId={selectedId}
+          setSelectedId={setSelectedId}
+        />
+      </PortalContainerProvider>
     </div>
   );
 }
