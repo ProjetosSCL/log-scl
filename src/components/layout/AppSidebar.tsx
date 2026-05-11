@@ -59,7 +59,7 @@ export function AppSidebar() {
           return (
             <Link
               key={it.to}
-              to={it.to}
+              to={it.to as "/"}
               className={cn(
                 "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all",
                 "hover:bg-accent/60 hover:translate-x-[1px]",
