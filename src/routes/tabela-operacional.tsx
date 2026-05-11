@@ -116,6 +116,17 @@ function TabelaOperacionalPage() {
           <Button
             variant="outline"
             size="sm"
+            onClick={handleScreenshot}
+            disabled={capturing}
+            className="h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-3 shrink-0"
+            title="Baixar print da tabela (PNG)"
+          >
+            <Camera className="h-3.5 w-3.5" />
+            <span className="text-xs">{capturing ? "Gerando..." : "Print"}</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={toggleFullscreen}
             className="h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-3 shrink-0"
             title={isFullscreen ? "Sair da tela cheia (F)" : "Tela cheia (F)"}
@@ -124,6 +135,17 @@ function TabelaOperacionalPage() {
             <span className="text-xs">{isFullscreen ? "Sair" : "Tela cheia"}</span>
           </Button>
         </div>
+
+        <div className="flex items-center justify-between text-[11px] text-muted-foreground px-1">
+          <div>
+            <span className="font-semibold text-foreground tabular-nums">{filtered.length}</span> OS visíveis ·
+            <span className="ml-1 font-semibold text-foreground tabular-nums">{cidades}</span> cidades
+          </div>
+          <div>Pressione <kbd className="px-1.5 py-0.5 rounded border border-border/60 bg-secondary/40 font-mono text-[10px]">F</kbd> para tela cheia · <span className="ml-1">botão Print baixa a tabela em PNG</span></div>
+        </div>
+
+        <div ref={tableRef} className="flex-1 min-h-0">
+          <PivotTable filters={filters} onCellClick={openDrawer} fullHeight />
 
         <div className="flex items-center justify-between text-[11px] text-muted-foreground px-1">
           <div>
