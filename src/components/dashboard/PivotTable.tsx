@@ -62,13 +62,13 @@ export function PivotTable({ filters, onCellClick, fullHeight = false, zoom = 10
         <table className="w-full border-collapse">
           <thead className="sticky top-0 z-10 bg-muted/40 backdrop-blur">
             <tr className="border-b border-border">
-              <th className="text-left font-semibold px-3 py-2 text-foreground sticky left-0 bg-muted/60 backdrop-blur z-20 min-w-[180px] border-r border-border">
+              <th className="text-left font-semibold px-3 py-1.5 text-foreground sticky left-0 bg-muted/60 backdrop-blur z-20 min-w-[180px] border-r border-border">
                 Cidade
               </th>
               {dates.map((d) => (
                 <th
                   key={d.label}
-                  className="font-semibold px-2 py-2 text-foreground text-center capitalize text-xs whitespace-nowrap border-r border-border/40"
+                  className="font-semibold px-2 py-1.5 text-foreground text-center capitalize text-xs whitespace-nowrap border-r border-border/40"
                 >
                   {d.label}
                   {d.offset === 0 && (
@@ -78,7 +78,7 @@ export function PivotTable({ filters, onCellClick, fullHeight = false, zoom = 10
                   )}
                 </th>
               ))}
-              <th className="font-bold px-3 py-2 text-foreground text-center min-w-[70px] bg-muted/60">
+              <th className="font-bold px-3 py-1.5 text-foreground text-center min-w-[70px] bg-muted/60">
                 Total
               </th>
             </tr>
@@ -89,20 +89,20 @@ export function PivotTable({ filters, onCellClick, fullHeight = false, zoom = 10
                 key={city}
                 className="group/row border-b border-border/40 hover:bg-accent/20 transition-colors"
               >
-                <td className="px-3 py-1.5 sticky left-0 bg-background/80 backdrop-blur z-10 group-hover/row:bg-accent/20 border-r border-border/60">
+                <td className="px-3 py-1 sticky left-0 bg-background/80 backdrop-blur z-10 group-hover/row:bg-accent/20 border-r border-border/60">
                   <div className="font-medium text-sm truncate" title={city}>{city}</div>
                 </td>
                 {dates.map((d) => {
                   const items = matrix[city]?.[d.label] ?? [];
                   const crit = cellCriticality(items);
                   return (
-                    <td key={d.label} className="px-1.5 py-1.5 text-center border-r border-border/30">
+                    <td key={d.label} className="px-1.5 py-1 text-center border-r border-border/30">
                       {items.length > 0 ? (
                         <button
                           type="button"
                           onClick={() => onCellClick(city, d.label, items)}
                           className={cn(
-                            "min-w-[34px] px-2 py-1 rounded-md font-semibold tabular-nums transition-all text-sm",
+                            "min-w-[34px] px-2 py-0.5 rounded-md font-semibold tabular-nums transition-all text-sm",
                             critClasses[crit],
                             "hover:scale-[1.08]",
                           )}
@@ -116,7 +116,7 @@ export function PivotTable({ filters, onCellClick, fullHeight = false, zoom = 10
                     </td>
                   );
                 })}
-                <td className="px-3 py-1.5 text-center font-bold tabular-nums text-sm bg-muted/30">
+                <td className="px-3 py-1 text-center font-bold tabular-nums text-sm bg-muted/30">
                   {totalsByCity[ci]}
                 </td>
               </tr>
