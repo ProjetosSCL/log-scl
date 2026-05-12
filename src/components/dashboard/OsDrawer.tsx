@@ -63,10 +63,10 @@ export function OsDrawer({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-full sm:max-w-[640px] glass-strong border-l border-border/60 overflow-y-auto p-0"
+        className="w-[96vw] sm:w-full sm:max-w-[640px] glass-strong border-l border-border/60 p-0 flex flex-col h-[100dvh] max-h-[100dvh] overflow-hidden"
       >
-        <SheetHeader className="p-5 border-b border-border/60 sticky top-0 backdrop-blur-xl bg-background/40 z-10">
-          <div className="flex items-center gap-2">
+        <SheetHeader className="p-4 md:p-5 border-b border-border/60 backdrop-blur-xl bg-background/40 shrink-0">
+          <div className="flex items-center gap-2 flex-wrap">
             <Badge className="bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
               {items.length} OS
             </Badge>
@@ -79,15 +79,15 @@ export function OsDrawer({
               {dateLabel}
             </Badge>
           </div>
-          <SheetTitle className="text-left text-lg">Detalhamento operacional</SheetTitle>
+          <SheetTitle className="text-left text-base md:text-lg">Detalhamento operacional</SheetTitle>
           <SheetDescription className="text-left text-xs">
             Lista completa das OS para a célula selecionada. Clique em uma OS para inspecionar.
           </SheetDescription>
         </SheetHeader>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-0">
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-0 overflow-hidden">
           {/* List */}
-          <div className="border-b lg:border-b-0 lg:border-r border-border/60 max-h-[280px] lg:max-h-none overflow-y-auto">
+          <div className="border-b lg:border-b-0 lg:border-r border-border/60 max-h-[35vh] lg:max-h-none overflow-y-auto overscroll-contain">
             {items.map((o) => (
               <button
                 key={o.id}
@@ -121,7 +121,7 @@ export function OsDrawer({
 
           {/* Detail */}
           {selected && (
-            <div className="p-5 space-y-4">
+            <div className="p-4 md:p-5 space-y-4 overflow-y-auto overscroll-contain min-h-0">
               <div className="flex items-start justify-between">
                 <div>
                   <div className="text-xs font-mono text-muted-foreground">

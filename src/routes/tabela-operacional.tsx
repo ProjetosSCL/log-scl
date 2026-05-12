@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Camera, Maximize2, Minimize2 } from "lucide-react";
+import { Camera, Maximize2, Minimize2, Rows3 } from "lucide-react";
 import { toPng } from "html-to-image";
 
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,7 @@ function TabelaOperacionalPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [capturing, setCapturing] = useState(false);
   const [zoom, setZoom] = useState<80 | 90 | 100 | 110 | 120>(90);
+  const [compact, setCompact] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
 
@@ -135,6 +136,22 @@ function TabelaOperacionalPage() {
           <Button
             variant="outline"
             size="sm"
+            onClick={() => setCompact((v) => !v)}
+            className={
+              "h-9 gap-1.5 rounded-full px-3 shrink-0 " +
+              (compact
+                ? "border-primary/50 bg-primary/15 text-primary hover:bg-primary/20"
+                : "border-border/60 bg-secondary/50 hover:bg-accent/60")
+            }
+            title="Modo compacto: reduz o tamanho dos elementos"
+            aria-pressed={compact}
+          >
+            <Rows3 className="h-3.5 w-3.5" />
+            <span className="text-xs">Compacto</span>
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={handleScreenshot}
             disabled={capturing}
             className="h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-3 shrink-0"
@@ -164,7 +181,7 @@ function TabelaOperacionalPage() {
         </div>
 
         <div ref={tableRef} className="flex-1 min-h-0">
-          <PivotTable filters={filters} onCellClick={openDrawer} fullHeight zoom={zoom} />
+          <PivotTable filters={filters} onCellClick={openDrawer} fullHeight zoom={zoom} compact={compact} />
         </div>
 
         <OsDrawer
