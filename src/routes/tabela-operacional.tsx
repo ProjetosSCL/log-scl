@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Camera, Maximize2, Minimize2 } from "lucide-react";
+import { Camera, Maximize2, Minimize2, Rows3 } from "lucide-react";
 import { toPng } from "html-to-image";
 
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,7 @@ function TabelaOperacionalPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [capturing, setCapturing] = useState(false);
   const [zoom, setZoom] = useState<80 | 90 | 100 | 110 | 120>(90);
+  const [compact, setCompact] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
 
