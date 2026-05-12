@@ -16,7 +16,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const items = [
+const items: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/tabela-operacional", label: "Tabela Operacional", icon: Table2 },
   { to: "/sla", label: "SLA", icon: GaugeCircle },
@@ -25,7 +25,7 @@ const items = [
   { to: "/relatorios", label: "Relatórios", icon: FileBarChart },
   { to: "/indicadores", label: "Indicadores", icon: Activity },
   { to: "/configuracoes", label: "Configurações", icon: Settings },
-] as const;
+];
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
