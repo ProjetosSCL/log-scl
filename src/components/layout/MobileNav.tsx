@@ -61,7 +61,7 @@ export function MobileNav() {
             return (
               <Link
                 key={it.to}
-                to={it.to}
+                to={it.to as "/"}
                 onClick={() => setOpen(false)}
                 className={cn(
                   "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all",
