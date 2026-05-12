@@ -121,7 +121,7 @@ export function OsDrawer({
 
           {/* Detail */}
           {selected && (
-            <div className="p-5 space-y-4">
+            <div className="p-4 md:p-5 space-y-4 overflow-y-auto overscroll-contain min-h-0">
               <div className="flex items-start justify-between">
                 <div>
                   <div className="text-xs font-mono text-muted-foreground">
