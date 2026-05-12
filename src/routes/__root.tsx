@@ -139,7 +139,7 @@ function RootComponent() {
           <AppSidebar />
           <div className="flex-1 min-w-0 flex flex-col">
             <AppHeader />
-            <main className="flex-1 p-3 pt-3">
+            <main className="flex-1 p-2 pt-2 md:p-3 md:pt-3">
               <Outlet />
             </main>
           </div>
