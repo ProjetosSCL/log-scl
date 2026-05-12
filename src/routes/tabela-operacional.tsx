@@ -106,11 +106,11 @@ function TabelaOperacionalPage() {
       className={
         isFullscreen
           ? "fixed inset-0 z-50 flex flex-col gap-3 p-4 bg-background overflow-hidden animate-fade-in"
-          : "h-[calc(100dvh-7rem)] flex flex-col gap-3 animate-fade-in min-h-0"
+          : "min-h-[calc(100dvh-7rem)] md:h-[calc(100dvh-7rem)] flex flex-col gap-3 animate-fade-in md:min-h-0"
       }
     >
       <PortalContainerProvider container={isFullscreen ? containerRef.current : null}>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <div className="flex-1 min-w-0">
             <FiltersBar filters={filters} setFilters={setFilters} />
           </div>

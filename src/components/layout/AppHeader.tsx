@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Bell, RefreshCcw, Search, UserRound } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { MobileNav } from "@/components/layout/MobileNav";
 
 export function AppHeader({ title = "Central Operacional" }: { title?: string }) {
   const [now, setNow] = useState<Date | null>(null);
@@ -47,19 +48,20 @@ export function AppHeader({ title = "Central Operacional" }: { title?: string })
     : "--:--";
 
   return (
-    <header className="glass rounded-2xl mt-3 mx-3 p-3 md:p-4 flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+    <header className="glass rounded-2xl mt-2 mx-2 md:mt-3 md:mx-3 p-2.5 md:p-4 flex items-center gap-2 md:gap-4 flex-wrap">
+      <MobileNav />
       <div className="flex items-center gap-3 min-w-0">
         <div className="min-w-0">
-          <h1 className="text-base md:text-lg font-semibold tracking-tight leading-none">
+          <h1 className="text-sm md:text-lg font-semibold tracking-tight leading-none truncate">
             {title}
           </h1>
-          <div className="mt-1 text-[11px] text-muted-foreground capitalize">
+          <div className="mt-1 text-[10px] md:text-[11px] text-muted-foreground capitalize">
             {dateStr} · <span className="text-foreground/80 tabular-nums">{timeStr}</span>
           </div>
         </div>
       </div>
 
-      <div className="md:ml-auto flex-1 md:flex-initial md:w-[360px] relative">
+      <div className="hidden sm:block md:ml-auto flex-1 md:flex-initial md:w-[360px] relative order-3 md:order-none w-full sm:w-auto">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Buscar OS, cliente, técnico, cidade…"
@@ -67,7 +69,7 @@ export function AppHeader({ title = "Central Operacional" }: { title?: string })
         />
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 md:gap-2 ml-auto md:ml-0">
         <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full glass text-[11px]">
           <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--primary)]" />
           <span className="text-muted-foreground">Atualizado</span>
