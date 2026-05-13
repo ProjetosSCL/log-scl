@@ -6,11 +6,15 @@ import {
   CalendarClock,
   CalendarDays,
   Flame,
+  Focus,
   Gauge,
   ListChecks,
   MapPin,
+  Minimize2,
   Users,
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 
 import { KpiCard } from "@/components/dashboard/KpiCard";
 import { FiltersBar } from "@/components/dashboard/FiltersBar";
