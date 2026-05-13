@@ -182,9 +182,10 @@ function DashboardPage() {
           hint="Foco operacional"
         />
       </div>
+      )}
 
       {/* Main grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-3">
+      <div className={focusTable ? "grid grid-cols-1 gap-3" : "grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-3"}>
         <div className="space-y-3 min-w-0">
           <PivotTable filters={filters} onCellClick={openDrawer} />
 
