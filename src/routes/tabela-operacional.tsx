@@ -195,21 +195,30 @@ function TabelaOperacionalPage() {
         )}
 
         {focusTable && (
-          <div className="flex items-center justify-between gap-2">
-            <div className="text-[11px] text-muted-foreground tabular-nums">
-              <span className="font-semibold text-foreground">{filtered.length}</span> OS ·
-              <span className="ml-1 font-semibold text-foreground">{cidades}</span> cidades
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex-1 min-w-0">
+              <FiltersBar
+                filters={filters}
+                setFilters={setFilters}
+                only={["contratante", "prestador", "cidade"]}
+              />
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setFocusTable(false)}
-              className="h-8 md:h-9 gap-1.5 rounded-full border-primary/50 bg-primary/15 text-primary hover:bg-primary/20 px-2.5 md:px-3"
-              title="Sair do modo foco"
-            >
-              <Minimize2 className="h-3.5 w-3.5" />
-              <span className="text-[11px] md:text-xs">Sair do foco</span>
-            </Button>
+            <div className="flex items-center gap-2 shrink-0">
+              <div className="text-[11px] text-muted-foreground tabular-nums">
+                <span className="font-semibold text-foreground">{filtered.length}</span> OS ·
+                <span className="ml-1 font-semibold text-foreground">{cidades}</span> cidades
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setFocusTable(false)}
+                className="h-8 md:h-9 gap-1.5 rounded-full border-primary/50 bg-primary/15 text-primary hover:bg-primary/20 px-2.5 md:px-3"
+                title="Sair do modo foco"
+              >
+                <Minimize2 className="h-3.5 w-3.5" />
+                <span className="text-[11px] md:text-xs">Sair do foco</span>
+              </Button>
+            </div>
           </div>
         )}
 
