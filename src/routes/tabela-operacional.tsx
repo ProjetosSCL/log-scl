@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Camera, Maximize2, Minimize2, Rows3 } from "lucide-react";
+import { Camera, Focus, Maximize2, Minimize2, Rows3 } from "lucide-react";
 import { toPng } from "html-to-image";
 
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,7 @@ function TabelaOperacionalPage() {
   const [capturing, setCapturing] = useState(false);
   const [zoom, setZoom] = useState<80 | 90 | 100 | 110 | 120>(90);
   const [compact, setCompact] = useState(false);
+  const [focusTable, setFocusTable] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
 
@@ -106,79 +107,111 @@ function TabelaOperacionalPage() {
       ref={containerRef}
       className={
         isFullscreen
-          ? "fixed inset-0 z-50 flex flex-col gap-3 p-4 bg-background overflow-hidden animate-fade-in"
-          : "min-h-[calc(100dvh-7rem)] md:h-[calc(100dvh-7rem)] flex flex-col gap-3 animate-fade-in md:min-h-0"
+          ? "fixed inset-0 z-50 flex flex-col gap-2 md:gap-3 p-2 md:p-4 bg-background overflow-hidden animate-fade-in"
+          : "h-[calc(100dvh-7rem)] flex flex-col gap-2 md:gap-3 animate-fade-in"
       }
     >
       <PortalContainerProvider container={isFullscreen ? containerRef.current : null}>
-        <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex-1 min-w-0">
-            <FiltersBar filters={filters} setFilters={setFilters} />
+        {!focusTable && (
+          <div className="flex items-stretch md:items-center gap-2 flex-wrap">
+            <div className="flex-1 min-w-0 w-full md:w-auto order-1 md:order-none">
+              <FiltersBar filters={filters} setFilters={setFilters} />
+            </div>
+            <div className="flex items-center gap-1 rounded-full border border-border/60 bg-secondary/50 p-0.5 shrink-0 overflow-x-auto max-w-full">
+              {([80, 90, 100, 110, 120] as const).map((z) => (
+                <button
+                  key={z}
+                  type="button"
+                  onClick={() => setZoom(z)}
+                  className={
+                    "px-2 h-7 md:h-8 rounded-full text-[11px] md:text-xs font-medium transition-colors shrink-0 " +
+                    (zoom === z
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent/40")
+                  }
+                  title={`Zoom da tabela ${z}%`}
+                >
+                  {z}%
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="flex items-center gap-1 rounded-full border border-border/60 bg-secondary/50 p-0.5 shrink-0">
-            {([80, 90, 100, 110, 120] as const).map((z) => (
-              <button
-                key={z}
-                type="button"
-                onClick={() => setZoom(z)}
-                className={
-                  "px-2.5 h-8 rounded-full text-xs font-medium transition-colors " +
-                  (zoom === z
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent/40")
-                }
-                title={`Zoom da tabela ${z}%`}
-              >
-                {z}%
-              </button>
-            ))}
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCompact((v) => !v)}
-            className={
-              "h-9 gap-1.5 rounded-full px-3 shrink-0 " +
-              (compact
-                ? "border-primary/50 bg-primary/15 text-primary hover:bg-primary/20"
-                : "border-border/60 bg-secondary/50 hover:bg-accent/60")
-            }
-            title="Modo compacto: reduz o tamanho dos elementos"
-            aria-pressed={compact}
-          >
-            <Rows3 className="h-3.5 w-3.5" />
-            <span className="text-xs">Compacto</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleScreenshot}
-            disabled={capturing}
-            className="h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-3 shrink-0"
-            title="Baixar print da tabela (PNG)"
-          >
-            <Camera className="h-3.5 w-3.5" />
-            <span className="text-xs">{capturing ? "Gerando..." : "Print"}</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={toggleFullscreen}
-            className="h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-3 shrink-0"
-            title={isFullscreen ? "Sair da tela cheia (F)" : "Tela cheia (F)"}
-          >
-            {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
-            <span className="text-xs">{isFullscreen ? "Sair" : "Tela cheia"}</span>
-          </Button>
-        </div>
+        )}
 
-        <div className="flex items-center justify-between text-[11px] text-muted-foreground px-1">
-          <div>
-            <span className="font-semibold text-foreground tabular-nums">{filtered.length}</span> OS visíveis ·
-            <span className="ml-1 font-semibold text-foreground tabular-nums">{cidades}</span> cidades
+        {!focusTable && (
+          <div className="flex items-center gap-2 flex-wrap">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCompact((v) => !v)}
+              className={
+                "h-8 md:h-9 gap-1.5 rounded-full px-2.5 md:px-3 shrink-0 " +
+                (compact
+                  ? "border-primary/50 bg-primary/15 text-primary hover:bg-primary/20"
+                  : "border-border/60 bg-secondary/50 hover:bg-accent/60")
+              }
+              title="Modo compacto: reduz o tamanho dos elementos"
+              aria-pressed={compact}
+            >
+              <Rows3 className="h-3.5 w-3.5" />
+              <span className="text-[11px] md:text-xs">Compacto</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setFocusTable(true)}
+              className="h-8 md:h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-2.5 md:px-3 shrink-0"
+              title="Foco na tabela: oculta filtros e barra superior"
+            >
+              <Focus className="h-3.5 w-3.5" />
+              <span className="text-[11px] md:text-xs">Foco</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleScreenshot}
+              disabled={capturing}
+              className="h-8 md:h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-2.5 md:px-3 shrink-0"
+              title="Baixar print da tabela (PNG)"
+            >
+              <Camera className="h-3.5 w-3.5" />
+              <span className="text-[11px] md:text-xs">{capturing ? "…" : "Print"}</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={toggleFullscreen}
+              className="h-8 md:h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-2.5 md:px-3 shrink-0"
+              title={isFullscreen ? "Sair da tela cheia (F)" : "Tela cheia (F)"}
+            >
+              {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+              <span className="text-[11px] md:text-xs">{isFullscreen ? "Sair" : "Tela cheia"}</span>
+            </Button>
+            <div className="ml-auto text-[11px] text-muted-foreground tabular-nums">
+              <span className="font-semibold text-foreground">{filtered.length}</span> OS ·
+              <span className="ml-1 font-semibold text-foreground">{cidades}</span> cidades
+            </div>
           </div>
-          <div>Pressione <kbd className="px-1.5 py-0.5 rounded border border-border/60 bg-secondary/40 font-mono text-[10px]">F</kbd> para tela cheia · <span className="ml-1">botão Print baixa a tabela em PNG</span></div>
-        </div>
+        )}
+
+        {focusTable && (
+          <div className="flex items-center justify-between gap-2">
+            <div className="text-[11px] text-muted-foreground tabular-nums">
+              <span className="font-semibold text-foreground">{filtered.length}</span> OS ·
+              <span className="ml-1 font-semibold text-foreground">{cidades}</span> cidades
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setFocusTable(false)}
+              className="h-8 md:h-9 gap-1.5 rounded-full border-primary/50 bg-primary/15 text-primary hover:bg-primary/20 px-2.5 md:px-3"
+              title="Sair do modo foco"
+            >
+              <Minimize2 className="h-3.5 w-3.5" />
+              <span className="text-[11px] md:text-xs">Sair do foco</span>
+            </Button>
+          </div>
+        )}
 
         <div ref={tableRef} className="flex-1 min-h-0">
           <PivotTable filters={filters} onCellClick={openDrawer} fullHeight zoom={zoom} compact={compact} />
