@@ -189,6 +189,7 @@ function DashboardPage() {
         <div className="space-y-3 min-w-0">
           <PivotTable filters={filters} onCellClick={openDrawer} />
 
+          {!focusTable && (<>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <OsByCityBar data={byCity} />
             <DueByDayLine data={dueByDay} />
