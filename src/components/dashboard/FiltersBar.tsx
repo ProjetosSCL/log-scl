@@ -75,9 +75,11 @@ function MultiFilter({ label, options, value, onChange }: MultiProps) {
 interface Props {
   filters: Filters;
   setFilters: (f: Filters) => void;
+  only?: Key[];
 }
 
-export function FiltersBar({ filters, setFilters }: Props) {
+export function FiltersBar({ filters, setFilters, only }: Props) {
+  const show = (k: Key) => !only || only.includes(k);
   const { facets: FACETS } = useDataset();
   const set = <K extends Key>(k: K, v: Filters[K]) =>
     setFilters({ ...filters, [k]: v });
