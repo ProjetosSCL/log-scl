@@ -89,7 +89,29 @@ function DashboardPage() {
 
   return (
     <div className="space-y-3 animate-fade-in">
-      <FiltersBar filters={filters} setFilters={setFilters} />
+      <div className="flex items-center gap-2">
+        {!focusTable && (
+          <div className="flex-1 min-w-0">
+            <FiltersBar filters={filters} setFilters={setFilters} />
+          </div>
+        )}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setFocusTable((v) => !v)}
+          className={
+            "h-9 gap-1.5 rounded-full px-3 shrink-0 ml-auto " +
+            (focusTable
+              ? "border-primary/50 bg-primary/15 text-primary hover:bg-primary/20"
+              : "border-border/60 bg-secondary/50 hover:bg-accent/60")
+          }
+          title="Foco na tabela: recolhe filtros e painéis laterais"
+          aria-pressed={focusTable}
+        >
+          {focusTable ? <Minimize2 className="h-3.5 w-3.5" /> : <Focus className="h-3.5 w-3.5" />}
+          <span className="text-xs">{focusTable ? "Sair do foco" : "Foco na tabela"}</span>
+        </Button>
+      </div>
 
       {/* KPIs */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
