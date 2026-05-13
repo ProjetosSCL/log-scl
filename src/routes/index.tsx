@@ -6,11 +6,15 @@ import {
   CalendarClock,
   CalendarDays,
   Flame,
+  Focus,
   Gauge,
   ListChecks,
   MapPin,
+  Minimize2,
   Users,
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 
 import { KpiCard } from "@/components/dashboard/KpiCard";
 import { FiltersBar } from "@/components/dashboard/FiltersBar";
@@ -62,6 +66,7 @@ function DashboardPage() {
   const [drawerDate, setDrawerDate] = useState<string | null>(null);
   const [drawerItems, setDrawerItems] = useState<OS[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [focusTable, setFocusTable] = useState(false);
 
   const { all } = useDataset();
   const filtered = useMemo(() => applyFilters(all, filters), [all, filters]);
@@ -84,9 +89,32 @@ function DashboardPage() {
 
   return (
     <div className="space-y-3 animate-fade-in">
-      <FiltersBar filters={filters} setFilters={setFilters} />
+      <div className="flex items-center gap-2">
+        {!focusTable && (
+          <div className="flex-1 min-w-0">
+            <FiltersBar filters={filters} setFilters={setFilters} />
+          </div>
+        )}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setFocusTable((v) => !v)}
+          className={
+            "h-9 gap-1.5 rounded-full px-3 shrink-0 ml-auto " +
+            (focusTable
+              ? "border-primary/50 bg-primary/15 text-primary hover:bg-primary/20"
+              : "border-border/60 bg-secondary/50 hover:bg-accent/60")
+          }
+          title="Foco na tabela: recolhe filtros e painéis laterais"
+          aria-pressed={focusTable}
+        >
+          {focusTable ? <Minimize2 className="h-3.5 w-3.5" /> : <Focus className="h-3.5 w-3.5" />}
+          <span className="text-xs">{focusTable ? "Sair do foco" : "Foco na tabela"}</span>
+        </Button>
+      </div>
 
       {/* KPIs */}
+      {!focusTable && (
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         <KpiCard
           label="Total de OS"
@@ -154,12 +182,14 @@ function DashboardPage() {
           hint="Foco operacional"
         />
       </div>
+      )}
 
       {/* Main grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-3">
+      <div className={focusTable ? "grid grid-cols-1 gap-3" : "grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-3"}>
         <div className="space-y-3 min-w-0">
           <PivotTable filters={filters} onCellClick={openDrawer} />
 
+          {!focusTable && (<>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <OsByCityBar data={byCity} />
             <DueByDayLine data={dueByDay} />
@@ -184,8 +214,10 @@ function DashboardPage() {
             subtitle="Distribuição de carga"
             data={rankTec}
           />
+          </>)}
         </div>
 
+        {!focusTable && (
         <div className="space-y-3">
           <InsightsPanel insights={insights} />
           <div className="rounded-2xl glass p-4">
@@ -208,6 +240,7 @@ function DashboardPage() {
             </div>
           </div>
         </div>
+        )}
       </div>
 
       <OsDrawer
