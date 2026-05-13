@@ -96,54 +96,63 @@ export function FiltersBar({ filters, setFilters, only }: Props) {
 
   return (
     <div className="rounded-2xl glass p-3 flex flex-wrap items-center gap-2">
+      {show("contratante") && (
       <MultiFilter
         label="Contratante"
         options={FACETS.contratantes}
         value={filters.contratante}
         onChange={(v) => set("contratante", v)}
-      />
+      />)}
+      {show("prestador") && (
       <MultiFilter
         label="Prestador"
         options={FACETS.prestadores}
         value={filters.prestador}
         onChange={(v) => set("prestador", v)}
-      />
+      />)}
+      {show("cidade") && (
       <MultiFilter
         label="Cidade"
         options={FACETS.cidades}
         value={filters.cidade}
         onChange={(v) => set("cidade", v)}
-      />
+      />)}
+      {show("estado") && (
       <MultiFilter
         label="Estado"
         options={FACETS.estados}
         value={filters.estado}
         onChange={(v) => set("estado", v)}
-      />
+      />)}
+      {show("regiao") && (
       <MultiFilter
         label="Região"
         options={FACETS.regioes}
         value={filters.regiao}
         onChange={(v) => set("regiao", v)}
-      />
+      />)}
+      {show("tecnico") && (
       <MultiFilter
         label="Técnico"
         options={FACETS.tecnicos}
         value={filters.tecnico}
         onChange={(v) => set("tecnico", v)}
-      />
+      />)}
+      {show("criticidade") && (
       <MultiFilter
         label="Criticidade"
         options={["vencido", "vence_hoje", "proximo", "saudavel"]}
         value={filters.criticidade as string[] | undefined}
         onChange={(v) => set("criticidade", v as Criticality[])}
-      />
+      />)}
+      {show("status") && (
       <MultiFilter
         label="Status"
         options={FACETS.status}
         value={filters.status as string[] | undefined}
         onChange={(v) => set("status", v as Status[])}
-      />
+      />)}
+      {show("emergencial") && (
       <Button
         variant="outline"
         size="sm"
@@ -160,7 +169,7 @@ export function FiltersBar({ filters, setFilters, only }: Props) {
           )}
         />
         Emergencial
-      </Button>
+      </Button>)}
 
       {totalActive > 0 && (
         <Button
