@@ -90,7 +90,15 @@ function DashboardPage() {
   return (
     <div className="space-y-3 animate-fade-in">
       <div className="flex items-center gap-2">
-        {!focusTable && (
+        {focusTable ? (
+          <div className="flex-1 min-w-0">
+            <FiltersBar
+              filters={filters}
+              setFilters={setFilters}
+              only={["contratante", "prestador", "cidade"]}
+            />
+          </div>
+        ) : (
           <div className="flex-1 min-w-0">
             <FiltersBar filters={filters} setFilters={setFilters} />
           </div>
