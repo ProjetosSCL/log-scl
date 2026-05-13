@@ -214,8 +214,10 @@ function DashboardPage() {
             subtitle="Distribuição de carga"
             data={rankTec}
           />
+          </>)}
         </div>
 
+        {!focusTable && (
         <div className="space-y-3">
           <InsightsPanel insights={insights} />
           <div className="rounded-2xl glass p-4">
