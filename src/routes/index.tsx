@@ -66,6 +66,7 @@ function DashboardPage() {
   const [drawerDate, setDrawerDate] = useState<string | null>(null);
   const [drawerItems, setDrawerItems] = useState<OS[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [focusTable, setFocusTable] = useState(false);
 
   const { all } = useDataset();
   const filtered = useMemo(() => applyFilters(all, filters), [all, filters]);
