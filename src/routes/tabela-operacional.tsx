@@ -168,7 +168,7 @@ function TabelaOperacionalPage() {
                 <button
                   key={z}
                   type="button"
-                  onClick={() => setZoom(z)}
+                  onClick={() => handleZoom(z)}
                   className={
                     "px-2 h-7 md:h-8 rounded-full text-[11px] md:text-xs font-medium transition-colors shrink-0 " +
                     (zoom === z
