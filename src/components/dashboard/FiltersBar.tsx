@@ -96,7 +96,7 @@ export function FiltersBar({ filters, setFilters, only, dense = false }: Props) 
     (filters.emergencial ? 1 : 0);
 
   return (
-    <div className="rounded-2xl glass p-3 flex flex-wrap items-center gap-2">
+    <div className={cn("rounded-2xl glass flex flex-wrap items-center", dense ? "p-1.5 gap-1" : "p-3 gap-2")}>
       {show("contratante") && (
       <MultiFilter
         label="Contratante"
