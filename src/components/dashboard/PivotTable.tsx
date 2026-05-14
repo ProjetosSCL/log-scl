@@ -31,16 +31,37 @@ interface Props {
 }
 
 function useOrientation() {
-  const [state, setState] = useState<{ isMobile: boolean; isPortrait: boolean }>(() => ({
-    isMobile: typeof window !== "undefined" && window.innerWidth < 768,
-    isPortrait: typeof window !== "undefined" && window.innerHeight > window.innerWidth,
-  }));
+  const [state, setState] = useState<{
+    isMobile: boolean;
+    isPortrait: boolean;
+    isMobileLandscape: boolean;
+    width: number;
+  }>(() => {
+    const w = typeof window !== "undefined" ? window.innerWidth : 1024;
+    const h = typeof window !== "undefined" ? window.innerHeight : 768;
+    const isMobile = w < 768;
+    // Mobile landscape: short height + wider than tall (covers phones rotated horizontally)
+    const isMobileLandscape = h <= 500 && w > h;
+    return {
+      isMobile: isMobile || isMobileLandscape,
+      isPortrait: h > w,
+      isMobileLandscape,
+      width: w,
+    };
+  });
   useEffect(() => {
-    const update = () =>
+    const update = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const isMobile = w < 768;
+      const isMobileLandscape = h <= 500 && w > h;
       setState({
-        isMobile: window.innerWidth < 768,
-        isPortrait: window.innerHeight > window.innerWidth,
+        isMobile: isMobile || isMobileLandscape,
+        isPortrait: h > w,
+        isMobileLandscape,
+        width: w,
       });
+    };
     update();
     window.addEventListener("resize", update);
     window.addEventListener("orientationchange", update);
@@ -56,7 +77,7 @@ export function PivotTable({ filters, onCellClick, fullHeight = false, zoom = 10
   const { all, dates: storeDates } = useDataset();
   const data = useMemo(() => applyFilters(all, filters), [all, filters]);
   const { cities, dates, matrix } = useMemo(() => getPivot(data, storeDates), [data, storeDates]);
-  const { isMobile, isPortrait } = useOrientation();
+  const { isMobile, isPortrait, isMobileLandscape, width } = useOrientation();
   const [hintDismissed, setHintDismissed] = useState(false);
 
   const totalsByCity = cities.map((c) =>
@@ -67,10 +88,25 @@ export function PivotTable({ filters, onCellClick, fullHeight = false, zoom = 10
   );
   const grandTotal = totalsByCity.reduce((a, b) => a + b, 0);
 
-  // Responsive sizing — never let city names get illegible
-  const cityMinW = compact ? 132 : isMobile ? 140 : 180;
-  const dateMinW = compact ? 48 : isMobile ? 56 : 64;
-  const cityFontPx = compact ? 13 : isMobile ? 13 : 14;
+  // Responsive sizing — landscape mobile widens the city column and
+  // stretches date cells to fill the available width.
+  const cityMinW = compact
+    ? isMobileLandscape ? 150 : 132
+    : isMobileLandscape ? 168 : isMobile ? 140 : 180;
+  const dateMinWBase = compact
+    ? isMobileLandscape ? 52 : 48
+    : isMobileLandscape ? 60 : isMobile ? 56 : 64;
+  const cityFontPx = compact
+    ? isMobileLandscape ? 13 : 13
+    : isMobileLandscape ? 14 : isMobile ? 13 : 14;
+  // In landscape, distribute remaining width across date columns so the table
+  // fills the viewport instead of leaving empty space on the right.
+  const dateMinW = isMobileLandscape && dates.length > 0
+    ? Math.max(
+        dateMinWBase,
+        Math.floor((width - cityMinW - (compact ? 56 : 72) - 16) / dates.length),
+      )
+    : dateMinWBase;
 
   const showLandscapeHint = isMobile && isPortrait && !hintDismissed && dates.length > 4;
 
