@@ -156,7 +156,12 @@ function TabelaOperacionalPage() {
         {!focusTable && (
           <div className="flex items-stretch md:items-center gap-2 flex-wrap">
             <div className="flex-1 min-w-0 w-full md:w-auto order-1 md:order-none">
-              <FiltersBar filters={filters} setFilters={setFilters} />
+              <FiltersBar
+                filters={filters}
+                setFilters={setFilters}
+                dense={isMobileLandscape}
+                only={isMobileLandscape ? ["contratante", "prestador", "cidade"] : undefined}
+              />
             </div>
             <div className="flex items-center gap-1 rounded-full border border-border/60 bg-secondary/50 p-0.5 shrink-0 overflow-x-auto max-w-full">
               {([80, 90, 100, 110, 120] as const).map((z) => (
