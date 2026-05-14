@@ -1,77 +1,62 @@
+## Plano de melhorias — Tabela operacional + visual global
 
-# Plano — Migrar dashboard para tema predominantemente branco
+### 1. Layout duas-colunas no mobile landscape (`PivotTable.tsx`)
 
-## Mudança principal
+Em `isMobileLandscape`, mudar o agrupamento das datas para reduzir o scroll horizontal:
+- Em vez de N colunas (uma por dia), agrupar duas datas consecutivas em uma única coluna composta, exibindo um mini sub-header com o par "DD/DD" e dois badges lado a lado dentro da célula. Isso corta a largura horizontal pela metade mantendo legibilidade.
+- A coluna Cidade fica fixa à esquerda com largura ampliada (≈180px) e fonte 14px.
+- Total da linha continua sticky à direita.
+- Em desktop e mobile portrait o layout atual (uma coluna por dia) é preservado.
 
-Inverter a estética de "dark glassmorphism" para "light glassmorphism premium", mantendo:
-- verde Stone (#00D959) como accent principal;
-- glassmorphism, blur, glow sutil e microinterações;
-- todas as cores de criticidade (vermelho/laranja/amarelo/verde) com leve ajuste para contraste em fundo claro;
-- toda a estrutura, componentes e dados existentes — só muda o sistema de cores.
+### 2. Sticky header otimizado para mobile landscape
 
-## Ajustes em `src/styles.css`
+- `<thead>` continua `sticky top-0` mas com `bg-background/85 backdrop-blur-md` e `box-shadow` inferior sutil para destacar do corpo durante scroll vertical.
+- Em landscape, reduzir altura do header (`py-0.5`) e usar duas linhas (par de datas em cima, "HOJE" embaixo se aplicável) para manter os dias sempre visíveis sem ocupar área.
+- Coluna Cidade do header ganha `z-30` (acima do z-20 da coluna corpo) garantindo canto superior esquerdo sempre limpo.
 
-Reescrever os tokens em `:root` para uma paleta light-first em oklch:
+### 3. Filtros otimizados para landscape (`tabela-operacional.tsx` + `FiltersBar.tsx`)
 
-- `--background`: branco quase puro com leve verde (`oklch(0.99 0.005 150)`)
-- `--foreground`: cinza-grafite escuro (`oklch(0.2 0.02 250)`)
-- `--surface` / `--card`: branco translúcido (`oklch(1 0 0 / 0.7)`)
-- `--surface-elevated`: branco mais opaco para drawer/modal (`oklch(1 0 0 / 0.85)`)
-- `--popover`: branco quase opaco (`oklch(1 0 0 / 0.96)`)
-- `--primary`: mantém Stone green `oklch(0.72 0.2 148)` (levemente mais escuro p/ contraste em branco)
-- `--primary-foreground`: branco
-- `--primary-glow`: verde claro
-- `--secondary`: cinza muito claro (`oklch(0.96 0.005 150)`)
-- `--muted-foreground`: cinza médio (`oklch(0.5 0.02 250)`)
-- `--border`: linha cinza sutil (`oklch(0.85 0.01 150 / 0.6)`)
-- Tokens de criticidade ajustados levemente (saturação maior para contrastar com branco):
-  - `--status-critical`, `--status-warning`, `--status-attention`, `--status-healthy`
-- Sombras: sombras suaves coloridas em vez de pretas pesadas
-  - `--shadow-glass: 0 8px 32px oklch(0.5 0.05 150 / 0.08), inset 0 1px 0 oklch(1 0 0 / 0.6)`
-  - `--shadow-glow: 0 0 30px oklch(0.78 0.21 148 / 0.25)`
-  - `--shadow-elevated: 0 20px 50px -20px oklch(0.5 0.05 150 / 0.18)`
-- `--gradient-bg`: fundo claro com halos verdes muito sutis
-  ```
-  radial-gradient(ellipse 80% 60% at 20% 0%, oklch(0.78 0.21 148 / 0.10), transparent 60%),
-  radial-gradient(ellipse 60% 50% at 90% 100%, oklch(0.7 0.15 200 / 0.08), transparent 60%),
-  oklch(0.985 0.005 150)
-  ```
-- `--gradient-glass`: branco translúcido sobre branco
-  ```
-  linear-gradient(135deg, oklch(1 0 0 / 0.55) 0%, oklch(1 0 0 / 0.25) 100%)
-  ```
-- Scrollbar: thumb cinza claro em vez de branco transparente.
-- Grid-bg: linhas cinza muito sutis (`oklch(0.5 0.02 150 / 0.05)`).
+- Detectar `isMobileLandscape` na rota e renderizar `FiltersBar` com `only={["contratante","prestador","cidade"]}` automaticamente (sem precisar entrar no modo foco).
+- A barra de ações (Compacto / Foco / Print / Tela cheia) colapsa em um único botão "⋯" com Popover em landscape, liberando espaço vertical.
+- `FiltersBar` ganha prop `dense` que reduz `p-3 → p-1.5`, gap, e altura dos chips para 7 unidades quando em landscape.
 
-Manter os mesmos nomes de variáveis para que nenhum componente precise mudar.
+### 4. Auto-zoom em landscape
 
-## Ajustes em `src/routes/__root.tsx`
+- Na página `tabela-operacional.tsx`, quando entra em `isMobileLandscape`, calcular zoom alvo: `clamp(80, floor((width - 16) / idealWidth * 100), 100)` onde `idealWidth = cityMinW + (dates.length/2) * pairColWidth + totalCol`.
+- Aplicar apenas se o usuário não tiver mexido manualmente no zoom (flag `userZoomed`). Resetar `userZoomed` ao sair do landscape.
+- Garante que cidade e badges fiquem legíveis sem necessidade de pinça.
 
-- Remover `className="dark"` do `<html>` (passar a usar light mode por padrão).
-- Mantém o resto da estrutura.
+### 5. Print apenas da tabela (`tabela-operacional.tsx`)
 
-## Ajustes pontuais nos componentes (mínimos)
+- `handleScreenshot` já usa `tableRef.current` via `toPng`, mas o `tableRef` envolve o wrapper `flex-1 min-h-0` que herda altura do container. Em fullscreen ele captura também áreas vazias.
+- Mover `tableRef` para envolver diretamente o `<div className="rounded-lg glass …">` interno do `PivotTable` via `forwardRef` exposto como `printRef`.
+- Adicionar opção `{ width: el.scrollWidth, height: el.scrollHeight }` em `toPng` para capturar a tabela inteira (incluindo conteúdo fora do viewport por scroll), gerando um PNG que mostra toda a matriz, não apenas a tela.
 
-Verificar e ajustar onde houver dependência implícita de fundo escuro:
+### 6. Glassmorfismo global
 
-- **`charts.tsx`**:
-  - `tooltipStyle.background` → branco translúcido com borda cinza, texto escuro.
-  - `StatusDonut` `Pie.stroke` → branco em vez de verde-escuro do background.
-  - Cores das séries: manter (já legíveis em ambos os modos).
-- **`PivotTable.tsx`**: header sticky `bg-background/40 backdrop-blur` — funciona em branco também, mas aumentar opacidade para 60–70% para garantir leitura.
-- **`OsDrawer.tsx`**: header sticky idem; verificar contraste das badges de criticidade (já usam `/15` opacidade — ok em branco).
-- **`AppSidebar.tsx`** e **`AppHeader.tsx`**: classes `glass`/`glass-strong` já refletem os novos tokens, sem mudança necessária.
-- **`KpiCard`**: o "glow" colorido no canto continua funcionando; ajustar opacidade do gradient para 45% (em vez de 60%) p/ não estourar em fundo claro.
+- As classes `.glass` / `.glass-strong` já existem em `src/styles.css`. Reforçar visual aplicando-as consistentemente onde hoje há `bg-card`/`bg-secondary` puros:
+  - `KpiCard`, `InsightsPanel`, `OsDrawer` header/footer, `AppHeader`, `AppSidebar`, popover de filtros, botões de ação da toolbar.
+  - Aumentar `backdrop-blur` do token `.glass` de `blur(12px)` para `blur(16px) saturate(140%)` e adicionar borda interna `inset 0 1px 0 oklch(1 0 0 / 0.5)` para o brilho de vidro.
+- Adicionar nova classe utilitária `.glass-card` no `styles.css` para cards menores (sombra mais leve) e aplicar em chips/badges principais.
+- Manter performance: `will-change: backdrop-filter` apenas em containers grandes.
 
-## Hidratação
+### 7. Cidades em maiúsculo
 
-Aproveitar para corrigir o erro de hidratação atual no `AppHeader` (relógio renderizando hora diferente entre server e client): inicializar `now`/`lastUpdate` como `null` e só popular após `useEffect`, exibindo `--:--:--` no SSR. Isso elimina o warning de hydration mismatch.
+- Em `PivotTable.tsx`, na célula de cidade aplicar `className="… uppercase tracking-wide"` (CSS-only, sem mutar dados). Mesmo tratamento no `OsDrawer` (header da cidade) para consistência visual.
 
-## Resultado esperado
+### Arquivos afetados
 
-- Visual claro, premium, tipo Linear/Notion/Stripe em modo light, com sotaque verde Stone.
-- Cards e sidebar em vidro branco translúcido sobre fundo claro com halos verdes sutis.
-- Todo contraste preservado, status de criticidade ainda muito legíveis.
-- Zero mudança estrutural — só tokens + 4 ajustes pontuais.
+- `src/components/dashboard/PivotTable.tsx` — agrupamento landscape, sticky header reforçado, uppercase cidade, expor ref para print.
+- `src/components/dashboard/FiltersBar.tsx` — prop `dense`.
+- `src/routes/tabela-operacional.tsx` — auto-foco filtros em landscape, auto-zoom, ref de print, toolbar colapsável.
+- `src/components/dashboard/OsDrawer.tsx` — uppercase cidade + glass reforçado.
+- `src/styles.css` — `.glass` reforçado + `.glass-card`.
+- `src/components/dashboard/KpiCard.tsx`, `InsightsPanel.tsx`, `layout/AppHeader.tsx`, `layout/AppSidebar.tsx` — aplicação consistente de `.glass`.
 
-Confirma para aplicar?
+### Pontos de atenção
+
+- O agrupamento de duas datas só ativa quando `dates.length >= 4` em landscape (com 2-3 datas mantém colunas individuais).
+- Auto-zoom respeita override manual do usuário.
+- Print em PNG de tabela longa pode gerar imagem alta — aceitável e melhor que cortar.
+
+Confirma para implementar?
