@@ -99,11 +99,19 @@ function TabelaOperacionalPage() {
     if (!tableRef.current) return;
     setCapturing(true);
     try {
-      const bg = getComputedStyle(document.body).backgroundColor || "#0b0b0f";
-      const dataUrl = await toPng(tableRef.current, {
+      const bg = getComputedStyle(document.body).backgroundColor || "#ffffff";
+      const el = tableRef.current;
+      const w = Math.max(el.scrollWidth, el.clientWidth);
+      const h = Math.max(el.scrollHeight, el.clientHeight);
+      const dataUrl = await toPng(el, {
         cacheBust: true,
         pixelRatio: 2,
         backgroundColor: bg,
+        width: w,
+        height: h,
+        canvasWidth: w,
+        canvasHeight: h,
+        style: { transform: "none" },
       });
       const link = document.createElement("a");
       const ts = new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-");
