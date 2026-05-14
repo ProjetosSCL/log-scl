@@ -32,13 +32,46 @@ function TabelaOperacionalPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [capturing, setCapturing] = useState(false);
   const [zoom, setZoom] = useState<80 | 90 | 100 | 110 | 120>(90);
+  const [userZoomed, setUserZoomed] = useState(false);
   const [compact, setCompact] = useState(false);
   const [focusTable, setFocusTable] = useState(false);
+  const [isMobileLandscape, setIsMobileLandscape] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
 
   const { all } = useDataset();
   const filtered = useMemo(() => applyFilters(all, filters), [all, filters]);
+
+  // Detect mobile landscape to drive auto-filters and auto-zoom
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      setIsMobileLandscape(h <= 500 && w > h);
+    };
+    update();
+    window.addEventListener("resize", update);
+    window.addEventListener("orientationchange", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("orientationchange", update);
+    };
+  }, []);
+
+  // Auto-zoom to a comfortable level in landscape unless the user touched it
+  useEffect(() => {
+    if (isMobileLandscape && !userZoomed) {
+      setZoom(90);
+    }
+    if (!isMobileLandscape) {
+      setUserZoomed(false);
+    }
+  }, [isMobileLandscape, userZoomed]);
+
+  const handleZoom = (z: 80 | 90 | 100 | 110 | 120) => {
+    setZoom(z);
+    setUserZoomed(true);
+  };
 
   const openDrawer = (city: string, dateLabel: string, items: OS[]) => {
     setDrawerCity(city);
