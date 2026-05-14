@@ -76,9 +76,10 @@ interface Props {
   filters: Filters;
   setFilters: (f: Filters) => void;
   only?: Key[];
+  dense?: boolean;
 }
 
-export function FiltersBar({ filters, setFilters, only }: Props) {
+export function FiltersBar({ filters, setFilters, only, dense = false }: Props) {
   const show = (k: Key) => !only || only.includes(k);
   const { facets: FACETS } = useDataset();
   const set = <K extends Key>(k: K, v: Filters[K]) =>
