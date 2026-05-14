@@ -31,16 +31,37 @@ interface Props {
 }
 
 function useOrientation() {
-  const [state, setState] = useState<{ isMobile: boolean; isPortrait: boolean }>(() => ({
-    isMobile: typeof window !== "undefined" && window.innerWidth < 768,
-    isPortrait: typeof window !== "undefined" && window.innerHeight > window.innerWidth,
-  }));
+  const [state, setState] = useState<{
+    isMobile: boolean;
+    isPortrait: boolean;
+    isMobileLandscape: boolean;
+    width: number;
+  }>(() => {
+    const w = typeof window !== "undefined" ? window.innerWidth : 1024;
+    const h = typeof window !== "undefined" ? window.innerHeight : 768;
+    const isMobile = w < 768;
+    // Mobile landscape: short height + wider than tall (covers phones rotated horizontally)
+    const isMobileLandscape = h <= 500 && w > h;
+    return {
+      isMobile: isMobile || isMobileLandscape,
+      isPortrait: h > w,
+      isMobileLandscape,
+      width: w,
+    };
+  });
   useEffect(() => {
-    const update = () =>
+    const update = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const isMobile = w < 768;
+      const isMobileLandscape = h <= 500 && w > h;
       setState({
-        isMobile: window.innerWidth < 768,
-        isPortrait: window.innerHeight > window.innerWidth,
+        isMobile: isMobile || isMobileLandscape,
+        isPortrait: h > w,
+        isMobileLandscape,
+        width: w,
       });
+    };
     update();
     window.addEventListener("resize", update);
     window.addEventListener("orientationchange", update);
