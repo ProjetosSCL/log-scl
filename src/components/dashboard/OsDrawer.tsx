@@ -70,7 +70,7 @@ export function OsDrawer({
             <Badge className="bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
               {items.length} OS
             </Badge>
-            <Badge variant="outline" className="border-border/60 text-muted-foreground">
+            <Badge variant="outline" className="border-border/60 text-muted-foreground uppercase tracking-wide">
               <MapPin className="h-3 w-3 mr-1" />
               {city}
             </Badge>

@@ -32,13 +32,46 @@ function TabelaOperacionalPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [capturing, setCapturing] = useState(false);
   const [zoom, setZoom] = useState<80 | 90 | 100 | 110 | 120>(90);
+  const [userZoomed, setUserZoomed] = useState(false);
   const [compact, setCompact] = useState(false);
   const [focusTable, setFocusTable] = useState(false);
+  const [isMobileLandscape, setIsMobileLandscape] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const tableRef = useRef<HTMLDivElement>(null);
 
   const { all } = useDataset();
   const filtered = useMemo(() => applyFilters(all, filters), [all, filters]);
+
+  // Detect mobile landscape to drive auto-filters and auto-zoom
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      setIsMobileLandscape(h <= 500 && w > h);
+    };
+    update();
+    window.addEventListener("resize", update);
+    window.addEventListener("orientationchange", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("orientationchange", update);
+    };
+  }, []);
+
+  // Auto-zoom to a comfortable level in landscape unless the user touched it
+  useEffect(() => {
+    if (isMobileLandscape && !userZoomed) {
+      setZoom(90);
+    }
+    if (!isMobileLandscape) {
+      setUserZoomed(false);
+    }
+  }, [isMobileLandscape, userZoomed]);
+
+  const handleZoom = (z: 80 | 90 | 100 | 110 | 120) => {
+    setZoom(z);
+    setUserZoomed(true);
+  };
 
   const openDrawer = (city: string, dateLabel: string, items: OS[]) => {
     setDrawerCity(city);
@@ -66,11 +99,19 @@ function TabelaOperacionalPage() {
     if (!tableRef.current) return;
     setCapturing(true);
     try {
-      const bg = getComputedStyle(document.body).backgroundColor || "#0b0b0f";
-      const dataUrl = await toPng(tableRef.current, {
+      const bg = getComputedStyle(document.body).backgroundColor || "#ffffff";
+      const el = tableRef.current;
+      const w = Math.max(el.scrollWidth, el.clientWidth);
+      const h = Math.max(el.scrollHeight, el.clientHeight);
+      const dataUrl = await toPng(el, {
         cacheBust: true,
         pixelRatio: 2,
         backgroundColor: bg,
+        width: w,
+        height: h,
+        canvasWidth: w,
+        canvasHeight: h,
+        style: { transform: "none" },
       });
       const link = document.createElement("a");
       const ts = new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-");
@@ -115,14 +156,19 @@ function TabelaOperacionalPage() {
         {!focusTable && (
           <div className="flex items-stretch md:items-center gap-2 flex-wrap">
             <div className="flex-1 min-w-0 w-full md:w-auto order-1 md:order-none">
-              <FiltersBar filters={filters} setFilters={setFilters} />
+              <FiltersBar
+                filters={filters}
+                setFilters={setFilters}
+                dense={isMobileLandscape}
+                only={isMobileLandscape ? ["contratante", "prestador", "cidade"] : undefined}
+              />
             </div>
             <div className="flex items-center gap-1 rounded-full border border-border/60 bg-secondary/50 p-0.5 shrink-0 overflow-x-auto max-w-full">
               {([80, 90, 100, 110, 120] as const).map((z) => (
                 <button
                   key={z}
                   type="button"
-                  onClick={() => setZoom(z)}
+                  onClick={() => handleZoom(z)}
                   className={
                     "px-2 h-7 md:h-8 rounded-full text-[11px] md:text-xs font-medium transition-colors shrink-0 " +
                     (zoom === z
@@ -222,8 +268,15 @@ function TabelaOperacionalPage() {
           </div>
         )}
 
-        <div ref={tableRef} className="flex-1 min-h-0">
-          <PivotTable filters={filters} onCellClick={openDrawer} fullHeight zoom={zoom} compact={compact} />
+        <div className="flex-1 min-h-0">
+          <PivotTable
+            ref={tableRef}
+            filters={filters}
+            onCellClick={openDrawer}
+            fullHeight
+            zoom={zoom}
+            compact={compact}
+          />
         </div>
 
         <OsDrawer

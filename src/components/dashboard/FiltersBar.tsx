@@ -76,9 +76,10 @@ interface Props {
   filters: Filters;
   setFilters: (f: Filters) => void;
   only?: Key[];
+  dense?: boolean;
 }
 
-export function FiltersBar({ filters, setFilters, only }: Props) {
+export function FiltersBar({ filters, setFilters, only, dense = false }: Props) {
   const show = (k: Key) => !only || only.includes(k);
   const { facets: FACETS } = useDataset();
   const set = <K extends Key>(k: K, v: Filters[K]) =>
@@ -95,7 +96,7 @@ export function FiltersBar({ filters, setFilters, only }: Props) {
     (filters.emergencial ? 1 : 0);
 
   return (
-    <div className="rounded-2xl glass p-3 flex flex-wrap items-center gap-2">
+    <div className={cn("rounded-2xl glass flex flex-wrap items-center", dense ? "p-1.5 gap-1" : "p-3 gap-2")}>
       {show("contratante") && (
       <MultiFilter
         label="Contratante"
