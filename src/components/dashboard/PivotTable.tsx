@@ -166,7 +166,8 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
             <tr className="border-b border-border">
               <th
                 className={cn(
-                  "text-left font-semibold text-foreground sticky left-0 bg-muted/80 backdrop-blur z-30 border-r border-border shadow-[2px_0_4px_-2px_oklch(0.4_0.04_150/0.18)]",
+                  "text-left font-semibold text-primary-foreground sticky left-0 z-30 border-r border-primary/30 shadow-[2px_0_4px_-2px_oklch(0.4_0.04_150/0.25)]",
+                  "bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.85),oklch(0.82_0.21_148/0.7))] backdrop-blur-md",
                   compact || isMobileLandscape ? "px-2 py-1" : "px-3 py-1.5",
                 )}
                 style={{ minWidth: cityMinW }}
@@ -226,13 +227,15 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
               >
                 <td
                   className={cn(
-                    "sticky left-0 bg-background/90 backdrop-blur z-10 group-hover/row:bg-accent/20 border-r border-border/60 shadow-[2px_0_4px_-2px_oklch(0.4_0.04_150/0.18)]",
+                    "sticky left-0 z-10 border-r border-primary/25 shadow-[2px_0_4px_-2px_oklch(0.4_0.04_150/0.18)]",
+                    "bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.18),oklch(0.82_0.21_148/0.1))] backdrop-blur-md",
+                    "group-hover/row:bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.28),oklch(0.82_0.21_148/0.18))]",
                     compact || isMobileLandscape ? "px-2 py-1" : "px-3 py-1.5",
                   )}
                   style={{ minWidth: cityMinW }}
                 >
                   <div
-                    className="font-semibold uppercase tracking-wide truncate"
+                    className="font-semibold uppercase tracking-wide truncate text-primary"
                     style={{ fontSize: cityFontPx, maxWidth: cityMinW - 16 }}
                     title={city}
                   >
@@ -314,7 +317,8 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
             <tr className="border-t-2 border-border bg-muted/80 backdrop-blur">
               <td
                 className={cn(
-                  "font-bold sticky left-0 bg-muted/85 backdrop-blur z-20 border-r border-border",
+                  "font-bold sticky left-0 z-20 border-r border-primary/30 text-primary-foreground",
+                  "bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.9),oklch(0.82_0.21_148/0.75))] backdrop-blur-md",
                   compact || isMobileLandscape ? "px-2 py-1.5 text-xs" : "px-3 py-2 text-sm",
                 )}
                 style={{ minWidth: cityMinW }}
