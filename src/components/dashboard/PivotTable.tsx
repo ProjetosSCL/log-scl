@@ -321,8 +321,9 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
             <tr className="border-t-2 border-border bg-muted/80 backdrop-blur">
               <td
                 className={cn(
-                  "font-bold sticky left-0 z-20 border-r border-primary/30 text-primary-foreground",
-                  "bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.9),oklch(0.82_0.21_148/0.75))] backdrop-blur-md",
+                  "font-bold sticky left-0 z-20 text-primary",
+                  "bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.18),oklch(0.82_0.21_148/0.1))] backdrop-blur-xl",
+                  "shadow-[inset_3px_0_0_oklch(0.7_0.2_148/0.7),inset_-1px_0_0_oklch(0.7_0.2_148/0.2),2px_0_8px_-4px_oklch(0.4_0.04_150/0.2)]",
                   compact || isMobileLandscape ? "px-2 py-1.5 text-xs" : "px-3 py-2 text-sm",
                 )}
                 style={{ minWidth: cityMinW }}
