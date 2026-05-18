@@ -166,9 +166,11 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
             <tr className="border-b border-border">
               <th
                 className={cn(
-                  "text-left font-semibold text-primary-foreground sticky left-0 z-30 border-r border-primary/30 shadow-[2px_0_4px_-2px_oklch(0.4_0.04_150/0.25)]",
-                  "bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.85),oklch(0.82_0.21_148/0.7))] backdrop-blur-md",
-                  compact || isMobileLandscape ? "px-2 py-1" : "px-3 py-1.5",
+                  "text-left font-semibold sticky left-0 z-30",
+                  "border-r border-primary/20 text-primary",
+                  "bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.12),oklch(0.82_0.21_148/0.06))] backdrop-blur-xl",
+                  "shadow-[inset_-1px_0_0_oklch(0.7_0.2_148/0.18),2px_0_8px_-4px_oklch(0.4_0.04_150/0.2)]",
+                  compact || isMobileLandscape ? "px-2 py-1 text-xs" : "px-3 py-1.5 text-sm",
                 )}
                 style={{ minWidth: cityMinW }}
               >
@@ -227,15 +229,17 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
               >
                 <td
                   className={cn(
-                    "sticky left-0 z-10 border-r border-primary/25 shadow-[2px_0_4px_-2px_oklch(0.4_0.04_150/0.18)]",
-                    "bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.18),oklch(0.82_0.21_148/0.1))] backdrop-blur-md",
-                    "group-hover/row:bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.28),oklch(0.82_0.21_148/0.18))]",
+                    "sticky left-0 z-10",
+                    "bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.08),oklch(0.82_0.21_148/0.03))] backdrop-blur-xl",
+                    "shadow-[inset_3px_0_0_oklch(0.7_0.2_148/0.55),inset_-1px_0_0_oklch(0.7_0.2_148/0.12),2px_0_6px_-4px_oklch(0.4_0.04_150/0.15)]",
+                    "group-hover/row:bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.16),oklch(0.82_0.21_148/0.08))]",
+                    "transition-colors",
                     compact || isMobileLandscape ? "px-2 py-1" : "px-3 py-1.5",
                   )}
                   style={{ minWidth: cityMinW }}
                 >
                   <div
-                    className="font-semibold uppercase tracking-wide truncate text-primary"
+                    className="font-semibold uppercase tracking-wide truncate text-foreground"
                     style={{ fontSize: cityFontPx, maxWidth: cityMinW - 16 }}
                     title={city}
                   >
