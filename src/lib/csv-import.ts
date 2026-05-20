@@ -114,6 +114,15 @@ const titleCase = (s: string) =>
 
 const truthy = (v: string) => /^(1|true|sim|s|yes|y|x)$/i.test(v.trim());
 
+// Trata valores "ruído" comuns em exports (".", "-", "N/A", etc.) como vazio.
+const cleanCell = (v: string) => {
+  const s = (v ?? "").trim();
+  if (!s) return "";
+  if (/^[.\-_–—\s]*$/.test(s)) return "";
+  if (/^(n\/?a|nao informado|não informado|null|none|sem)$/i.test(s)) return "";
+  return s;
+};
+
 export interface ParseResult {
   rows: RawRow[];
   errors: string[];
