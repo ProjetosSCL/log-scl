@@ -245,15 +245,26 @@ function RelatoriosPage() {
           )}
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 text-[11px]">
-            {Object.entries(pending.parsed.detectedColumns).map(([k, v]) => (
-              <div
-                key={k}
-                className="rounded-lg border border-border/60 bg-secondary/40 px-2.5 py-1.5"
-              >
-                <div className="text-muted-foreground">{k}</div>
-                <div className="font-medium truncate">{v}</div>
-              </div>
-            ))}
+            {Object.entries(pending.parsed.detectedColumns).map(([k, v]) => {
+              const missing = v === "—";
+              return (
+                <div
+                  key={k}
+                  className={
+                    "rounded-lg border px-2.5 py-1.5 " +
+                    (missing
+                      ? "border-status-warning/40 bg-status-warning/10 text-status-warning"
+                      : "border-border/60 bg-secondary/40")
+                  }
+                  title={missing ? "Coluna não encontrada no CSV — campo ficará vazio" : v}
+                >
+                  <div className={missing ? "text-status-warning/80" : "text-muted-foreground"}>
+                    {k}
+                  </div>
+                  <div className="font-medium truncate">{missing ? "não mapeada" : v}</div>
+                </div>
+              );
+            })}
           </div>
 
           <div className="overflow-auto rounded-xl border border-border/60 max-h-[280px]">
