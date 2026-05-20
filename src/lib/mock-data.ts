@@ -166,7 +166,7 @@ export function normalizeRows(rows: RawRow[]): { all: OS[]; refToday: Date; date
       tipoEquipamento: r.tipoEquipamento,
       servico: r.servico,
       grupoServico: r.grupoServico,
-      endereco: r.endereco || `${r.cidade} · ${r.estado}`,
+      endereco: r.endereco || "—",
       cidade: r.cidade,
       estado: r.estado,
       regiao: r.regiao,
