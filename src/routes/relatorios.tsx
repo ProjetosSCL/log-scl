@@ -45,7 +45,13 @@ function RelatoriosPage() {
     if (!file) return;
     setBusy(true);
     try {
-      const text = await file.text();
+      // Detect encoding — many BR ERP exports are latin1/windows-1252, not UTF-8.
+      const buf = await file.arrayBuffer();
+      const utf8 = new TextDecoder("utf-8", { fatal: false }).decode(buf);
+      // If UTF-8 decoding produced replacement chars, fallback to latin1.
+      const text = utf8.includes("\uFFFD")
+        ? new TextDecoder("windows-1252").decode(buf)
+        : utf8;
       const parsed = parseRelatorioCsv(text);
       setPending({ fileName: file.name, parsed });
       if (parsed.errors.length) {
