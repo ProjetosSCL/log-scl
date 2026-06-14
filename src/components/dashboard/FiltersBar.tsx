@@ -86,7 +86,7 @@ export function FiltersBar({ filters, setFilters, only, dense = false }: Props) 
     setFilters({ ...filters, [k]: v });
 
   const activeChips: { key: Key; values: string[] }[] = [];
-  (["contratante", "prestador", "cidade", "estado", "regiao", "tecnico", "criticidade", "status"] as Key[]).forEach((k) => {
+  ("contratante", "prestador", "cidade", "bairro", "estado", "regiao", "tecnico", "criticidade", "status" as Key[]).forEach((k) => {
     const v = filters[k] as string[] | undefined;
     if (v && v.length) activeChips.push({ key: k, values: v });
   });
