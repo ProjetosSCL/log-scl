@@ -247,6 +247,7 @@ export function parseRelatorioCsv(text: string): ParseResult {
     servico: get(r, cols.servico).toUpperCase(),
     grupoServico: get(r, cols.grupoServico).toUpperCase(),
     endereco: get(r, cols.endereco),
+    bairro: titleCase(get(r, cols.bairro)),
     cidade: titleCase(get(r, cols.cidade)),
     estado: get(r, cols.estado).toUpperCase(),
     regiao: get(r, cols.regiao).toUpperCase(),
