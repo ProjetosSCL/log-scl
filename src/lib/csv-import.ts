@@ -181,6 +181,7 @@ export function parseRelatorioCsv(text: string): ParseResult {
       "Local", "Local Atendimento", "Local de Atendimento",
     ),
     cidade: findCol(header, "Cidade", "Municipio", "Município"),
+    bairro: findCol(header, "Bairro", "Bairro Cliente", "Bairro Atendimento", "Vizinhança"),
     estado: findCol(header, "UF", "Estado"),
     regiao: findCol(header, "Regiao", "Região", "Faixa"),
     regiaoCode: findCol(header, "Codigo Regiao", "Código Região", "Cod Regiao", "Faixa Cod"),
