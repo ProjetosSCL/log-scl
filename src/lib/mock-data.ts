@@ -16,6 +16,7 @@ export interface OS {
   servico: string;
   grupoServico: string;
   endereco: string;
+  bairro: string;
   cidade: string;
   estado: string;
   regiao: string;
@@ -45,6 +46,7 @@ export interface RawRow {
   servico: string;
   grupoServico: string;
   endereco: string;
+  bairro: string;
   cidade: string;
   estado: string;
   regiao: string;
@@ -167,6 +169,7 @@ export function normalizeRows(rows: RawRow[]): { all: OS[]; refToday: Date; date
       servico: r.servico,
       grupoServico: r.grupoServico,
       endereco: r.endereco || "—",
+      bairro: r.bairro || "—",
       cidade: r.cidade,
       estado: r.estado,
       regiao: r.regiao,
@@ -194,6 +197,7 @@ export interface Filters {
   contratante?: string[];
   prestador?: string[];
   cidade?: string[];
+  bairro?: string[];
   estado?: string[];
   regiao?: string[];
   tecnico?: string[];
@@ -207,6 +211,7 @@ export function applyFilters(data: OS[], f: Filters): OS[] {
     if (f.contratante?.length && !f.contratante.includes(o.contratante)) return false;
     if (f.prestador?.length && !f.prestador.includes(o.prestador)) return false;
     if (f.cidade?.length && !f.cidade.includes(o.cidade)) return false;
+    if (f.bairro?.length && !f.bairro.includes(o.bairro)) return false;
     if (f.estado?.length && !f.estado.includes(o.estado)) return false;
     if (f.regiao?.length && !f.regiao.includes(o.regiao)) return false;
     if (f.tecnico?.length && !f.tecnico.includes(o.tecnico)) return false;
@@ -397,6 +402,7 @@ export interface Facets {
   contratantes: string[];
   prestadores: string[];
   cidades: string[];
+  bairros: string[];
   estados: string[];
   regioes: string[];
   tecnicos: string[];
@@ -408,6 +414,7 @@ export function computeFacets(all: OS[]): Facets {
     contratantes: uniq(all.map((o) => o.contratante)),
     prestadores: uniq(all.map((o) => o.prestador)),
     cidades: uniq(all.map((o) => o.cidade)),
+    bairros: uniq(all.map((o) => o.bairro).filter((b) => b && b !== "—")),
     estados: uniq(all.map((o) => o.estado)),
     regioes: uniq(all.map((o) => o.regiao)),
     tecnicos: uniq(
