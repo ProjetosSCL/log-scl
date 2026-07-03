@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Camera, Focus, Maximize2, Minimize2, Rows3 } from "lucide-react";
+import { Camera, Focus, Maximize2, Minimize2, Rows3, Share2 } from "lucide-react";
 import { toPng } from "html-to-image";
 
 import { Button } from "@/components/ui/button";
 import { FiltersBar } from "@/components/dashboard/FiltersBar";
 import { PivotTable } from "@/components/dashboard/PivotTable";
 import { OsDrawer } from "@/components/dashboard/OsDrawer";
+import { BatchExportDialog } from "@/components/dashboard/BatchExportDialog";
 import { applyFilters, useDataset, type Filters, type OS } from "@/lib/mock-data";
 import { PortalContainerProvider } from "@/lib/portal-container";
 
