@@ -300,6 +300,8 @@ function TabelaOperacionalPage() {
           selectedId={selectedId}
           setSelectedId={setSelectedId}
         />
+
+        <BatchExportDialog open={batchOpen} onOpenChange={setBatchOpen} filters={filters} />
       </PortalContainerProvider>
     </div>
   );
