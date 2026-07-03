@@ -26,6 +26,7 @@ export const Route = createFileRoute("/tabela-operacional")({
 function TabelaOperacionalPage() {
   const [filters, setFilters] = useState<Filters>({});
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [batchOpen, setBatchOpen] = useState(false);
   const [drawerCity, setDrawerCity] = useState<string | null>(null);
   const [drawerDate, setDrawerDate] = useState<string | null>(null);
   const [drawerItems, setDrawerItems] = useState<OS[]>([]);
