@@ -228,6 +228,16 @@ function TabelaOperacionalPage() {
             <Button
               variant="outline"
               size="sm"
+              onClick={() => setBatchOpen(true)}
+              className="h-8 md:h-9 gap-1.5 rounded-full border-primary/50 bg-primary/10 text-primary hover:bg-primary/20 px-2.5 md:px-3 shrink-0"
+              title="Gerar prints por Contratante × Prestador e compartilhar no WhatsApp"
+            >
+              <Share2 className="h-3.5 w-3.5" />
+              <span className="text-[11px] md:text-xs">Exportar prints</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={toggleFullscreen}
               className="h-8 md:h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-2.5 md:px-3 shrink-0"
               title={isFullscreen ? "Sair da tela cheia (F)" : "Tela cheia (F)"}
