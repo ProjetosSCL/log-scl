@@ -1,57 +1,59 @@
-## Diagnóstico
 
-No print do drawer:
-- **Endereço:** "Paracatu · MG" → é o fallback `${cidade} · ${estado}` aplicado em `normalizeRows` quando `r.endereco` vem vazio.
-- **Técnico:** "Não atribuído" → fallback de `csv-import.ts` quando a coluna não é encontrada.
-- **Serviço:** "." e **Grupo Serviço** vazio → coluna não mapeada ou valor literal "." na origem.
-- **Prestador:** "Mg - Paracatu Fra…" → truncado mas plausível.
+## Objetivo
 
-Causa raiz: `parseRelatorioCsv` em `src/lib/csv-import.ts` reconhece apenas uma lista curta de nomes de cabeçalho por campo. Cabeçalhos comuns em exportações de relatório de OS (Logradouro, Rua, Endereço Cliente, Técnico Responsável, Nome Técnico, Tipo Serviço, Tipo de Serviço, Grupo de Serviço, Empresa Prestadora, Polo Atendimento etc.) não estão na lista, então `findCol` retorna -1 e o valor sai vazio.
+Automatizar a rotina diária: em vez de aplicar filtros e tirar print manualmente para cada par Contratante × Prestador, gerar todos os prints de uma vez a partir da Tabela Operacional e compartilhar direto no WhatsApp.
 
-Não há bug de renderização no `OsDrawer` — ele exibe corretamente o que existe no objeto OS. O conserto é no import.
+## Fluxo do usuário
 
-## Plano
+1. Na **Tabela Operacional**, clicar no novo botão **"Exportar prints"** (ao lado de *Print* / *Tela cheia*).
+2. Abre um modal **"Prints diários"** listando todas as combinações Contratante × Prestador detectadas nos dados filtrados atualmente (respeita filtros de data/cidade já aplicados).
+3. Cada linha do modal mostra:
+   - Checkbox (marcada por padrão)
+   - Contratante — Prestador
+   - Quantidade de OS
+   - Miniatura pequena da tabela gerada
+4. Botões no rodapé:
+   - **Gerar prints** → renderiza as imagens em memória e habilita as ações abaixo
+   - **Compartilhar no WhatsApp** (aparece após gerar)
+   - **Baixar todos (.zip)** como alternativa
+5. Ao clicar em **Compartilhar no WhatsApp**:
+   - **Mobile / navegadores com Web Share API de arquivos** (Chrome Android, Safari iOS): abre a folha nativa de compartilhamento com todas as imagens anexadas → escolher WhatsApp → escolher contato/grupo → enviar (1 toque final).
+   - **Desktop**: abre um assistente passo-a-passo. Para cada par:
+     - Imagem copiada automaticamente para o clipboard
+     - Botão "Abrir WhatsApp Web" (`https://web.whatsapp.com/`) e instrução: colar (Ctrl/Cmd+V) no chat desejado
+     - Botão "Próxima" avança para a próxima imagem
+   - Motivo: a API do WhatsApp Web não aceita anexar imagens via URL; clipboard + colar é a forma mais rápida sem extensão.
 
-### 1. Ampliar candidatos de cabeçalho em `src/lib/csv-import.ts`
+## Geração das imagens
 
-Adicionar sinônimos comuns para cada campo crítico em `findCol(...)`:
+- Reaproveitar o `PivotTable` existente renderizado num container off-screen (posição fixa fora da viewport, mesma largura da tabela em foco).
+- Para cada par selecionado:
+  - Aplicar filtros `contratante=[X], prestador=[Y]` combinados com os filtros já ativos.
+  - Renderizar, aguardar layout (`requestAnimationFrame` duplo), capturar com `html-to-image` `toPng` (mesmo helper já usado em `handleScreenshot`).
+  - Nome do arquivo: `CONTRATANTE-PRESTADOR-YYYY-MM-DD.png` (ex: `TON-MACAU-2026-07-03.png`).
+- Cabeçalho da imagem inclui o título "Contratante — Prestador" e a data, para casar com o formato dos prints atuais do WhatsApp.
 
-- **endereco:** `Endereço`, `Endereco`, `Logradouro`, `Rua`, `Endereço Cliente`, `Endereço Completo`, `Local`, `Local Atendimento`
-- **tecnico:** `Técnico`, `Tecnico`, `Tecnico Responsavel`, `Técnico Responsável`, `Nome Tecnico`, `Atendente`, `Responsavel`
-- **servico:** `Serviço`, `Servico`, `Tipo Servico`, `Tipo de Servico`, `Tipo Serviço`, `Descrição Serviço`, `Servico Solicitado`
-- **grupoServico:** `Grupo Servico`, `Grupo de Servico`, `Grupo Serviço`, `Grupo de Serviço`, `Categoria Serviço`, `Família Serviço`, `Familia`
-- **prestador:** `Prestador`, `Empresa Prestadora`, `Polo`, `Polo Atendimento`, `Parceiro`, `Fornecedor`
-- **contratante:** `Contratante`, `Cliente Contratante`, `Empresa Contratante`, `Tomador`
-- **observacoes:** acrescentar `Descrição`, `Descricao`, `Detalhes`, `Notas`
-- **dataLimite:** acrescentar `Data SLA`, `Prazo Limite`, `Data Vencimento`
-- **dataAtendimento:** acrescentar `Data Execução`, `Data Execucao`, `Data Visita`
+## Onde mudar
 
-### 2. Limpar valores "ruído" do CSV
+Arquivos novos:
+- `src/components/dashboard/BatchExportDialog.tsx` — modal, lista de pares, geração e ações de compartilhar/baixar.
+- `src/lib/batch-export.ts` — utilitários: enumerar pares, renderizar off-screen, `toPng`, empacotar em zip (`jszip`), Web Share API, clipboard.
 
-Em `csv-import.ts`, depois do `get(...)`:
-- Tratar `"."`, `"-"`, `"N/A"`, `"NA"`, `"--"` e strings só com pontuação como vazio (helper `cleanCell`).
-- Aplicar em `servico`, `grupoServico`, `endereco`, `observacoes`, `tecnico`, `prestador`.
+Arquivos alterados:
+- `src/routes/tabela-operacional.tsx` — novo botão "Exportar prints" na barra de ações; abre o dialog passando `filters` e `all`.
+- `package.json` — adicionar `jszip` (zip fallback).
 
-### 3. Melhorar fallback de endereço em `normalizeRows` (`src/lib/mock-data.ts`)
+Sem alterações em `mock-data`, filtros, ou lógica de negócio.
 
-- Se `r.endereco` está vazio, exibir `"—"` em vez de `${cidade} · ${estado}`. Assim o usuário percebe que a coluna não veio no CSV e não confunde com a Cidade/UF que já é mostrada ao lado no drawer.
+## Detalhes técnicos
 
-### 4. Feedback visível na importação (`src/routes/configuracoes.tsx` ou onde está o ImportCSV)
+- Detecção de suporte: `navigator.canShare?.({ files: [file] })` decide entre Web Share ou fluxo desktop.
+- Clipboard de imagem: `navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])`.
+- Off-screen render: portal para `<div style="position:fixed; left:-99999px; top:0; width:1280px">` para garantir largura consistente independente do zoom atual.
+- Progresso: barra "Gerando X de N…" durante a captura em lote.
+- Erros individuais não abortam o lote — par com erro é marcado com aviso e pulado.
 
-Já existe `detectedColumns` no `ParseResult`. Garantir que após importar, o toast/painel mostre claramente quais campos ficaram com "—" (não detectados), para o usuário renomear a coluna no CSV ou reimportar. Sem alterar layout — só reforçar a mensagem.
+## Limitações honestas (fora do escopo)
 
-### 5. Manter `OsDrawer` como está
-
-Sem mudanças funcionais; apenas valores corretos vão chegar nele.
-
-## Arquivos afetados
-
-- `src/lib/csv-import.ts` — ampliar `cols`, adicionar `cleanCell`.
-- `src/lib/mock-data.ts` — fallback de `endereco` para `"—"`.
-- `src/routes/configuracoes.tsx` (ou local do importador) — destacar campos não mapeados no resultado.
-
-## Observação
-
-Para validar 100% o mapeamento real, seria útil ver 1 linha de cabeçalho do CSV que está sendo importado. Mesmo sem isso, o aumento da cobertura de sinônimos cobre os formatos mais comuns de relatórios de OS no Brasil e resolve o caso do print.
-
-Confirma para implementar?
+- Não é possível abrir o WhatsApp Web já com imagem anexada — é uma restrição do próprio WhatsApp, sem workaround via navegador. O clipboard + colar é o mais próximo de "1 clique".
+- Envio 100% automatizado (sem clicar em "enviar" no WhatsApp) exigiria WhatsApp Business API, o que é um projeto separado — posso planejar depois se quiser.
