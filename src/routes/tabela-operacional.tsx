@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Camera, Focus, Maximize2, Minimize2, Rows3 } from "lucide-react";
+import { Camera, Focus, Maximize2, Minimize2, Rows3, Share2 } from "lucide-react";
 import { toPng } from "html-to-image";
 
 import { Button } from "@/components/ui/button";
 import { FiltersBar } from "@/components/dashboard/FiltersBar";
 import { PivotTable } from "@/components/dashboard/PivotTable";
 import { OsDrawer } from "@/components/dashboard/OsDrawer";
+import { BatchExportDialog } from "@/components/dashboard/BatchExportDialog";
 import { applyFilters, useDataset, type Filters, type OS } from "@/lib/mock-data";
 import { PortalContainerProvider } from "@/lib/portal-container";
 
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/tabela-operacional")({
 function TabelaOperacionalPage() {
   const [filters, setFilters] = useState<Filters>({});
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [batchOpen, setBatchOpen] = useState(false);
   const [drawerCity, setDrawerCity] = useState<string | null>(null);
   const [drawerDate, setDrawerDate] = useState<string | null>(null);
   const [drawerItems, setDrawerItems] = useState<OS[]>([]);
@@ -226,6 +228,16 @@ function TabelaOperacionalPage() {
             <Button
               variant="outline"
               size="sm"
+              onClick={() => setBatchOpen(true)}
+              className="h-8 md:h-9 gap-1.5 rounded-full border-primary/50 bg-primary/10 text-primary hover:bg-primary/20 px-2.5 md:px-3 shrink-0"
+              title="Gerar prints por Contratante × Prestador e compartilhar no WhatsApp"
+            >
+              <Share2 className="h-3.5 w-3.5" />
+              <span className="text-[11px] md:text-xs">Exportar prints</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={toggleFullscreen}
               className="h-8 md:h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-2.5 md:px-3 shrink-0"
               title={isFullscreen ? "Sair da tela cheia (F)" : "Tela cheia (F)"}
@@ -288,6 +300,8 @@ function TabelaOperacionalPage() {
           selectedId={selectedId}
           setSelectedId={setSelectedId}
         />
+
+        <BatchExportDialog open={batchOpen} onOpenChange={setBatchOpen} filters={filters} />
       </PortalContainerProvider>
     </div>
   );
