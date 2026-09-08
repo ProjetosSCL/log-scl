@@ -39,9 +39,7 @@ export function KpiCard({
         )}
       />
       <div className="relative flex items-start justify-between">
-        <div className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-          {label}
-        </div>
+        <div className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">{label}</div>
         <div
           className={cn(
             "h-8 w-8 grid place-items-center rounded-lg glass",
@@ -59,23 +57,15 @@ export function KpiCard({
           <div
             className={cn(
               "flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-md",
-              good
-                ? "text-primary bg-primary/10"
-                : "text-status-critical bg-status-critical/10",
+              good ? "text-primary bg-primary/10" : "text-status-critical bg-status-critical/10",
             )}
           >
-            {positive ? (
-              <TrendingUp className="h-3 w-3" />
-            ) : (
-              <TrendingDown className="h-3 w-3" />
-            )}
+            {positive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
             {Math.abs(delta).toFixed(1)}%
           </div>
         )}
       </div>
-      {hint && (
-        <div className="relative mt-1 text-[11px] text-muted-foreground">{hint}</div>
-      )}
+      {hint && <div className="relative mt-1 text-[11px] text-muted-foreground">{hint}</div>}
     </div>
   );
 }

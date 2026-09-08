@@ -11,6 +11,9 @@ export const Route = createFileRoute("/configuracoes")({
     ],
   }),
   component: () => (
-    <PlaceholderRoute title="Configurações" description="Preferências da operação, alertas e integrações." />
+    <PlaceholderRoute
+      title="Configurações"
+      description="Preferências da operação, alertas e integrações."
+    />
   ),
 });

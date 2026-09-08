@@ -104,22 +104,43 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
   }, [pairMode, dates]);
 
   const cityMinW = compact
-    ? isMobileLandscape ? 156 : 132
-    : isMobileLandscape ? 180 : isMobile ? 140 : 180;
+    ? isMobileLandscape
+      ? 156
+      : 132
+    : isMobileLandscape
+      ? 180
+      : isMobile
+        ? 140
+        : 180;
   const dateMinWBase = pairMode
-    ? compact ? 86 : 96
+    ? compact
+      ? 86
+      : 96
     : compact
-      ? isMobileLandscape ? 52 : 48
-      : isMobileLandscape ? 60 : isMobile ? 56 : 64;
+      ? isMobileLandscape
+        ? 52
+        : 48
+      : isMobileLandscape
+        ? 60
+        : isMobile
+          ? 56
+          : 64;
   const cityFontPx = compact
-    ? isMobileLandscape ? 13 : 13
-    : isMobileLandscape ? 14 : isMobile ? 13 : 14;
-  const dateMinW = isMobileLandscape && dateGroups.length > 0
-    ? Math.max(
-        dateMinWBase,
-        Math.floor((width - cityMinW - (compact ? 56 : 72) - 16) / dateGroups.length),
-      )
-    : dateMinWBase;
+    ? isMobileLandscape
+      ? 13
+      : 13
+    : isMobileLandscape
+      ? 14
+      : isMobile
+        ? 13
+        : 14;
+  const dateMinW =
+    isMobileLandscape && dateGroups.length > 0
+      ? Math.max(
+          dateMinWBase,
+          Math.floor((width - cityMinW - (compact ? 56 : 72) - 16) / dateGroups.length),
+        )
+      : dateMinWBase;
 
   const showLandscapeHint = isMobile && isPortrait && !hintDismissed && dates.length > 4;
 
@@ -181,7 +202,9 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
                   key={gi}
                   className={cn(
                     "font-semibold text-foreground text-center capitalize whitespace-nowrap border-r border-border/40",
-                    compact || isMobileLandscape ? "px-1 py-0.5 text-[10px]" : "px-2 py-1.5 text-xs",
+                    compact || isMobileLandscape
+                      ? "px-1 py-0.5 text-[10px]"
+                      : "px-2 py-1.5 text-xs",
                   )}
                   style={{ minWidth: dateMinW }}
                 >
@@ -202,7 +225,12 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
                     <>
                       {g.dates[0].label}
                       {g.dates[0].offset === 0 && (
-                        <div className={cn("text-primary font-bold leading-none mt-0.5", compact ? "text-[8px]" : "text-[10px]")}>
+                        <div
+                          className={cn(
+                            "text-primary font-bold leading-none mt-0.5",
+                            compact ? "text-[8px]" : "text-[10px]",
+                          )}
+                        >
                           HOJE
                         </div>
                       )}
@@ -276,34 +304,38 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
                               {items.length}
                             </button>
                           ) : (
-                            <span key={d.label} className="text-muted-foreground/30 min-w-[24px]">·</span>
+                            <span key={d.label} className="text-muted-foreground/30 min-w-[24px]">
+                              ·
+                            </span>
                           );
                         })}
                       </div>
-                    ) : (() => {
-                      const d = g.dates[0];
-                      const items = matrix[city]?.[d.label] ?? [];
-                      const crit = cellCriticality(items);
-                      return items.length > 0 ? (
-                        <button
-                          type="button"
-                          onClick={() => onCellClick(city, d.label, items)}
-                          className={cn(
-                            "rounded-md font-semibold tabular-nums transition-all touch-manipulation",
-                            compact
-                              ? "min-w-[26px] min-h-[24px] px-1.5 py-0.5 text-[11px]"
-                              : "min-w-[34px] min-h-[28px] px-2 py-0.5 text-sm",
-                            critClasses[crit],
-                            "hover:scale-[1.08] active:scale-95",
-                          )}
-                          title={`${items.length} OS — ${city} · ${d.label}`}
-                        >
-                          {items.length}
-                        </button>
-                      ) : (
-                        <span className="text-muted-foreground/30">·</span>
-                      );
-                    })()}
+                    ) : (
+                      (() => {
+                        const d = g.dates[0];
+                        const items = matrix[city]?.[d.label] ?? [];
+                        const crit = cellCriticality(items);
+                        return items.length > 0 ? (
+                          <button
+                            type="button"
+                            onClick={() => onCellClick(city, d.label, items)}
+                            className={cn(
+                              "rounded-md font-semibold tabular-nums transition-all touch-manipulation",
+                              compact
+                                ? "min-w-[26px] min-h-[24px] px-1.5 py-0.5 text-[11px]"
+                                : "min-w-[34px] min-h-[28px] px-2 py-0.5 text-sm",
+                              critClasses[crit],
+                              "hover:scale-[1.08] active:scale-95",
+                            )}
+                            title={`${items.length} OS — ${city} · ${d.label}`}
+                          >
+                            {items.length}
+                          </button>
+                        ) : (
+                          <span className="text-muted-foreground/30">·</span>
+                        );
+                      })()
+                    )}
                   </td>
                 ))}
                 <td

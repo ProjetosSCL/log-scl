@@ -74,9 +74,7 @@ function dayDiff(a: Date, b: Date) {
 }
 
 function fmtBR(d: Date) {
-  return d
-    .toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })
-    .replace(".", "");
+  return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" }).replace(".", "");
 }
 
 function classifyCriticality(limit: Date, status: string, refToday: Date): Criticality {
@@ -117,8 +115,8 @@ function buildDates(refToday: Date, rows: RawRow[]) {
   const limites = rows
     .map((r) => (r.dataLimite ? new Date(r.dataLimite).getTime() : 0))
     .filter((t) => t > 0);
-  let min = limites.length ? Math.min(...limites) : refToday.getTime();
-  let max = limites.length ? Math.max(...limites) : refToday.getTime();
+  const min = limites.length ? Math.min(...limites) : refToday.getTime();
+  const max = limites.length ? Math.max(...limites) : refToday.getTime();
   // Garante que "hoje" (refToday) sempre apareça e mostre pelo menos 1 dia antes
   const minD = startOfDay(new Date(Math.min(min, refToday.getTime() - 86400000)));
   const maxD = startOfDay(new Date(Math.max(max, refToday.getTime())));
@@ -133,7 +131,11 @@ function buildDates(refToday: Date, rows: RawRow[]) {
   return arr;
 }
 
-export function normalizeRows(rows: RawRow[]): { all: OS[]; refToday: Date; dates: { iso: string; label: string; offset: number }[] } {
+export function normalizeRows(rows: RawRow[]): {
+  all: OS[];
+  refToday: Date;
+  dates: { iso: string; label: string; offset: number }[];
+} {
   const refToday = computeRefToday(rows);
   const dates = buildDates(refToday, rows);
   const all: OS[] = rows.map((r) => {
@@ -236,8 +238,7 @@ export function getKpis(data: OS[]) {
   data
     .filter((o) => o.criticidade === "vencido" || o.criticidade === "vence_hoje")
     .forEach((o) => byPrest.set(o.prestador, (byPrest.get(o.prestador) || 0) + 1));
-  const prestadorCritico =
-    [...byPrest.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "—";
+  const prestadorCritico = [...byPrest.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "—";
 
   const byCity = new Map<string, number>();
   data
@@ -257,7 +258,10 @@ export function getKpis(data: OS[]) {
   };
 }
 
-export function getPivot(data: OS[], dates: { iso: string; label: string; offset: number }[] = getStore().dates) {
+export function getPivot(
+  data: OS[],
+  dates: { iso: string; label: string; offset: number }[] = getStore().dates,
+) {
   const totals = new Map<string, number>();
   data.forEach((o) => totals.set(o.cidade, (totals.get(o.cidade) || 0) + 1));
   const cities = [...totals.entries()].sort((a, b) => b[1] - a[1]).map(([c]) => c);
@@ -373,10 +377,7 @@ export function getOsByCity(data: OS[]) {
     .slice(0, 12);
 }
 
-export function getRanking(
-  data: OS[],
-  key: "prestador" | "cidade" | "tecnico",
-) {
+export function getRanking(data: OS[], key: "prestador" | "cidade" | "tecnico") {
   const m = new Map<string, { total: number; criticas: number }>();
   data.forEach((o) => {
     const k = o[key];
@@ -418,9 +419,7 @@ export function computeFacets(all: OS[]): Facets {
     estados: uniq(all.map((o) => o.estado)),
     regioes: uniq(all.map((o) => o.regiao)),
     tecnicos: uniq(
-      all
-        .map((o) => o.tecnico)
-        .filter((t) => t && t !== "Não atribuído" && t !== "Não Atribuído"),
+      all.map((o) => o.tecnico).filter((t) => t && t !== "Não atribuído" && t !== "Não Atribuído"),
     ),
     status: uniq(all.map((o) => o.status)),
   };
@@ -518,4 +517,3 @@ export function useDataset(): Snapshot {
 export function getDatasetSnapshot(): Snapshot {
   return snapshot;
 }
-

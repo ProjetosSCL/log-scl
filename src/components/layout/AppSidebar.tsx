@@ -42,9 +42,7 @@ export function AppSidebar() {
         </div>
         <div className="leading-tight">
           <div className="text-sm font-semibold tracking-tight">FieldOps</div>
-          <div className="text-[11px] text-muted-foreground">
-            Operações · Enterprise
-          </div>
+          <div className="text-[11px] text-muted-foreground">Operações · Enterprise</div>
         </div>
       </div>
 
@@ -65,9 +63,7 @@ export function AppSidebar() {
               className={cn(
                 "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all",
                 "hover:bg-accent/60 hover:translate-x-[1px]",
-                active
-                  ? "bg-accent/70 text-foreground"
-                  : "text-muted-foreground",
+                active ? "bg-accent/70 text-foreground" : "text-muted-foreground",
               )}
             >
               {active && (
@@ -91,9 +87,7 @@ export function AppSidebar() {
           <span className="h-2 w-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_var(--primary)]" />
           <span className="text-muted-foreground">Sistema operacional</span>
         </div>
-        <div className="mt-1 text-[11px] text-muted-foreground/80">
-          Todos os serviços online
-        </div>
+        <div className="mt-1 text-[11px] text-muted-foreground/80">Todos os serviços online</div>
       </div>
     </aside>
   );

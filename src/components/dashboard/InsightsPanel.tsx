@@ -23,9 +23,7 @@ export function InsightsPanel({ insights }: { insights: Insight[] }) {
         </div>
         <div>
           <div className="text-sm font-semibold">Insights inteligentes</div>
-          <div className="text-[11px] text-muted-foreground">
-            Sinais operacionais em tempo real
-          </div>
+          <div className="text-[11px] text-muted-foreground">Sinais operacionais em tempo real</div>
         </div>
       </div>
       <div className="space-y-2">

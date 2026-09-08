@@ -1,11 +1,10 @@
-
 ## Objetivo
 
 Automatizar a rotina diária: em vez de aplicar filtros e tirar print manualmente para cada par Contratante × Prestador, gerar todos os prints de uma vez a partir da Tabela Operacional e compartilhar direto no WhatsApp.
 
 ## Fluxo do usuário
 
-1. Na **Tabela Operacional**, clicar no novo botão **"Exportar prints"** (ao lado de *Print* / *Tela cheia*).
+1. Na **Tabela Operacional**, clicar no novo botão **"Exportar prints"** (ao lado de _Print_ / _Tela cheia_).
 2. Abre um modal **"Prints diários"** listando todas as combinações Contratante × Prestador detectadas nos dados filtrados atualmente (respeita filtros de data/cidade já aplicados).
 3. Cada linha do modal mostra:
    - Checkbox (marcada por padrão)
@@ -36,10 +35,12 @@ Automatizar a rotina diária: em vez de aplicar filtros e tirar print manualment
 ## Onde mudar
 
 Arquivos novos:
+
 - `src/components/dashboard/BatchExportDialog.tsx` — modal, lista de pares, geração e ações de compartilhar/baixar.
 - `src/lib/batch-export.ts` — utilitários: enumerar pares, renderizar off-screen, `toPng`, empacotar em zip (`jszip`), Web Share API, clipboard.
 
 Arquivos alterados:
+
 - `src/routes/tabela-operacional.tsx` — novo botão "Exportar prints" na barra de ações; abre o dialog passando `filters` e `all`.
 - `package.json` — adicionar `jszip` (zip fallback).
 

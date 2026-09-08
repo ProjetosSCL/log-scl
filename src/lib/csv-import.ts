@@ -66,7 +66,10 @@ function parseCsvText(text: string): { header: string[]; rows: string[][] } {
     out.push(row);
   }
   const header = out.shift() ?? [];
-  return { header: header.map((h) => h.trim()), rows: out.filter((r) => r.some((c) => c.trim() !== "")) };
+  return {
+    header: header.map((h) => h.trim()),
+    rows: out.filter((r) => r.some((c) => c.trim() !== "")),
+  };
 }
 
 const norm = (s: string) =>
@@ -97,8 +100,8 @@ function parseDate(v: string): string | null {
   // DD/MM/YYYY [HH:mm[:ss]]
   const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
   if (m) {
-    let [, dd, mm, yy, hh = "0", mi = "0", se = "0"] = m;
-    if (yy.length === 2) yy = (Number(yy) > 50 ? "19" : "20") + yy;
+    const [, dd, mm, rawYy, hh = "0", mi = "0", se = "0"] = m;
+    const yy = rawYy.length === 2 ? (Number(rawYy) > 50 ? "19" : "20") + rawYy : rawYy;
     const d = new Date(Number(yy), Number(mm) - 1, Number(dd), Number(hh), Number(mi), Number(se));
     return isNaN(d.getTime()) ? null : d.toISOString().slice(0, 19);
   }
@@ -136,8 +139,21 @@ export function parseRelatorioCsv(text: string): ParseResult {
   const cols = {
     numero: findCol(header, "Chamado", "Numero", "Número", "OS", "ID", "Codigo OS", "Código OS"),
     status: findCol(header, "Status", "Situacao", "Situação", "Estado OS"),
-    contratante: findCol(header, "Contratante", "Cliente Contratante", "Empresa Contratante", "Tomador"),
-    cliente: findCol(header, "Nome Cliente", "Cliente", "Razao Social", "Razão Social", "Nome do Cliente"),
+    contratante: findCol(
+      header,
+      "Contratante",
+      "Cliente Contratante",
+      "Empresa Contratante",
+      "Tomador",
+    ),
+    cliente: findCol(
+      header,
+      "Nome Cliente",
+      "Cliente",
+      "Razao Social",
+      "Razão Social",
+      "Nome do Cliente",
+    ),
     modelo: findCol(
       header,
       "Modelo",
@@ -158,27 +174,44 @@ export function parseRelatorioCsv(text: string): ParseResult {
     ),
     servico: findCol(
       header,
-      "Serviço", "Servico",
-      "Tipo Servico", "Tipo Serviço", "Tipo de Servico", "Tipo de Serviço",
-      "Descricao Servico", "Descrição Serviço",
-      "Servico Solicitado", "Serviço Solicitado",
+      "Serviço",
+      "Servico",
+      "Tipo Servico",
+      "Tipo Serviço",
+      "Tipo de Servico",
+      "Tipo de Serviço",
+      "Descricao Servico",
+      "Descrição Serviço",
+      "Servico Solicitado",
+      "Serviço Solicitado",
     ),
     grupoServico: findCol(
       header,
-      "Grupo Servico", "Grupo Serviço",
-      "Grupo de Servico", "Grupo de Serviço",
+      "Grupo Servico",
+      "Grupo Serviço",
+      "Grupo de Servico",
+      "Grupo de Serviço",
       "Grupo",
-      "Categoria Servico", "Categoria Serviço",
-      "Familia", "Família",
-      "Familia Servico", "Família Serviço",
+      "Categoria Servico",
+      "Categoria Serviço",
+      "Familia",
+      "Família",
+      "Familia Servico",
+      "Família Serviço",
     ),
     endereco: findCol(
       header,
-      "Endereço", "Endereco",
-      "Logradouro", "Rua",
-      "Endereço Cliente", "Endereco Cliente",
-      "Endereço Completo", "Endereco Completo",
-      "Local", "Local Atendimento", "Local de Atendimento",
+      "Endereço",
+      "Endereco",
+      "Logradouro",
+      "Rua",
+      "Endereço Cliente",
+      "Endereco Cliente",
+      "Endereço Completo",
+      "Endereco Completo",
+      "Local",
+      "Local Atendimento",
+      "Local de Atendimento",
     ),
     cidade: findCol(header, "Cidade", "Municipio", "Município"),
     bairro: findCol(header, "Bairro", "Bairro Cliente", "Bairro Atendimento", "Vizinhança"),
@@ -187,47 +220,77 @@ export function parseRelatorioCsv(text: string): ParseResult {
     regiaoCode: findCol(header, "Codigo Regiao", "Código Região", "Cod Regiao", "Faixa Cod"),
     tecnico: findCol(
       header,
-      "Tecnico", "Técnico",
-      "Tecnico Responsavel", "Técnico Responsável",
-      "Nome Tecnico", "Nome Técnico",
-      "Atendente", "Responsavel", "Responsável",
+      "Tecnico",
+      "Técnico",
+      "Tecnico Responsavel",
+      "Técnico Responsável",
+      "Nome Tecnico",
+      "Nome Técnico",
+      "Atendente",
+      "Responsavel",
+      "Responsável",
     ),
     prestador: findCol(
       header,
       "Prestador",
       "Empresa Prestadora",
-      "Polo", "Polo Atendimento",
-      "Parceiro", "Fornecedor",
+      "Polo",
+      "Polo Atendimento",
+      "Parceiro",
+      "Fornecedor",
     ),
     emergencial: findCol(header, "Emergencial", "Urgente", "OS Emergencial"),
     agendamento: findCol(header, "Agendamento", "Agendado"),
     observacoes: findCol(
       header,
-      "Observacoes", "Observações",
-      "Observações Atendimento", "Observacoes Atendimento",
+      "Observacoes",
+      "Observações",
+      "Observações Atendimento",
+      "Observacoes Atendimento",
       "Obs",
-      "Comentarios", "Comentários",
-      "Descricao", "Descrição",
-      "Detalhes", "Notas",
+      "Comentarios",
+      "Comentários",
+      "Descricao",
+      "Descrição",
+      "Detalhes",
+      "Notas",
     ),
-    dataAbertura: findCol(header, "Data Abertura", "Abertura", "Data Criacao", "Data Criação", "Criado Em"),
+    dataAbertura: findCol(
+      header,
+      "Data Abertura",
+      "Abertura",
+      "Data Criacao",
+      "Data Criação",
+      "Criado Em",
+    ),
     dataLimite: findCol(
       header,
-      "Data Limite", "Data Limite Cliente",
-      "Prazo", "SLA", "Vencimento",
-      "Data SLA", "Prazo Limite", "Data Vencimento",
+      "Data Limite",
+      "Data Limite Cliente",
+      "Prazo",
+      "SLA",
+      "Vencimento",
+      "Data SLA",
+      "Prazo Limite",
+      "Data Vencimento",
     ),
     dataAtendimento: findCol(
       header,
-      "Data Atendimento", "Atendimento",
-      "Data Execução", "Data Execucao",
+      "Data Atendimento",
+      "Atendimento",
+      "Data Execução",
+      "Data Execucao",
       "Data Visita",
     ),
     dataModificacao: findCol(
       header,
-      "Data Modificacao", "Data Modificação",
-      "Última Modificação", "Ultima Modificação", "Ultima Modificacao",
-      "Modificacao", "Atualizado Em",
+      "Data Modificacao",
+      "Data Modificação",
+      "Última Modificação",
+      "Ultima Modificação",
+      "Ultima Modificacao",
+      "Modificacao",
+      "Atualizado Em",
     ),
   };
 

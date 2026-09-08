@@ -11,6 +11,9 @@ export const Route = createFileRoute("/indicadores")({
     ],
   }),
   component: () => (
-    <PlaceholderRoute title="Indicadores" description="Painel completo de KPIs operacionais e de campo." />
+    <PlaceholderRoute
+      title="Indicadores"
+      description="Painel completo de KPIs operacionais e de campo."
+    />
   ),
 });

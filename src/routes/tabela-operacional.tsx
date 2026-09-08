@@ -242,7 +242,11 @@ function TabelaOperacionalPage() {
               className="h-8 md:h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-2.5 md:px-3 shrink-0"
               title={isFullscreen ? "Sair da tela cheia (F)" : "Tela cheia (F)"}
             >
-              {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+              {isFullscreen ? (
+                <Minimize2 className="h-3.5 w-3.5" />
+              ) : (
+                <Maximize2 className="h-3.5 w-3.5" />
+              )}
               <span className="text-[11px] md:text-xs">{isFullscreen ? "Sair" : "Tela cheia"}</span>
             </Button>
             <div className="ml-auto text-[11px] text-muted-foreground tabular-nums">

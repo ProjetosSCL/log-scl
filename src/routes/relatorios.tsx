@@ -11,21 +11,22 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import {
-  resetDataset,
-  setDataset,
-  useDataset,
-  type RawRow,
-} from "@/lib/mock-data";
+import { resetDataset, setDataset, useDataset, type RawRow } from "@/lib/mock-data";
 import { parseRelatorioCsv, type ParseResult } from "@/lib/csv-import";
 
 export const Route = createFileRoute("/relatorios")({
   head: () => ({
     meta: [
       { title: "Relatórios · FieldOps" },
-      { name: "description", content: "Importação de relatórios CSV de OS para atualizar a operação." },
+      {
+        name: "description",
+        content: "Importação de relatórios CSV de OS para atualizar a operação.",
+      },
       { property: "og:title", content: "Relatórios · FieldOps" },
-      { property: "og:description", content: "Atualize sua base operacional importando relatórios CSV." },
+      {
+        property: "og:description",
+        content: "Atualize sua base operacional importando relatórios CSV.",
+      },
     ],
   }),
   component: RelatoriosPage,
@@ -49,9 +50,7 @@ function RelatoriosPage() {
       const buf = await file.arrayBuffer();
       const utf8 = new TextDecoder("utf-8", { fatal: false }).decode(buf);
       // If UTF-8 decoding produced replacement chars, fallback to latin1.
-      const text = utf8.includes("\uFFFD")
-        ? new TextDecoder("windows-1252").decode(buf)
-        : utf8;
+      const text = utf8.includes("\uFFFD") ? new TextDecoder("windows-1252").decode(buf) : utf8;
       const parsed = parseRelatorioCsv(text);
       setPending({ fileName: file.name, parsed });
       if (parsed.errors.length) {
@@ -98,8 +97,8 @@ function RelatoriosPage() {
             Importação de Base Operacional
           </h1>
           <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-            Importe seu CSV de OS sempre que precisar atualizar os dados. O arquivo é
-            processado localmente e fica salvo no navegador para todas as visualizações.
+            Importe seu CSV de OS sempre que precisar atualizar os dados. O arquivo é processado
+            localmente e fica salvo no navegador para todas as visualizações.
           </p>
         </div>
         <div className="flex flex-col items-end gap-1.5">
@@ -173,9 +172,8 @@ function RelatoriosPage() {
             />
           </div>
           <div className="mt-3 text-[11px] text-muted-foreground">
-            Colunas reconhecidas: Chamado, Status, Contratante, Cliente, Cidade, UF,
-            Prestador, Técnico, Data Abertura, Data Limite, Data Atendimento,
-            Emergencial, etc.
+            Colunas reconhecidas: Chamado, Status, Contratante, Cliente, Cidade, UF, Prestador,
+            Técnico, Data Abertura, Data Limite, Data Atendimento, Emergencial, etc.
           </div>
         </div>
 
@@ -190,18 +188,10 @@ function RelatoriosPage() {
             <Row label="Prestadores" value={String(dataset.facets.prestadores.length)} />
             <Row label="Contratantes" value={String(dataset.facets.contratantes.length)} />
             <Row label="UFs" value={String(dataset.facets.estados.length)} />
-            <Row
-              label="Referência"
-              value={dataset.refToday.toLocaleDateString("pt-BR")}
-            />
+            <Row label="Referência" value={dataset.refToday.toLocaleDateString("pt-BR")} />
           </div>
           {dataset.source === "import" && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={reset}
-              className="w-full gap-2 mt-2"
-            >
+            <Button variant="outline" size="sm" onClick={reset} className="w-full gap-2 mt-2">
               <RotateCcw className="h-3.5 w-3.5" />
               Restaurar dataset inicial
             </Button>
@@ -277,7 +267,16 @@ function RelatoriosPage() {
             <table className="w-full text-xs">
               <thead className="sticky top-0 bg-background/70 backdrop-blur">
                 <tr className="text-left text-muted-foreground">
-                  {["Chamado", "Status", "Contratante", "Prestador", "Cliente", "Cidade", "UF", "Limite"].map((h) => (
+                  {[
+                    "Chamado",
+                    "Status",
+                    "Contratante",
+                    "Prestador",
+                    "Cliente",
+                    "Cidade",
+                    "UF",
+                    "Limite",
+                  ].map((h) => (
                     <th key={h} className="px-3 py-2 font-medium whitespace-nowrap">
                       {h}
                     </th>

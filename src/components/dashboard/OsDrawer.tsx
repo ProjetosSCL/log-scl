@@ -1,4 +1,10 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { type OS } from "@/lib/mock-data";
@@ -70,7 +76,10 @@ export function OsDrawer({
             <Badge className="bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
               {items.length} OS
             </Badge>
-            <Badge variant="outline" className="border-border/60 text-muted-foreground uppercase tracking-wide">
+            <Badge
+              variant="outline"
+              className="border-border/60 text-muted-foreground uppercase tracking-wide"
+            >
               <MapPin className="h-3 w-3 mr-1" />
               {city}
             </Badge>
@@ -79,7 +88,9 @@ export function OsDrawer({
               {dateLabel}
             </Badge>
           </div>
-          <SheetTitle className="text-left text-base md:text-lg">Detalhamento operacional</SheetTitle>
+          <SheetTitle className="text-left text-base md:text-lg">
+            Detalhamento operacional
+          </SheetTitle>
           <SheetDescription className="text-left text-xs">
             Lista completa das OS para a célula selecionada. Clique em uma OS para inspecionar.
           </SheetDescription>
@@ -99,9 +110,7 @@ export function OsDrawer({
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-mono text-muted-foreground">{o.numero}</span>
-                  {o.emergencial && (
-                    <AlertTriangle className="h-3 w-3 text-status-critical" />
-                  )}
+                  {o.emergencial && <AlertTriangle className="h-3 w-3 text-status-critical" />}
                 </div>
                 <div className="text-sm font-medium mt-0.5 truncate">{o.cliente}</div>
                 <div className="mt-1.5 flex items-center gap-1.5">
@@ -124,13 +133,9 @@ export function OsDrawer({
             <div className="p-4 md:p-5 space-y-4 overflow-y-auto overscroll-contain min-h-0">
               <div className="flex items-start justify-between">
                 <div>
-                  <div className="text-xs font-mono text-muted-foreground">
-                    {selected.numero}
-                  </div>
+                  <div className="text-xs font-mono text-muted-foreground">{selected.numero}</div>
                   <div className="text-lg font-semibold mt-0.5">{selected.cliente}</div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    Modelo {selected.modelo}
-                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">Modelo {selected.modelo}</div>
                 </div>
                 <div className="flex flex-col items-end gap-1.5">
                   <Badge className={cn("border", critBadge[selected.criticidade])}>
@@ -169,11 +174,19 @@ export function OsDrawer({
               {/* Grid info */}
               <div className="grid grid-cols-2 gap-3">
                 <Info icon={MapPin} label="Endereço" value={`${selected.endereco}`} />
-                <Info icon={MapPin} label="Cidade / UF" value={`${selected.cidade} · ${selected.estado}`} />
+                <Info
+                  icon={MapPin}
+                  label="Cidade / UF"
+                  value={`${selected.cidade} · ${selected.estado}`}
+                />
                 <Info icon={User} label="Técnico" value={selected.tecnico} />
                 <Info icon={Wrench} label="Prestador" value={selected.prestador} />
                 <Info icon={ScrollText} label="Contratante" value={selected.contratante} />
-                <Info icon={ScrollText} label="Serviço" value={`${selected.grupoServico} · ${selected.servico}`} />
+                <Info
+                  icon={ScrollText}
+                  label="Serviço"
+                  value={`${selected.grupoServico} · ${selected.servico}`}
+                />
                 <Info icon={Calendar} label="Data limite" value={fmt(selected.dataLimite)} />
                 <Info icon={Clock} label="Atendimento" value={fmt(selected.dataAtendimento)} />
               </div>
@@ -223,15 +236,7 @@ export function OsDrawer({
   );
 }
 
-function Info({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: typeof MapPin;
-  label: string;
-  value: string;
-}) {
+function Info({ icon: Icon, label, value }: { icon: typeof MapPin; label: string; value: string }) {
   return (
     <div className="rounded-xl glass p-3">
       <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">

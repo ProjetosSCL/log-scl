@@ -2,16 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toPng } from "html-to-image";
 import JSZip from "jszip";
-import {
-  Camera,
-  Check,
-  Copy,
-  Download,
-  ExternalLink,
-  Loader2,
-  Share2,
-  X,
-} from "lucide-react";
+import { Camera, Check, Copy, Download, ExternalLink, Loader2, Share2, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -80,8 +71,7 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
     });
     return [...m.values()].sort(
       (a, b) =>
-        a.contratante.localeCompare(b.contratante) ||
-        a.prestador.localeCompare(b.prestador),
+        a.contratante.localeCompare(b.contratante) || a.prestador.localeCompare(b.prestador),
     );
   }, [filtered]);
 
@@ -160,9 +150,7 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
 
   const shareWhatsApp = async () => {
     if (generated.length === 0) return;
-    const files = generated.map(
-      (g) => new File([g.blob], g.filename, { type: "image/png" }),
-    );
+    const files = generated.map((g) => new File([g.blob], g.filename, { type: "image/png" }));
     if (canWebShareFiles()) {
       try {
         await navigator.share({
@@ -233,8 +221,8 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
               Prints diários por Contratante × Prestador
             </DialogTitle>
             <DialogDescription>
-              {pairs.length} combinações detectadas nos dados filtrados. Desmarque as que
-              não quiser exportar.
+              {pairs.length} combinações detectadas nos dados filtrados. Desmarque as que não quiser
+              exportar.
             </DialogDescription>
           </DialogHeader>
 
@@ -263,14 +251,11 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
                         className="h-4 w-4 accent-primary"
                         checked={sel}
                         disabled={busy}
-                        onChange={(e) =>
-                          setSelected((s) => ({ ...s, [p.key]: e.target.checked }))
-                        }
+                        onChange={(e) => setSelected((s) => ({ ...s, [p.key]: e.target.checked }))}
                       />
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium truncate">
-                          {p.contratante}{" "}
-                          <span className="text-muted-foreground">—</span>{" "}
+                          {p.contratante} <span className="text-muted-foreground">—</span>{" "}
                           {p.prestador}
                         </div>
                         <div className="text-[11px] text-muted-foreground tabular-nums">
@@ -336,12 +321,7 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
                 <div className="text-xs text-muted-foreground flex-1">
                   {generated.length} imagem(ns) prontas
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={downloadZip}
-                  className="gap-1.5"
-                >
+                <Button variant="outline" size="sm" onClick={downloadZip} className="gap-1.5">
                   <Download className="h-3.5 w-3.5" />
                   Baixar .zip
                 </Button>
@@ -415,10 +395,9 @@ function ShareAssistant({
   return (
     <div className="space-y-4 py-2">
       <div className="text-sm text-muted-foreground">
-        Imagem {step + 1} de {generated.length} — copiada para a área de transferência.
-        Abra o WhatsApp Web, entre no chat e cole com{" "}
-        <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Ctrl</kbd>
-        +
+        Imagem {step + 1} de {generated.length} — copiada para a área de transferência. Abra o
+        WhatsApp Web, entre no chat e cole com{" "}
+        <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Ctrl</kbd>+
         <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">V</kbd>.
       </div>
 
@@ -450,12 +429,7 @@ function ShareAssistant({
             </>
           )}
         </Button>
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => downloadOne(g)}
-          className="gap-1.5"
-        >
+        <Button size="sm" variant="outline" onClick={() => downloadOne(g)} className="gap-1.5">
           <Download className="h-3.5 w-3.5" /> Baixar
         </Button>
         <a

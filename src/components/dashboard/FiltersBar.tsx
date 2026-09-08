@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Check, ChevronDown, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useDataset, type Filters, type Criticality, type Status } from "@/lib/mock-data";
@@ -82,102 +89,130 @@ interface Props {
 export function FiltersBar({ filters, setFilters, only, dense = false }: Props) {
   const show = (k: Key) => !only || only.includes(k);
   const { facets: FACETS } = useDataset();
-  const set = <K extends Key>(k: K, v: Filters[K]) =>
-    setFilters({ ...filters, [k]: v });
+  const set = <K extends Key>(k: K, v: Filters[K]) => setFilters({ ...filters, [k]: v });
 
   const activeChips: { key: Key; values: string[] }[] = [];
-  (["contratante", "prestador", "cidade", "bairro", "estado", "regiao", "tecnico", "criticidade", "status"] as Key[]).forEach((k) => {
+  (
+    [
+      "contratante",
+      "prestador",
+      "cidade",
+      "bairro",
+      "estado",
+      "regiao",
+      "tecnico",
+      "criticidade",
+      "status",
+    ] as Key[]
+  ).forEach((k) => {
     const v = filters[k] as string[] | undefined;
     if (v && v.length) activeChips.push({ key: k, values: v });
   });
 
   const totalActive =
-    activeChips.reduce((a, b) => a + b.values.length, 0) +
-    (filters.emergencial ? 1 : 0);
+    activeChips.reduce((a, b) => a + b.values.length, 0) + (filters.emergencial ? 1 : 0);
 
   return (
-    <div className={cn("rounded-2xl glass flex flex-wrap items-center", dense ? "p-1.5 gap-1" : "p-3 gap-2")}>
+    <div
+      className={cn(
+        "rounded-2xl glass flex flex-wrap items-center",
+        dense ? "p-1.5 gap-1" : "p-3 gap-2",
+      )}
+    >
       {show("contratante") && (
-      <MultiFilter
-        label="Contratante"
-        options={FACETS.contratantes}
-        value={filters.contratante}
-        onChange={(v) => set("contratante", v)}
-      />)}
-      {show("prestador") && (
-      <MultiFilter
-        label="Prestador"
-        options={FACETS.prestadores}
-        value={filters.prestador}
-        onChange={(v) => set("prestador", v)}
-      />)}
-      {show("cidade") && (
-      <MultiFilter
-        label="Cidade"
-        options={FACETS.cidades}
-        value={filters.cidade}
-        onChange={(v) => set("cidade", v)}
-      />)}
-      {show("bairro") && (
-      <MultiFilter
-        label="Bairro"
-        options={FACETS.bairros}
-        value={filters.bairro}
-        onChange={(v) => set("bairro", v)}
-      />)}
-      {show("estado") && (
-      <MultiFilter
-        label="Estado"
-        options={FACETS.estados}
-        value={filters.estado}
-        onChange={(v) => set("estado", v)}
-      />)}
-      {show("regiao") && (
-      <MultiFilter
-        label="Região"
-        options={FACETS.regioes}
-        value={filters.regiao}
-        onChange={(v) => set("regiao", v)}
-      />)}
-      {show("tecnico") && (
-      <MultiFilter
-        label="Técnico"
-        options={FACETS.tecnicos}
-        value={filters.tecnico}
-        onChange={(v) => set("tecnico", v)}
-      />)}
-      {show("criticidade") && (
-      <MultiFilter
-        label="Criticidade"
-        options={["vencido", "vence_hoje", "proximo", "saudavel"]}
-        value={filters.criticidade as string[] | undefined}
-        onChange={(v) => set("criticidade", v as Criticality[])}
-      />)}
-      {show("status") && (
-      <MultiFilter
-        label="Status"
-        options={FACETS.status}
-        value={filters.status as string[] | undefined}
-        onChange={(v) => set("status", v as Status[])}
-      />)}
-      {show("emergencial") && (
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() => set("emergencial", filters.emergencial ? null : true)}
-        className={cn(
-          "h-8 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-3 text-xs gap-1.5",
-          filters.emergencial && "border-status-critical/50 text-status-critical bg-status-critical/10",
-        )}
-      >
-        <span
-          className={cn(
-            "h-1.5 w-1.5 rounded-full",
-            filters.emergencial ? "bg-status-critical shadow-[0_0_8px_var(--status-critical)]" : "bg-muted-foreground/50",
-          )}
+        <MultiFilter
+          label="Contratante"
+          options={FACETS.contratantes}
+          value={filters.contratante}
+          onChange={(v) => set("contratante", v)}
         />
-        Emergencial
-      </Button>)}
+      )}
+      {show("prestador") && (
+        <MultiFilter
+          label="Prestador"
+          options={FACETS.prestadores}
+          value={filters.prestador}
+          onChange={(v) => set("prestador", v)}
+        />
+      )}
+      {show("cidade") && (
+        <MultiFilter
+          label="Cidade"
+          options={FACETS.cidades}
+          value={filters.cidade}
+          onChange={(v) => set("cidade", v)}
+        />
+      )}
+      {show("bairro") && (
+        <MultiFilter
+          label="Bairro"
+          options={FACETS.bairros}
+          value={filters.bairro}
+          onChange={(v) => set("bairro", v)}
+        />
+      )}
+      {show("estado") && (
+        <MultiFilter
+          label="Estado"
+          options={FACETS.estados}
+          value={filters.estado}
+          onChange={(v) => set("estado", v)}
+        />
+      )}
+      {show("regiao") && (
+        <MultiFilter
+          label="Região"
+          options={FACETS.regioes}
+          value={filters.regiao}
+          onChange={(v) => set("regiao", v)}
+        />
+      )}
+      {show("tecnico") && (
+        <MultiFilter
+          label="Técnico"
+          options={FACETS.tecnicos}
+          value={filters.tecnico}
+          onChange={(v) => set("tecnico", v)}
+        />
+      )}
+      {show("criticidade") && (
+        <MultiFilter
+          label="Criticidade"
+          options={["vencido", "vence_hoje", "proximo", "saudavel"]}
+          value={filters.criticidade as string[] | undefined}
+          onChange={(v) => set("criticidade", v as Criticality[])}
+        />
+      )}
+      {show("status") && (
+        <MultiFilter
+          label="Status"
+          options={FACETS.status}
+          value={filters.status as string[] | undefined}
+          onChange={(v) => set("status", v as Status[])}
+        />
+      )}
+      {show("emergencial") && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => set("emergencial", filters.emergencial ? null : true)}
+          className={cn(
+            "h-8 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-3 text-xs gap-1.5",
+            filters.emergencial &&
+              "border-status-critical/50 text-status-critical bg-status-critical/10",
+          )}
+        >
+          <span
+            className={cn(
+              "h-1.5 w-1.5 rounded-full",
+              filters.emergencial
+                ? "bg-status-critical shadow-[0_0_8px_var(--status-critical)]"
+                : "bg-muted-foreground/50",
+            )}
+          />
+          Emergencial
+        </Button>
+      )}
 
       {totalActive > 0 && (
         <Button

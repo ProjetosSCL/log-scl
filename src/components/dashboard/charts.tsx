@@ -64,12 +64,7 @@ export function DueByDayLine({ data }: { data: { name: string; value: number }[]
       <ResponsiveContainer width="100%" height={220}>
         <LineChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
           <CartesianGrid stroke={gridStroke} vertical={false} />
-          <XAxis
-            dataKey="name"
-            tick={axisTick}
-            axisLine={false}
-            tickLine={false}
-          />
+          <XAxis dataKey="name" tick={axisTick} axisLine={false} tickLine={false} />
           <YAxis tick={axisTick} axisLine={false} tickLine={false} />
           <Tooltip contentStyle={tooltipStyle} />
           <Line
@@ -152,15 +147,11 @@ export function RankingList({
             <div key={d.name}>
               <div className="flex items-center justify-between text-xs mb-1">
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-muted-foreground tabular-nums w-4">
-                    {i + 1}
-                  </span>
+                  <span className="text-muted-foreground tabular-nums w-4">{i + 1}</span>
                   <span className="truncate">{d.name}</span>
                 </div>
                 <div className="flex items-center gap-2 text-[11px]">
-                  <span className="text-status-critical tabular-nums">
-                    {d.criticas}
-                  </span>
+                  <span className="text-status-critical tabular-nums">{d.criticas}</span>
                   <span className="text-muted-foreground">/</span>
                   <span className="tabular-nums font-semibold">{d.total}</span>
                 </div>
@@ -196,9 +187,7 @@ function ChartCard({
     <div className="rounded-2xl glass p-4">
       <div className="mb-3">
         <div className="text-sm font-semibold">{title}</div>
-        {subtitle && (
-          <div className="text-[11px] text-muted-foreground">{subtitle}</div>
-        )}
+        {subtitle && <div className="text-[11px] text-muted-foreground">{subtitle}</div>}
       </div>
       {children}
     </div>

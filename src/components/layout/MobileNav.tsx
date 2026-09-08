@@ -70,9 +70,7 @@ export function MobileNav() {
                     : "text-muted-foreground hover:bg-accent/60",
                 )}
               >
-                <Icon
-                  className={cn("h-4 w-4", active ? "text-primary" : "")}
-                />
+                <Icon className={cn("h-4 w-4", active ? "text-primary" : "")} />
                 <span className="font-medium">{it.label}</span>
               </Link>
             );

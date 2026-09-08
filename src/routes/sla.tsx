@@ -5,12 +5,21 @@ export const Route = createFileRoute("/sla")({
   head: () => ({
     meta: [
       { title: "Indicadores de SLA · FieldOps" },
-      { name: "description", content: "Acompanhamento detalhado de SLA por contrato, prestador e região." },
+      {
+        name: "description",
+        content: "Acompanhamento detalhado de SLA por contrato, prestador e região.",
+      },
       { property: "og:title", content: "Indicadores de SLA · FieldOps" },
-      { property: "og:description", content: "Acompanhamento detalhado de SLA por contrato, prestador e região." },
+      {
+        property: "og:description",
+        content: "Acompanhamento detalhado de SLA por contrato, prestador e região.",
+      },
     ],
   }),
   component: () => (
-    <PlaceholderRoute title="Indicadores de SLA" description="Acompanhamento detalhado de SLA por contrato, prestador e região." />
+    <PlaceholderRoute
+      title="Indicadores de SLA"
+      description="Acompanhamento detalhado de SLA por contrato, prestador e região."
+    />
   ),
 });

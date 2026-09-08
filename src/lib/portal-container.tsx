@@ -10,9 +10,7 @@ export function PortalContainerProvider({
   children: ReactNode;
 }) {
   return (
-    <PortalContainerContext.Provider value={container}>
-      {children}
-    </PortalContainerContext.Provider>
+    <PortalContainerContext.Provider value={container}>{children}</PortalContainerContext.Provider>
   );
 }
 

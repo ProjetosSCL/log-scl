@@ -1,13 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Construction } from "lucide-react";
 
-export function PlaceholderRoute({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+export function PlaceholderRoute({ title, description }: { title: string; description: string }) {
   return (
     <div className="rounded-2xl glass p-10 text-center max-w-2xl mx-auto mt-10 animate-fade-in">
       <div className="h-12 w-12 mx-auto rounded-xl glass grid place-items-center text-primary glow-primary mb-4">
