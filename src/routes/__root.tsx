@@ -16,16 +16,16 @@ import { Toaster } from "@/components/ui/sonner";
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="max-w-md text-center glass rounded-2xl p-10">
-        <h1 className="text-7xl font-bold text-gradient-primary">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Página não encontrada</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
+      <div className="max-w-md text-center rounded-sm border border-border bg-surface p-8 shadow-card">
+        <h1 className="text-6xl font-display font-extrabold text-green-700">404</h1>
+        <h2 className="mt-4 text-xl font-display font-bold text-ink-900">Página não encontrada</h2>
+        <p className="mt-2 text-sm text-ink-600 font-sans">
           A rota acessada não existe ou foi movida.
         </p>
         <div className="mt-6">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-sm bg-green-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-800"
           >
             Voltar ao dashboard
           </Link>
@@ -41,11 +41,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
-      <div className="max-w-md text-center glass rounded-2xl p-10">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          Erro ao carregar a página
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+      <div className="max-w-md text-center rounded-sm border border-border bg-surface p-8 shadow-card">
+        <h1 className="text-xl font-display font-bold text-ink-900">Erro ao carregar a página</h1>
+        <p className="mt-2 text-sm text-ink-600 font-sans">
           Algo deu errado. Tente novamente ou volte ao início.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
@@ -54,13 +52,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-sm bg-green-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-800"
           >
             Tentar novamente
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-md border border-border bg-secondary px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="inline-flex items-center justify-center rounded-sm border border-border bg-surface px-4 py-2 text-sm font-medium text-ink-900 transition-colors hover:bg-green-100/50"
           >
             Início
           </a>
@@ -125,7 +123,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700&family=Sora:wght@600;700;800&display=swap",
       },
     ],
   }),

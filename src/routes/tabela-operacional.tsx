@@ -165,17 +165,17 @@ function TabelaOperacionalPage() {
                 only={isMobileLandscape ? ["contratante", "prestador", "cidade"] : undefined}
               />
             </div>
-            <div className="flex items-center gap-1 rounded-full border border-border/60 bg-secondary/50 p-0.5 shrink-0 overflow-x-auto max-w-full">
+            <div className="flex items-center gap-1 rounded-sm border border-border bg-surface p-0.5 shrink-0 overflow-x-auto max-w-full">
               {([80, 90, 100, 110, 120] as const).map((z) => (
                 <button
                   key={z}
                   type="button"
                   onClick={() => handleZoom(z)}
                   className={
-                    "px-2 h-7 md:h-8 rounded-full text-[11px] md:text-xs font-medium transition-colors shrink-0 " +
+                    "px-2.5 h-7 md:h-8 rounded-sm text-[11px] md:text-xs font-mono font-medium transition-colors shrink-0 " +
                     (zoom === z
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent/40")
+                      ? "bg-green-700 text-white font-semibold shadow-sm"
+                      : "text-ink-600 hover:text-ink-900 hover:bg-green-100/50")
                   }
                   title={`Zoom da tabela ${z}%`}
                 >
@@ -193,10 +193,10 @@ function TabelaOperacionalPage() {
               size="sm"
               onClick={() => setCompact((v) => !v)}
               className={
-                "h-8 md:h-9 gap-1.5 rounded-full px-2.5 md:px-3 shrink-0 " +
+                "h-8 md:h-9 gap-1.5 rounded-sm px-2.5 md:px-3 shrink-0 font-sans transition-colors " +
                 (compact
-                  ? "border-primary/50 bg-primary/15 text-primary hover:bg-primary/20"
-                  : "border-border/60 bg-secondary/50 hover:bg-accent/60")
+                  ? "border-green-700 bg-green-100 text-green-900 font-semibold"
+                  : "border-border bg-surface text-ink-900 hover:bg-green-100/50")
               }
               title="Modo compacto: reduz o tamanho dos elementos"
               aria-pressed={compact}
@@ -208,7 +208,7 @@ function TabelaOperacionalPage() {
               variant="outline"
               size="sm"
               onClick={() => setFocusTable(true)}
-              className="h-8 md:h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-2.5 md:px-3 shrink-0"
+              className="h-8 md:h-9 gap-1.5 rounded-sm border-border bg-surface text-ink-900 hover:bg-green-100/50 px-2.5 md:px-3 shrink-0 font-sans"
               title="Foco na tabela: oculta filtros e barra superior"
             >
               <Focus className="h-3.5 w-3.5" />
@@ -219,7 +219,7 @@ function TabelaOperacionalPage() {
               size="sm"
               onClick={handleScreenshot}
               disabled={capturing}
-              className="h-8 md:h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-2.5 md:px-3 shrink-0"
+              className="h-8 md:h-9 gap-1.5 rounded-sm border-border bg-surface text-ink-900 hover:bg-green-100/50 px-2.5 md:px-3 shrink-0 font-sans"
               title="Baixar print da tabela (PNG)"
             >
               <Camera className="h-3.5 w-3.5" />
@@ -229,17 +229,17 @@ function TabelaOperacionalPage() {
               variant="outline"
               size="sm"
               onClick={() => setBatchOpen(true)}
-              className="h-8 md:h-9 gap-1.5 rounded-full border-primary/50 bg-primary/10 text-primary hover:bg-primary/20 px-2.5 md:px-3 shrink-0"
+              className="h-8 md:h-9 gap-1.5 rounded-sm border-green-700/40 bg-green-100 text-green-900 hover:bg-green-100/80 px-2.5 md:px-3 shrink-0 font-sans font-medium"
               title="Gerar prints por Contratante × Prestador e compartilhar no WhatsApp"
             >
-              <Share2 className="h-3.5 w-3.5" />
+              <Share2 className="h-3.5 w-3.5 text-green-700" />
               <span className="text-[11px] md:text-xs">Exportar prints</span>
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={toggleFullscreen}
-              className="h-8 md:h-9 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-2.5 md:px-3 shrink-0"
+              className="h-8 md:h-9 gap-1.5 rounded-sm border-border bg-surface text-ink-900 hover:bg-green-100/50 px-2.5 md:px-3 shrink-0 font-sans"
               title={isFullscreen ? "Sair da tela cheia (F)" : "Tela cheia (F)"}
             >
               {isFullscreen ? (
@@ -249,9 +249,9 @@ function TabelaOperacionalPage() {
               )}
               <span className="text-[11px] md:text-xs">{isFullscreen ? "Sair" : "Tela cheia"}</span>
             </Button>
-            <div className="ml-auto text-[11px] text-muted-foreground tabular-nums">
-              <span className="font-semibold text-foreground">{filtered.length}</span> OS ·
-              <span className="ml-1 font-semibold text-foreground">{cidades}</span> cidades
+            <div className="ml-auto text-xs text-ink-600 font-sans tabular-nums">
+              <span className="font-semibold text-ink-900 font-mono">{filtered.length}</span> OS ·
+              <span className="ml-1 font-semibold text-ink-900 font-mono">{cidades}</span> cidades
             </div>
           </div>
         )}
@@ -266,15 +266,15 @@ function TabelaOperacionalPage() {
               />
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <div className="text-[11px] text-muted-foreground tabular-nums">
-                <span className="font-semibold text-foreground">{filtered.length}</span> OS ·
-                <span className="ml-1 font-semibold text-foreground">{cidades}</span> cidades
+              <div className="text-xs text-ink-600 font-sans tabular-nums">
+                <span className="font-semibold text-ink-900 font-mono">{filtered.length}</span> OS ·
+                <span className="ml-1 font-semibold text-ink-900 font-mono">{cidades}</span> cidades
               </div>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setFocusTable(false)}
-                className="h-8 md:h-9 gap-1.5 rounded-full border-primary/50 bg-primary/15 text-primary hover:bg-primary/20 px-2.5 md:px-3"
+                className="h-8 md:h-9 gap-1.5 rounded-sm border-green-700 bg-green-100 text-green-900 hover:bg-green-100/80 px-2.5 md:px-3 font-sans font-semibold"
                 title="Sair do modo foco"
               >
                 <Minimize2 className="h-3.5 w-3.5" />

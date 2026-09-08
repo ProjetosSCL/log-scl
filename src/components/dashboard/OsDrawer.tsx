@@ -31,10 +31,10 @@ interface Props {
 }
 
 const critBadge: Record<OS["criticidade"], string> = {
-  vencido: "bg-status-critical/15 text-status-critical border-status-critical/30",
-  vence_hoje: "bg-status-warning/15 text-status-warning border-status-warning/30",
-  proximo: "bg-status-attention/15 text-status-attention border-status-attention/30",
-  saudavel: "bg-status-healthy/15 text-status-healthy border-status-healthy/30",
+  vencido: "bg-danger/15 text-danger border-danger/30 font-semibold",
+  vence_hoje: "bg-amber-500/20 text-amber-600 border-amber-500/30 font-semibold",
+  proximo: "bg-green-600/15 text-green-700 border-green-600/30 font-semibold",
+  saudavel: "bg-green-100 text-green-900 border-green-700/20 font-semibold",
 };
 
 const critLabel: Record<OS["criticidade"], string> = {
@@ -69,60 +69,64 @@ export function OsDrawer({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-[96vw] sm:w-full sm:max-w-[640px] glass-strong border-l border-border/60 p-0 flex flex-col h-[100dvh] max-h-[100dvh] overflow-hidden"
+        className="w-[96vw] sm:w-full sm:max-w-[640px] bg-surface border-l border-border p-0 flex flex-col h-[100dvh] max-h-[100dvh] overflow-hidden"
       >
-        <SheetHeader className="p-4 md:p-5 border-b border-border/60 backdrop-blur-xl bg-background/40 shrink-0">
+        <SheetHeader className="p-4 md:p-5 border-b border-border bg-surface shrink-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <Badge className="bg-primary/15 text-primary border-primary/30 hover:bg-primary/15">
+            <Badge className="bg-green-100 text-green-900 border border-green-700/20 hover:bg-green-100 rounded-sm font-mono text-xs">
               {items.length} OS
             </Badge>
             <Badge
               variant="outline"
-              className="border-border/60 text-muted-foreground uppercase tracking-wide"
+              className="border-border text-ink-600 uppercase tracking-wide rounded-sm font-sans text-xs"
             >
               <MapPin className="h-3 w-3 mr-1" />
               {city}
             </Badge>
-            <Badge variant="outline" className="border-border/60 text-muted-foreground capitalize">
+            <Badge
+              variant="outline"
+              className="border-border text-ink-600 capitalize rounded-sm font-sans text-xs"
+            >
               <Calendar className="h-3 w-3 mr-1" />
               {dateLabel}
             </Badge>
           </div>
-          <SheetTitle className="text-left text-base md:text-lg">
+          <SheetTitle className="text-left text-base md:text-lg font-display font-bold text-ink-900">
             Detalhamento operacional
           </SheetTitle>
-          <SheetDescription className="text-left text-xs">
+          <SheetDescription className="text-left text-xs text-ink-600 font-sans">
             Lista completa das OS para a célula selecionada. Clique em uma OS para inspecionar.
           </SheetDescription>
         </SheetHeader>
 
         <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-0 overflow-hidden">
           {/* List */}
-          <div className="border-b lg:border-b-0 lg:border-r border-border/60 max-h-[35vh] lg:max-h-none overflow-y-auto overscroll-contain">
+          <div className="border-b lg:border-b-0 lg:border-r border-border max-h-[35vh] lg:max-h-none overflow-y-auto overscroll-contain">
             {items.map((o) => (
               <button
                 key={o.id}
                 onClick={() => setSelectedId(o.id)}
                 className={cn(
-                  "w-full text-left p-3 border-b border-border/40 hover:bg-accent/40 transition-colors",
-                  selected?.id === o.id && "bg-accent/60",
+                  "w-full text-left p-3 border-b border-border hover:bg-green-100/30 transition-colors font-sans",
+                  selected?.id === o.id &&
+                    "bg-green-100/60 font-semibold border-l-2 border-l-green-700",
                 )}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-mono text-muted-foreground">{o.numero}</span>
-                  {o.emergencial && <AlertTriangle className="h-3 w-3 text-status-critical" />}
+                  <span className="text-xs font-mono text-ink-600">{o.numero}</span>
+                  {o.emergencial && <AlertTriangle className="h-3.5 w-3.5 text-danger" />}
                 </div>
-                <div className="text-sm font-medium mt-0.5 truncate">{o.cliente}</div>
-                <div className="mt-1.5 flex items-center gap-1.5">
+                <div className="text-sm font-medium mt-0.5 truncate text-ink-900">{o.cliente}</div>
+                <div className="mt-1.5 flex items-center gap-1.5 font-sans">
                   <span
                     className={cn(
-                      "text-[10px] px-1.5 py-0.5 rounded border",
+                      "text-[10px] px-1.5 py-0.5 rounded-sm border",
                       critBadge[o.criticidade],
                     )}
                   >
                     {critLabel[o.criticidade]}
                   </span>
-                  <span className="text-[10px] text-muted-foreground">{o.status}</span>
+                  <span className="text-[10px] text-ink-600">{o.status}</span>
                 </div>
               </button>
             ))}
@@ -133,16 +137,20 @@ export function OsDrawer({
             <div className="p-4 md:p-5 space-y-4 overflow-y-auto overscroll-contain min-h-0">
               <div className="flex items-start justify-between">
                 <div>
-                  <div className="text-xs font-mono text-muted-foreground">{selected.numero}</div>
-                  <div className="text-lg font-semibold mt-0.5">{selected.cliente}</div>
-                  <div className="text-xs text-muted-foreground mt-1">Modelo {selected.modelo}</div>
+                  <div className="text-xs font-mono text-ink-600">{selected.numero}</div>
+                  <div className="text-lg font-display font-bold mt-0.5 text-ink-900">
+                    {selected.cliente}
+                  </div>
+                  <div className="text-xs text-ink-600 mt-1 font-sans">
+                    Modelo {selected.modelo}
+                  </div>
                 </div>
                 <div className="flex flex-col items-end gap-1.5">
-                  <Badge className={cn("border", critBadge[selected.criticidade])}>
+                  <Badge className={cn("border rounded-sm", critBadge[selected.criticidade])}>
                     {critLabel[selected.criticidade]}
                   </Badge>
                   {selected.emergencial && (
-                    <Badge className="bg-status-critical/15 text-status-critical border-status-critical/30 border">
+                    <Badge className="bg-danger/15 text-danger border-danger/30 border rounded-sm font-semibold">
                       <AlertTriangle className="h-3 w-3 mr-1" />
                       Emergencial
                     </Badge>
@@ -151,20 +159,22 @@ export function OsDrawer({
               </div>
 
               {/* SLA */}
-              <div className="rounded-xl glass p-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">SLA</span>
-                  <span className="font-semibold tabular-nums">{selected.sla}%</span>
+              <div className="rounded-sm border border-border bg-surface p-3.5 shadow-sm">
+                <div className="flex items-center justify-between text-xs font-sans">
+                  <span className="text-ink-600">SLA</span>
+                  <span className="font-bold font-mono text-ink-900 tabular-nums">
+                    {selected.sla}%
+                  </span>
                 </div>
-                <div className="mt-2 h-1.5 rounded-full bg-secondary/60 overflow-hidden">
+                <div className="mt-2 h-2 rounded-full bg-green-100 overflow-hidden">
                   <div
                     className={cn(
                       "h-full rounded-full transition-all",
                       selected.sla >= 70
-                        ? "bg-status-healthy"
+                        ? "bg-green-700"
                         : selected.sla >= 40
-                          ? "bg-status-warning"
-                          : "bg-status-critical",
+                          ? "bg-amber-500"
+                          : "bg-danger",
                     )}
                     style={{ width: `${selected.sla}%` }}
                   />
@@ -191,24 +201,24 @@ export function OsDrawer({
                 <Info icon={Clock} label="Atendimento" value={fmt(selected.dataAtendimento)} />
               </div>
 
-              <div className="rounded-xl glass p-3">
-                <div className="text-[11px] uppercase tracking-wider text-muted-foreground mb-1">
+              <div className="rounded-sm border border-border bg-surface p-3.5 shadow-sm">
+                <div className="text-[10px] font-mono font-semibold uppercase tracking-wider text-ink-400 mb-1">
                   Observações
                 </div>
-                <div className="text-sm">{selected.observacoes}</div>
+                <div className="text-sm font-sans text-ink-900">{selected.observacoes}</div>
               </div>
 
               {/* Timeline */}
-              <div className="rounded-xl glass p-4">
-                <div className="text-[11px] uppercase tracking-wider text-muted-foreground mb-3">
+              <div className="rounded-sm border border-border bg-surface p-4 shadow-sm">
+                <div className="text-[10px] font-mono font-semibold uppercase tracking-wider text-ink-400 mb-3">
                   Histórico operacional
                 </div>
-                <ol className="relative border-l border-border/60 pl-4 space-y-3">
+                <ol className="relative border-l border-border pl-4 space-y-3">
                   {selected.timeline.map((t, i) => (
                     <li key={i} className="relative">
-                      <span className="absolute -left-[21px] top-1 h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_8px_var(--primary)]" />
-                      <div className="text-sm">{t.label}</div>
-                      <div className="text-[11px] text-muted-foreground">
+                      <span className="absolute -left-[21px] top-1 h-2.5 w-2.5 rounded-full bg-green-700" />
+                      <div className="text-sm font-sans font-medium text-ink-900">{t.label}</div>
+                      <div className="text-xs text-ink-600 font-sans">
                         {fmt(t.ts)} · {t.by}
                       </div>
                     </li>
@@ -217,13 +227,13 @@ export function OsDrawer({
               </div>
 
               <div className="flex gap-2 pt-2">
-                <Button className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 gap-1.5">
+                <Button className="flex-1 bg-green-700 text-white hover:bg-green-800 rounded-sm gap-1.5 font-medium">
                   <ExternalLink className="h-4 w-4" />
                   Abrir OS
                 </Button>
                 <Button
                   variant="outline"
-                  className="flex-1 border-border/60 bg-secondary/50 hover:bg-accent/60"
+                  className="flex-1 border-border bg-surface hover:bg-green-100/50 rounded-sm text-ink-900"
                 >
                   Ver detalhes
                 </Button>
@@ -238,12 +248,12 @@ export function OsDrawer({
 
 function Info({ icon: Icon, label, value }: { icon: typeof MapPin; label: string; value: string }) {
   return (
-    <div className="rounded-xl glass p-3">
-      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">
-        <Icon className="h-3 w-3" />
+    <div className="rounded-sm border border-border bg-surface p-3 shadow-sm">
+      <div className="flex items-center gap-1.5 text-[10px] font-mono font-semibold uppercase tracking-wider text-ink-400">
+        <Icon className="h-3 w-3 text-green-700" />
         {label}
       </div>
-      <div className="text-sm mt-1 truncate" title={value}>
+      <div className="text-sm font-sans text-ink-900 mt-1 truncate" title={value}>
         {value}
       </div>
     </div>

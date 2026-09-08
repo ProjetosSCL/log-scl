@@ -13,13 +13,13 @@ import {
 
 const critClasses: Record<Criticality, string> = {
   vencido:
-    "bg-status-critical/15 text-status-critical hover:bg-status-critical/25 ring-1 ring-status-critical/30",
+    "bg-danger/15 text-danger hover:bg-danger/25 ring-1 ring-danger/30 font-mono font-semibold rounded-sm",
   vence_hoje:
-    "bg-status-warning/15 text-status-warning hover:bg-status-warning/25 ring-1 ring-status-warning/30",
+    "bg-amber-500/20 text-amber-600 hover:bg-amber-500/30 ring-1 ring-amber-500/40 font-mono font-semibold rounded-sm",
   proximo:
-    "bg-status-attention/15 text-status-attention hover:bg-status-attention/25 ring-1 ring-status-attention/30",
+    "bg-green-600/15 text-green-700 hover:bg-green-600/25 ring-1 ring-green-600/30 font-mono font-semibold rounded-sm",
   saudavel:
-    "bg-status-healthy/10 text-status-healthy hover:bg-status-healthy/20 ring-1 ring-status-healthy/25",
+    "bg-green-100 text-green-900 hover:bg-green-100/80 ring-1 ring-green-700/20 font-mono font-semibold rounded-sm",
 };
 
 interface Props {
@@ -147,20 +147,25 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
   return (
     <div
       ref={ref}
-      className={cn("rounded-lg glass overflow-hidden flex flex-col", fullHeight && "h-full")}
+      className={cn(
+        "rounded-md border border-border bg-surface shadow-card overflow-hidden flex flex-col",
+        fullHeight && "h-full",
+      )}
     >
-      <div className="flex items-center justify-between gap-2 px-3 md:px-4 py-2 md:py-2.5 border-b border-border/60 flex-wrap">
+      <div className="flex items-center justify-between gap-2 px-3 md:px-4 py-2.5 md:py-3 border-b border-border flex-wrap bg-surface">
         <div className="min-w-0">
-          <div className="text-sm font-semibold leading-tight">Tabela operacional</div>
-          <div className="text-[11px] md:text-xs text-muted-foreground leading-tight mt-0.5">
+          <div className="text-base font-display font-bold text-ink-900 leading-tight">
+            Tabela operacional
+          </div>
+          <div className="text-xs text-ink-600 font-sans leading-tight mt-0.5">
             Volume de OS por cidade × data · clique para detalhes
           </div>
         </div>
-        <div className="flex items-center gap-2 md:gap-3 text-[10px] md:text-xs flex-wrap">
-          <Legend color="status-critical" label="Vencido" />
-          <Legend color="status-warning" label="Vence hoje" />
-          <Legend color="status-attention" label="Próximo" />
-          <Legend color="status-healthy" label="Saudável" />
+        <div className="flex items-center gap-2 md:gap-3 text-xs font-sans flex-wrap">
+          <Legend color="danger" label="Vencido" />
+          <Legend color="amber-600" label="Vence hoje" />
+          <Legend color="green-600" label="Próximo" />
+          <Legend color="green-700" label="Saudável" />
         </div>
       </div>
 
@@ -257,10 +262,9 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
               >
                 <td
                   className={cn(
-                    "sticky left-0 z-10",
-                    "bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.08),oklch(0.82_0.21_148/0.03))] backdrop-blur-xl",
-                    "shadow-[inset_3px_0_0_oklch(0.7_0.2_148/0.55),inset_-1px_0_0_oklch(0.7_0.2_148/0.12),2px_0_6px_-4px_oklch(0.4_0.04_150/0.15)]",
-                    "group-hover/row:bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.16),oklch(0.82_0.21_148/0.08))]",
+                    "sticky left-0 z-10 bg-surface",
+                    "shadow-[inset_3px_0_0_#0B6E4F,inset_-1px_0_0_#DEE7E1]",
+                    "group-hover/row:bg-green-100/30",
                     "transition-colors",
                     compact || isMobileLandscape ? "px-2 py-1" : "px-3 py-1.5",
                   )}
@@ -396,12 +400,18 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
 });
 
 function Legend({ color, label }: { color: string; label: string }) {
+  const dotColorClass =
+    color === "danger"
+      ? "bg-danger"
+      : color === "amber-600"
+        ? "bg-amber-600"
+        : color === "green-600"
+          ? "bg-green-600"
+          : "bg-green-700";
+
   return (
-    <div className="flex items-center gap-1.5 text-muted-foreground whitespace-nowrap">
-      <span
-        className="h-2 w-2 rounded-full"
-        style={{ background: `var(--${color})`, boxShadow: `0 0 8px var(--${color})` }}
-      />
+    <div className="flex items-center gap-1.5 text-ink-600 whitespace-nowrap">
+      <span className={cn("h-2 w-2 rounded-full", dotColorClass)} />
       {label}
     </div>
   );

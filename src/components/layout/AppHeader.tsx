@@ -48,38 +48,39 @@ export function AppHeader({ title = "Central Operacional" }: { title?: string })
     : "--:--";
 
   return (
-    <header className="glass rounded-2xl mt-2 mx-2 md:mt-3 md:mx-3 p-2.5 md:p-4 flex items-center gap-2 md:gap-4 flex-wrap">
+    <header className="rounded-md border border-border bg-surface shadow-card mt-2 mx-2 md:mt-3 md:mx-3 p-3 md:p-4 flex items-center gap-2 md:gap-4 flex-wrap">
       <MobileNav />
       <div className="flex items-center gap-3 min-w-0">
         <div className="min-w-0">
-          <h1 className="text-sm md:text-lg font-semibold tracking-tight leading-none truncate">
+          <h1 className="text-base md:text-xl font-display font-bold tracking-tight leading-none truncate text-ink-900">
             {title}
           </h1>
-          <div className="mt-1 text-[10px] md:text-[11px] text-muted-foreground capitalize">
-            {dateStr} · <span className="text-foreground/80 tabular-nums">{timeStr}</span>
+          <div className="mt-1 text-[11px] md:text-xs text-ink-600 capitalize font-sans">
+            {dateStr} ·{" "}
+            <span className="text-ink-900 font-mono font-semibold tabular-nums">{timeStr}</span>
           </div>
         </div>
       </div>
 
       <div className="hidden sm:block md:ml-auto flex-1 md:flex-initial md:w-[360px] relative order-3 md:order-none w-full sm:w-auto">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-400" />
         <Input
           placeholder="Buscar OS, cliente, técnico, cidade…"
-          className="pl-9 bg-secondary/50 border-border/60 focus-visible:ring-primary/40"
+          className="pl-9 bg-surface border-border text-ink-900 placeholder:text-ink-400 focus-visible:ring-green-700 rounded-sm text-sm font-sans"
         />
       </div>
 
       <div className="flex items-center gap-1.5 md:gap-2 ml-auto md:ml-0">
-        <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full glass text-[11px]">
-          <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--primary)]" />
-          <span className="text-muted-foreground">Atualizado</span>
-          <span className="text-foreground/90 tabular-nums">{lastUpdateStr}</span>
+        <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-sm border border-border bg-green-100/40 text-xs font-sans">
+          <span className="h-2 w-2 rounded-full bg-green-700" />
+          <span className="text-ink-600">Atualizado</span>
+          <span className="text-ink-900 font-mono font-semibold tabular-nums">{lastUpdateStr}</span>
         </div>
         <Button
           variant="outline"
           size="icon"
           onClick={refresh}
-          className="border-border/60 bg-secondary/50 hover:bg-accent/60"
+          className="rounded-sm border border-border bg-surface hover:bg-green-100/50 text-ink-900"
           aria-label="Atualizar dados"
         >
           <RefreshCcw className={`h-4 w-4 ${spinning ? "animate-spin" : ""}`} />
@@ -87,14 +88,14 @@ export function AppHeader({ title = "Central Operacional" }: { title?: string })
         <Button
           variant="outline"
           size="icon"
-          className="border-border/60 bg-secondary/50 hover:bg-accent/60 relative"
+          className="rounded-sm border border-border bg-surface hover:bg-green-100/50 text-ink-900 relative"
           aria-label="Notificações"
         >
           <Bell className="h-4 w-4" />
-          <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-status-warning shadow-[0_0_8px_var(--status-warning)]" />
+          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-amber-500" />
         </Button>
-        <div className="h-9 w-9 rounded-full glass grid place-items-center">
-          <UserRound className="h-4 w-4 text-foreground/80" />
+        <div className="h-9 w-9 rounded-sm border border-border bg-green-100 text-green-900 grid place-items-center font-medium">
+          <UserRound className="h-4 w-4 text-green-900" />
         </div>
       </div>
     </header>

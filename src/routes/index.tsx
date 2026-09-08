@@ -102,10 +102,10 @@ function DashboardPage() {
           size="sm"
           onClick={() => setFocusTable((v) => !v)}
           className={
-            "h-9 gap-1.5 rounded-full px-3 shrink-0 ml-auto " +
+            "h-9 gap-1.5 rounded-sm px-3 shrink-0 ml-auto font-sans transition-colors " +
             (focusTable
-              ? "border-primary/50 bg-primary/15 text-primary hover:bg-primary/20"
-              : "border-border/60 bg-secondary/50 hover:bg-accent/60")
+              ? "border-green-700 bg-green-100 text-green-900 font-semibold"
+              : "border-border bg-surface hover:bg-green-100/50 text-ink-900")
           }
           title="Foco na tabela: recolhe filtros e painéis laterais"
           aria-pressed={focusTable}
@@ -124,6 +124,7 @@ function DashboardPage() {
             delta={3.2}
             icon={ListChecks}
             tone="primary"
+            variant="featured"
             hint="Janela de 7 dias"
           />
           <KpiCard
@@ -228,20 +229,18 @@ function DashboardPage() {
         {!focusTable && (
           <div className="space-y-3">
             <InsightsPanel insights={insights} />
-            <div className="rounded-2xl glass p-4">
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                Status do turno
-              </div>
-              <div className="mt-2 flex items-center gap-3">
-                <div className="relative h-12 w-12 rounded-full bg-primary/15 grid place-items-center">
-                  <AlertTriangle className="h-5 w-5 text-primary" />
-                  <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-status-warning animate-pulse" />
+            <div className="rounded-md border border-border bg-surface p-5 shadow-card">
+              <div className="text-base font-display font-bold text-ink-900">Status do turno</div>
+              <div className="mt-3 flex items-center gap-3">
+                <div className="relative h-11 w-11 rounded-sm bg-green-100 text-green-900 grid place-items-center shrink-0">
+                  <AlertTriangle className="h-5 w-5 text-green-700" />
+                  <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-amber-500" />
                 </div>
                 <div>
-                  <div className="text-sm font-semibold">
+                  <div className="text-sm font-semibold text-ink-900">
                     {kpis.vencidas + kpis.venceHoje} ações prioritárias
                   </div>
-                  <div className="text-[11px] text-muted-foreground">
+                  <div className="text-xs text-ink-600 font-sans mt-0.5">
                     Distribuídas em {new Set(filtered.map((o) => o.cidade)).size} cidades
                   </div>
                 </div>

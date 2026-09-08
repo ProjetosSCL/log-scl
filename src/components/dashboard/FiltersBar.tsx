@@ -36,20 +36,23 @@ function MultiFilter({ label, options, value, onChange }: MultiProps) {
           variant="outline"
           size="sm"
           className={cn(
-            "h-8 gap-1.5 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-3",
-            selected.length > 0 && "border-primary/40 text-foreground",
+            "h-8 gap-1.5 rounded-sm border border-border bg-surface hover:bg-green-100/60 px-3 text-ink-900 transition-colors",
+            selected.length > 0 && "border-green-600 bg-green-100 text-green-900 font-medium",
           )}
         >
-          <span className="text-xs">{label}</span>
+          <span className="text-xs font-sans">{label}</span>
           {selected.length > 0 && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary/20 text-primary font-semibold">
+            <span className="text-[10px] px-1.5 py-0.2 rounded-sm bg-green-700 text-white font-mono font-semibold">
               {selected.length}
             </span>
           )}
-          <ChevronDown className="h-3 w-3 opacity-60" />
+          <ChevronDown className="h-3 w-3 opacity-60 text-ink-600" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[240px] p-0 glass-strong border-border/60" align="start">
+      <PopoverContent
+        className="w-[240px] p-0 rounded-sm border border-border bg-surface shadow-card"
+        align="start"
+      >
         <Command>
           <CommandInput placeholder={`Buscar ${label.toLowerCase()}...`} className="h-9" />
           <CommandList>
@@ -61,13 +64,13 @@ function MultiFilter({ label, options, value, onChange }: MultiProps) {
                   <CommandItem key={opt} onSelect={() => toggle(opt)}>
                     <div
                       className={cn(
-                        "mr-2 h-4 w-4 rounded border border-border grid place-items-center",
-                        sel && "bg-primary border-primary text-primary-foreground",
+                        "mr-2 h-4 w-4 rounded-sm border border-border grid place-items-center",
+                        sel && "bg-green-700 border-green-700 text-white",
                       )}
                     >
                       {sel && <Check className="h-3 w-3" />}
                     </div>
-                    {opt}
+                    <span className="text-ink-900 text-xs font-sans">{opt}</span>
                   </CommandItem>
                 );
               })}
@@ -115,8 +118,8 @@ export function FiltersBar({ filters, setFilters, only, dense = false }: Props) 
   return (
     <div
       className={cn(
-        "rounded-2xl glass flex flex-wrap items-center",
-        dense ? "p-1.5 gap-1" : "p-3 gap-2",
+        "rounded-md border border-border bg-surface shadow-card flex flex-wrap items-center",
+        dense ? "p-2 gap-1.5" : "p-3.5 gap-2",
       )}
     >
       {show("contratante") && (
@@ -197,18 +200,12 @@ export function FiltersBar({ filters, setFilters, only, dense = false }: Props) 
           size="sm"
           onClick={() => set("emergencial", filters.emergencial ? null : true)}
           className={cn(
-            "h-8 rounded-full border-border/60 bg-secondary/50 hover:bg-accent/60 px-3 text-xs gap-1.5",
-            filters.emergencial &&
-              "border-status-critical/50 text-status-critical bg-status-critical/10",
+            "h-8 rounded-sm border border-border bg-surface hover:bg-green-100/60 px-3 text-xs gap-1.5 text-ink-900",
+            filters.emergencial && "border-danger text-danger bg-danger/10 font-semibold",
           )}
         >
           <span
-            className={cn(
-              "h-1.5 w-1.5 rounded-full",
-              filters.emergencial
-                ? "bg-status-critical shadow-[0_0_8px_var(--status-critical)]"
-                : "bg-muted-foreground/50",
-            )}
+            className={cn("h-2 w-2 rounded-full", filters.emergencial ? "bg-danger" : "bg-ink-400")}
           />
           Emergencial
         </Button>
@@ -219,7 +216,7 @@ export function FiltersBar({ filters, setFilters, only, dense = false }: Props) 
           variant="ghost"
           size="sm"
           onClick={() => setFilters({})}
-          className="h-8 rounded-full px-3 text-xs text-muted-foreground hover:text-foreground gap-1"
+          className="h-8 rounded-sm px-3 text-xs text-ink-600 hover:text-ink-900 gap-1"
         >
           <X className="h-3 w-3" />
           Limpar ({totalActive})

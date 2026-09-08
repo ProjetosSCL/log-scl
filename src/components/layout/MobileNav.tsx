@@ -37,23 +37,25 @@ export function MobileNav() {
         <Button
           variant="outline"
           size="icon"
-          className="md:hidden h-9 w-9 border-border/60 bg-secondary/50 hover:bg-accent/60"
+          className="md:hidden h-9 w-9 rounded-sm border-border bg-surface hover:bg-green-100/50 text-ink-900"
           aria-label="Abrir menu"
         >
           <Menu className="h-4 w-4" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-[260px] p-4 glass-strong border-border/60">
+      <SheetContent side="left" className="w-[260px] p-4 bg-surface border-border">
         <div className="flex items-center gap-3 px-1 py-2">
-          <div className="relative h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-primary-glow grid place-items-center glow-primary">
-            <Zap className="h-4 w-4 text-primary-foreground" strokeWidth={2.5} />
+          <div className="relative h-9 w-9 rounded-sm bg-green-700 text-white grid place-items-center shadow-sm">
+            <Zap className="h-4.5 w-4.5 text-white" strokeWidth={2.5} />
           </div>
           <div className="leading-tight">
-            <div className="text-sm font-semibold tracking-tight">FieldOps</div>
-            <div className="text-[11px] text-muted-foreground">Operações</div>
+            <div className="text-base font-display font-bold tracking-tight text-ink-900">
+              FieldOps
+            </div>
+            <div className="text-[11px] text-ink-600 font-sans">Operações · Log-SCL</div>
           </div>
         </div>
-        <div className="mt-3 h-px bg-border/60" />
+        <div className="mt-3 h-px bg-border" />
         <nav className="mt-3 space-y-1">
           {items.map((it) => {
             const active = it.exact ? path === it.to : path.startsWith(it.to);
@@ -64,14 +66,14 @@ export function MobileNav() {
                 to={it.to as "/"}
                 onClick={() => setOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all",
+                  "flex items-center gap-3 rounded-sm px-3 py-2.5 text-sm transition-all font-sans",
                   active
-                    ? "bg-accent/70 text-foreground"
-                    : "text-muted-foreground hover:bg-accent/60",
+                    ? "bg-green-100 text-green-900 font-semibold"
+                    : "text-ink-600 hover:bg-green-100/50 hover:text-ink-900",
                 )}
               >
-                <Icon className={cn("h-4 w-4", active ? "text-primary" : "")} />
-                <span className="font-medium">{it.label}</span>
+                <Icon className={cn("h-4 w-4", active ? "text-green-700" : "text-ink-600")} />
+                <span>{it.label}</span>
               </Link>
             );
           })}

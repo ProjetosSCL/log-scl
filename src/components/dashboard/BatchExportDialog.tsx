@@ -216,11 +216,11 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
       <Dialog open={open} onOpenChange={(v) => !busy && onOpenChange(v)}>
         <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Camera className="h-4 w-4" />
+            <DialogTitle className="flex items-center gap-2 font-display font-bold text-ink-900">
+              <Camera className="h-4 w-4 text-green-700" />
               Prints diários por Contratante × Prestador
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-ink-600 font-sans text-xs">
               {pairs.length} combinações detectadas nos dados filtrados. Desmarque as que não quiser
               exportar.
             </DialogDescription>
@@ -230,7 +230,7 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
             {shareStep === null ? (
               <div className="space-y-1.5">
                 {pairs.length === 0 && (
-                  <div className="text-sm text-muted-foreground py-8 text-center">
+                  <div className="text-sm text-ink-600 py-8 text-center font-sans">
                     Nenhuma combinação encontrada com os filtros atuais.
                   </div>
                 )}
@@ -241,24 +241,23 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
                     <label
                       key={p.key}
                       className={cn(
-                        "flex items-center gap-3 rounded-lg border border-border/60 px-3 py-2 cursor-pointer transition-colors",
-                        sel ? "bg-secondary/60" : "bg-transparent opacity-60",
+                        "flex items-center gap-3 rounded-sm border border-border px-3 py-2 cursor-pointer transition-colors font-sans",
+                        sel ? "bg-green-100/50 border-green-700/30" : "bg-transparent opacity-60",
                         busy && "cursor-wait",
                       )}
                     >
                       <input
                         type="checkbox"
-                        className="h-4 w-4 accent-primary"
+                        className="h-4 w-4 accent-green-700"
                         checked={sel}
                         disabled={busy}
                         onChange={(e) => setSelected((s) => ({ ...s, [p.key]: e.target.checked }))}
                       />
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium truncate">
-                          {p.contratante} <span className="text-muted-foreground">—</span>{" "}
-                          {p.prestador}
+                        <div className="text-sm font-medium truncate text-ink-900">
+                          {p.contratante} <span className="text-ink-400">—</span> {p.prestador}
                         </div>
-                        <div className="text-[11px] text-muted-foreground tabular-nums">
+                        <div className="text-[11px] text-ink-600 font-mono tabular-nums">
                           {p.count} OS · {p.filename}
                         </div>
                       </div>
@@ -266,7 +265,7 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
                         <img
                           src={g.dataUrl}
                           alt=""
-                          className="h-10 w-16 object-cover rounded border border-border/60"
+                          className="h-10 w-16 object-cover rounded-sm border border-border"
                         />
                       )}
                     </label>
@@ -285,10 +284,10 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
             )}
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-border/60">
+          <div className="flex items-center gap-2 flex-wrap pt-3 border-t border-border">
             {progress ? (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground flex-1">
-                <Loader2 className="h-4 w-4 animate-spin" />
+              <div className="flex items-center gap-2 text-sm text-ink-600 font-sans flex-1">
+                <Loader2 className="h-4 w-4 animate-spin text-green-700" />
                 Gerando {progress.i} de {progress.n}…
               </div>
             ) : shareStep !== null ? (
@@ -296,20 +295,20 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
                 variant="ghost"
                 size="sm"
                 onClick={() => setShareStep(null)}
-                className="gap-1.5"
+                className="gap-1.5 rounded-sm text-ink-600 hover:text-ink-900"
               >
                 <X className="h-3.5 w-3.5" />
                 Voltar
               </Button>
             ) : generated.length === 0 ? (
               <>
-                <div className="text-xs text-muted-foreground flex-1">
+                <div className="text-xs text-ink-600 font-sans flex-1">
                   {selectedPairs.length} selecionado(s)
                 </div>
                 <Button
                   onClick={runGenerate}
                   disabled={selectedPairs.length === 0}
-                  className="gap-1.5"
+                  className="gap-1.5 rounded-sm bg-green-700 text-white hover:bg-green-800"
                   size="sm"
                 >
                   <Camera className="h-3.5 w-3.5" />
@@ -318,14 +317,23 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
               </>
             ) : (
               <>
-                <div className="text-xs text-muted-foreground flex-1">
+                <div className="text-xs text-ink-600 font-sans flex-1">
                   {generated.length} imagem(ns) prontas
                 </div>
-                <Button variant="outline" size="sm" onClick={downloadZip} className="gap-1.5">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={downloadZip}
+                  className="gap-1.5 rounded-sm border-border bg-surface text-ink-900 hover:bg-green-100/50"
+                >
                   <Download className="h-3.5 w-3.5" />
                   Baixar .zip
                 </Button>
-                <Button size="sm" onClick={shareWhatsApp} className="gap-1.5">
+                <Button
+                  size="sm"
+                  onClick={shareWhatsApp}
+                  className="gap-1.5 rounded-sm bg-green-700 text-white hover:bg-green-800"
+                >
                   <Share2 className="h-3.5 w-3.5" />
                   Compartilhar no WhatsApp
                 </Button>
@@ -436,7 +444,7 @@ function ShareAssistant({
           href="https://web.whatsapp.com/"
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:opacity-90"
+          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-sm text-xs font-medium bg-green-700 text-white hover:bg-green-800 transition-colors"
         >
           <ExternalLink className="h-3.5 w-3.5" /> Abrir WhatsApp Web
         </a>
