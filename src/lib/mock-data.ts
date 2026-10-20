@@ -27,6 +27,7 @@ export interface OS {
   sla: number;
   criticidade: Criticality;
   status: Status;
+  cumpriuPrazo: boolean | null;
   emergencial: boolean;
   agendamento: boolean;
   observacoes: string;
@@ -144,6 +145,19 @@ export function normalizeRows(rows: RawRow[]): {
     const crit = classifyCriticality(limite, r.status, refToday);
     const sla = slaFromCrit(crit, limite, abertura, refToday);
 
+    const statusUpper = (r.status || "").toUpperCase();
+    const isConcluida =
+      statusUpper === "CONCLUIDA" || statusUpper === "CONCLUÍDA" || statusUpper === "FINALIZADA";
+
+    let cumpriuPrazo: boolean | null = null;
+    if (isConcluida && r.dataAtendimento) {
+      const atendDate = new Date(r.dataAtendimento).getTime();
+      const limiteDate = limite.getTime();
+      if (!isNaN(atendDate) && !isNaN(limiteDate)) {
+        cumpriuPrazo = atendDate <= limiteDate;
+      }
+    }
+
     const timeline: OS["timeline"] = [
       { ts: abertura.toISOString(), label: "OS aberta", by: "Sistema" },
     ];
@@ -182,6 +196,7 @@ export function normalizeRows(rows: RawRow[]): {
       sla,
       criticidade: crit,
       status: r.status,
+      cumpriuPrazo,
       emergencial: r.emergencial,
       agendamento: r.agendamento,
       observacoes: r.observacoes || "Sem observações registradas.",
@@ -229,6 +244,7 @@ export function getKpis(data: OS[]) {
   const total = data.length;
   const vencidas = data.filter((o) => o.criticidade === "vencido").length;
   const venceHoje = data.filter((o) => o.criticidade === "vence_hoje").length;
+  const proximo = data.filter((o) => o.criticidade === "proximo").length;
   const semana = data.length;
   const slaPct =
     Math.round((data.filter((o) => o.sla >= 70).length / Math.max(1, total)) * 1000) / 10;
@@ -250,6 +266,7 @@ export function getKpis(data: OS[]) {
     total,
     vencidas,
     venceHoje,
+    proximo,
     semana,
     slaPct,
     emergencial,
@@ -426,19 +443,29 @@ export function computeFacets(all: OS[]): Facets {
 }
 
 // ---------- Reactive store ----------
-const STORAGE_KEY = "fieldops_dataset_v2";
+const STORAGE_KEY = "fieldops_dataset_v3";
 
-interface Snapshot {
+export interface Snapshot {
   all: OS[];
   facets: Facets;
   refToday: Date;
   dates: { iso: string; label: string; offset: number }[];
   source: "seed" | "import";
-  importedAt?: string;
+  importedAt?: string | null;
   rowCount: number;
+  isSyncing: boolean;
+  syncError: string | null;
+  lastSyncedAt: string | null;
 }
 
-function buildSnapshot(rows: RawRow[], source: "seed" | "import", importedAt?: string): Snapshot {
+function buildSnapshot(
+  rows: RawRow[],
+  source: "seed" | "import",
+  importedAt?: string | null,
+  isSyncing = false,
+  syncError: string | null = null,
+  lastSyncedAt: string | null = null,
+): Snapshot {
   const { all, refToday, dates } = normalizeRows(rows);
   return {
     all,
@@ -446,17 +473,28 @@ function buildSnapshot(rows: RawRow[], source: "seed" | "import", importedAt?: s
     refToday,
     dates,
     source,
-    importedAt,
+    importedAt: importedAt ?? null,
     rowCount: rows.length,
+    isSyncing,
+    syncError,
+    lastSyncedAt: lastSyncedAt ?? (typeof window !== "undefined" ? new Date().toISOString() : null),
   };
 }
 
-function loadStored(): { rows: RawRow[]; importedAt: string } | null {
+function loadStored(): {
+  rows: RawRow[];
+  importedAt?: string | null;
+  source?: "seed" | "import";
+} | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as { rows: RawRow[]; importedAt: string };
+    const parsed = JSON.parse(raw) as {
+      rows: RawRow[];
+      importedAt?: string | null;
+      source?: "seed" | "import";
+    };
     if (!Array.isArray(parsed.rows) || !parsed.rows.length) return null;
     return parsed;
   } catch {
@@ -464,11 +502,18 @@ function loadStored(): { rows: RawRow[]; importedAt: string } | null {
   }
 }
 
-let snapshot: Snapshot = (() => {
-  const stored = loadStored();
-  if (stored) return buildSnapshot(stored.rows, "import", stored.importedAt);
-  return buildSnapshot(seed as RawRow[], "seed");
-})();
+function saveToLocalStorage(rows: RawRow[], source: "seed" | "import", importedAt?: string | null) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ rows, source, importedAt }));
+  } catch (e) {
+    console.warn("[DatasetStore] Falha ao salvar no cache local:", e);
+  }
+}
+
+const defaultSeedSnapshot: Snapshot = buildSnapshot(seed as unknown as RawRow[], "seed", null);
+
+let snapshot: Snapshot = defaultSeedSnapshot;
 
 const listeners = new Set<() => void>();
 
@@ -476,25 +521,191 @@ function getStore(): Snapshot {
   return snapshot;
 }
 
+function getServerSnapshot(): Snapshot {
+  return defaultSeedSnapshot;
+}
+
 function emit() {
   listeners.forEach((l) => l());
 }
 
+let isSyncingInProgress = false;
+
+export async function syncCentralDataset(force = false): Promise<boolean> {
+  if (typeof window === "undefined") return false;
+  if (isSyncingInProgress && !force) return false;
+
+  isSyncingInProgress = true;
+  snapshot = { ...snapshot, isSyncing: true, syncError: null };
+  emit();
+
+  try {
+    const res = await fetch("/api/dataset", {
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+    });
+
+    if (!res.ok) {
+      throw new Error(`Falha HTTP ${res.status} ao obter dados do servidor`);
+    }
+
+    const data = (await res.json()) as {
+      success: boolean;
+      source: "seed" | "import";
+      importedAt: string | null;
+      rowCount: number;
+      rows: RawRow[];
+      error?: string;
+    };
+
+    if (!data.success || !Array.isArray(data.rows)) {
+      throw new Error(data.error || "Formato de dados inválido retornado pelo servidor");
+    }
+
+    const now = new Date().toISOString();
+    snapshot = buildSnapshot(data.rows, data.source, data.importedAt, false, null, now);
+    saveToLocalStorage(data.rows, data.source, data.importedAt);
+    emit();
+    return true;
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.warn("[DatasetStore] Erro ao sincronizar com servidor central:", msg);
+    snapshot = { ...snapshot, isSyncing: false, syncError: msg };
+    emit();
+    return false;
+  } finally {
+    isSyncingInProgress = false;
+  }
+}
+
+export async function checkNewerCentralDataset(): Promise<void> {
+  if (typeof window === "undefined") return;
+  try {
+    const res = await fetch("/api/dataset?status_only=true", {
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+    });
+    if (!res.ok) return;
+    const data = (await res.json()) as {
+      success: boolean;
+      source: "seed" | "import";
+      importedAt: string | null;
+      rowCount: number;
+    };
+    if (data.success && data.importedAt !== snapshot.importedAt) {
+      await syncCentralDataset(true);
+    }
+  } catch {
+    /* ignore polling network errors */
+  }
+}
+
+// Upload new CSV rows to the central backend using password
+export async function uploadCentralDataset(
+  rows: RawRow[],
+  password: string,
+): Promise<{ success: boolean; error?: string; importedAt?: string; rowCount?: number }> {
+  if (!password) {
+    return { success: false, error: "A senha de confirmação é obrigatória." };
+  }
+
+  try {
+    const res = await fetch("/api/dataset", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ rows, password }),
+    });
+
+    const data = (await res.json().catch(() => ({}))) as {
+      success: boolean;
+      error?: string;
+      importedAt?: string;
+      rowCount?: number;
+    };
+
+    if (!res.ok || !data.success) {
+      return {
+        success: false,
+        error: data.error || `Erro ${res.status}: não foi possível atualizar a base central.`,
+      };
+    }
+
+    const importedAt = data.importedAt || new Date().toISOString();
+    snapshot = buildSnapshot(rows, "import", importedAt, false, null, importedAt);
+    saveToLocalStorage(rows, "import", importedAt);
+    emit();
+
+    return {
+      success: true,
+      importedAt,
+      rowCount: data.rowCount || rows.length,
+    };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return {
+      success: false,
+      error: `Erro de conexão ao enviar para o servidor: ${msg}`,
+    };
+  }
+}
+
+// Reset central dataset to default seed
+export async function resetCentralDataset(
+  password: string,
+): Promise<{ success: boolean; error?: string }> {
+  if (!password) {
+    return { success: false, error: "A senha de confirmação é obrigatória." };
+  }
+
+  try {
+    const res = await fetch("/api/dataset/reset", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ password }),
+    });
+
+    const data = (await res.json().catch(() => ({}))) as {
+      success: boolean;
+      error?: string;
+      dataset?: { rows: RawRow[] };
+    };
+
+    if (!res.ok || !data.success) {
+      return {
+        success: false,
+        error: data.error || `Erro ${res.status}: não foi possível restaurar a base.`,
+      };
+    }
+
+    const defaultSeed = (seed as unknown as RawRow[]) ?? [];
+    snapshot = buildSnapshot(defaultSeed, "seed", null, false, null, new Date().toISOString());
+    saveToLocalStorage(defaultSeed, "seed", null);
+    emit();
+
+    return { success: true };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return { success: false, error: msg };
+  }
+}
+
+// Legacy helpers kept for fallback compatibility
 export function setDataset(rows: RawRow[]) {
   const importedAt = new Date().toISOString();
   snapshot = buildSnapshot(rows, "import", importedAt);
-  if (typeof window !== "undefined") {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ rows, importedAt }));
-    } catch (e) {
-      console.warn("Falha ao persistir dataset", e);
-    }
-  }
+  saveToLocalStorage(rows, "import", importedAt);
   emit();
 }
 
 export function resetDataset() {
-  snapshot = buildSnapshot(seed as RawRow[], "seed");
+  const defaultSeed = (seed as unknown as RawRow[]) ?? [];
+  snapshot = buildSnapshot(defaultSeed, "seed", null);
   if (typeof window !== "undefined") {
     try {
       localStorage.removeItem(STORAGE_KEY);
@@ -505,13 +716,45 @@ export function resetDataset() {
   emit();
 }
 
+export async function refreshDataset(): Promise<boolean> {
+  return await syncCentralDataset(true);
+}
+
+// Initialize client store restoration and background sync
+if (typeof window !== "undefined") {
+  // Restore local storage snapshot asynchronously after initial hydration
+  // to guarantee strict server/client hydration parity
+  setTimeout(() => {
+    const stored = loadStored();
+    if (stored) {
+      snapshot = buildSnapshot(
+        stored.rows,
+        stored.source ?? (stored.importedAt ? "import" : "seed"),
+        stored.importedAt,
+      );
+      emit();
+    }
+    syncCentralDataset();
+  }, 0);
+
+  // Sync on window re-focus
+  window.addEventListener("focus", () => {
+    checkNewerCentralDataset();
+  });
+
+  // Background check every 3 minutes
+  setInterval(() => {
+    checkNewerCentralDataset();
+  }, 180000);
+}
+
 function subscribe(l: () => void) {
   listeners.add(l);
   return () => listeners.delete(l);
 }
 
 export function useDataset(): Snapshot {
-  return useSyncExternalStore(subscribe, getStore, getStore);
+  return useSyncExternalStore(subscribe, getStore, getServerSnapshot);
 }
 
 export function getDatasetSnapshot(): Snapshot {

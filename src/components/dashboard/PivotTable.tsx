@@ -12,14 +12,13 @@ import {
 } from "@/lib/mock-data";
 
 const critClasses: Record<Criticality, string> = {
-  vencido:
-    "bg-danger/15 text-danger hover:bg-danger/25 ring-1 ring-danger/30 font-mono font-semibold rounded-sm",
+  vencido: "bg-danger/15 text-danger hover:bg-danger/25 ring-1 ring-danger/30 font-mono font-bold",
   vence_hoje:
-    "bg-amber-500/20 text-amber-600 hover:bg-amber-500/30 ring-1 ring-amber-500/40 font-mono font-semibold rounded-sm",
+    "bg-amber-500 text-ink-900 hover:bg-amber-600 ring-1 ring-amber-600/40 font-mono font-bold shadow-sm",
   proximo:
-    "bg-green-600/15 text-green-700 hover:bg-green-600/25 ring-1 ring-green-600/30 font-mono font-semibold rounded-sm",
+    "bg-amber-500/20 text-ink-900 hover:bg-amber-500/30 ring-1 ring-amber-500/40 font-mono font-semibold",
   saudavel:
-    "bg-green-100 text-green-900 hover:bg-green-100/80 ring-1 ring-green-700/20 font-mono font-semibold rounded-sm",
+    "bg-green-100 text-green-900 hover:bg-green-100/80 ring-1 ring-green-700/20 font-mono font-semibold",
 };
 
 interface Props {
@@ -28,6 +27,10 @@ interface Props {
   fullHeight?: boolean;
   zoom?: number;
   compact?: boolean;
+  isPlanningMode?: boolean;
+  selectedCities?: string[];
+  onToggleCity?: (city: string) => void;
+  assignedTechByCity?: Record<string, string>;
 }
 
 function useOrientation() {
@@ -73,7 +76,17 @@ function useOrientation() {
 }
 
 export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
-  { filters, onCellClick, fullHeight = false, zoom = 100, compact = false },
+  {
+    filters,
+    onCellClick,
+    fullHeight = false,
+    zoom = 100,
+    compact = false,
+    isPlanningMode = false,
+    selectedCities = [],
+    onToggleCity,
+    assignedTechByCity = {},
+  },
   ref,
 ) {
   const { all, dates: storeDates } = useDataset();
@@ -101,39 +114,27 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
       out.push({ dates: dates.slice(i, i + 2) });
     }
     return out;
-  }, [pairMode, dates]);
+  }, [dates, pairMode]);
 
-  const cityMinW = compact
-    ? isMobileLandscape
-      ? 156
-      : 132
-    : isMobileLandscape
-      ? 180
+  // Dynamic widths for city column and date columns
+  const cityFontPx = isMobileLandscape ? 11 : isMobile ? 11 : compact ? 11 : 12;
+  const maxCityLen = cities.reduce((m, c) => Math.max(m, c.length), 0);
+  const cityMinW = Math.max(
+    compact
+      ? isPlanningMode
+        ? 110
+        : 90
       : isMobile
-        ? 140
-        : 180;
-  const dateMinWBase = pairMode
-    ? compact
-      ? 86
-      : 96
-    : compact
-      ? isMobileLandscape
-        ? 52
-        : 48
-      : isMobileLandscape
-        ? 60
-        : isMobile
-          ? 56
-          : 64;
-  const cityFontPx = compact
-    ? isMobileLandscape
-      ? 13
-      : 13
-    : isMobileLandscape
-      ? 14
-      : isMobile
-        ? 13
-        : 14;
+        ? isPlanningMode
+          ? 120
+          : 100
+        : isPlanningMode
+          ? 150
+          : 120,
+    Math.min(230, Math.round(maxCityLen * (cityFontPx * 0.65) + (isPlanningMode ? 60 : 24))),
+  );
+
+  const dateMinWBase = compact ? (pairMode ? 64 : 36) : pairMode ? 74 : 44;
   const dateMinW =
     isMobileLandscape && dateGroups.length > 0
       ? Math.max(
@@ -148,24 +149,24 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
     <div
       ref={ref}
       className={cn(
-        "rounded-md border border-border bg-surface shadow-card overflow-hidden flex flex-col",
+        "rounded-md bg-surface border border-border shadow-card overflow-hidden flex flex-col",
         fullHeight && "h-full",
       )}
     >
-      <div className="flex items-center justify-between gap-2 px-3 md:px-4 py-2.5 md:py-3 border-b border-border flex-wrap bg-surface">
+      <div className="flex items-center justify-between gap-2 px-3 md:px-4 py-2.5 border-b border-border flex-wrap">
         <div className="min-w-0">
-          <div className="text-base font-display font-bold text-ink-900 leading-tight">
-            Tabela operacional
+          <div className="text-sm font-display font-bold text-ink-900 leading-tight">
+            Tabela Operacional
           </div>
-          <div className="text-xs text-ink-600 font-sans leading-tight mt-0.5">
+          <div className="text-[11px] md:text-xs text-ink-600 font-sans leading-tight mt-0.5">
             Volume de OS por cidade × data · clique para detalhes
           </div>
         </div>
-        <div className="flex items-center gap-2 md:gap-3 text-xs font-sans flex-wrap">
-          <Legend color="danger" label="Vencido" />
-          <Legend color="amber-600" label="Vence hoje" />
-          <Legend color="green-600" label="Próximo" />
-          <Legend color="green-700" label="Saudável" />
+        <div className="flex items-center gap-2 md:gap-3 text-[10px] md:text-xs flex-wrap">
+          <Legend color="status-critical" label="Vencido" />
+          <Legend color="status-warning" label="Vence hoje" />
+          <Legend color="status-attention" label="Próximo" />
+          <Legend color="status-healthy" label="Saudável" />
         </div>
       </div>
 
@@ -173,14 +174,15 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
         <button
           type="button"
           onClick={() => setHintDismissed(true)}
-          className="flex items-center justify-center gap-2 px-3 py-1.5 bg-primary/10 text-primary text-[11px] font-medium border-b border-primary/20 hover:bg-primary/15 transition-colors"
+          className="flex items-center justify-center gap-2 px-3 py-1.5 bg-green-100 text-green-900 text-[11px] font-medium border-b border-border hover:bg-green-100/80 transition-colors"
         >
-          <RotateCw className="h-3 w-3" />
+          <RotateCw className="h-3 w-3 text-green-700" />
           Gire o celular para ver melhor a tabela · toque para ocultar
         </button>
       )}
 
       <div
+        data-pivot-scroll-container="true"
         className={cn(
           "overflow-auto overscroll-contain",
           fullHeight ? "flex-1 min-h-0" : "max-h-[520px]",
@@ -188,25 +190,33 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
         style={{ fontSize: `${zoom}%`, WebkitOverflowScrolling: "touch" }}
       >
         <table className="w-full border-collapse">
-          <thead className="sticky top-0 z-10 bg-background/85 backdrop-blur-md shadow-[0_2px_6px_-3px_oklch(0.4_0.04_150/0.25)]">
+          <thead className="sticky top-0 z-10 bg-bg border-b border-border shadow-sm">
             <tr className="border-b border-border">
               <th
                 className={cn(
-                  "text-left font-semibold sticky left-0 z-30",
-                  "border-r border-primary/20 text-primary",
-                  "bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.12),oklch(0.82_0.21_148/0.06))] backdrop-blur-xl",
-                  "shadow-[inset_-1px_0_0_oklch(0.7_0.2_148/0.18),2px_0_8px_-4px_oklch(0.4_0.04_150/0.2)]",
+                  "text-left font-bold sticky left-0 z-30",
+                  "border-r border-border text-green-900 bg-green-100/80",
                   compact || isMobileLandscape ? "px-2 py-1 text-xs" : "px-3 py-1.5 text-sm",
                 )}
                 style={{ minWidth: cityMinW }}
               >
-                Cidade
+                <div className="flex items-center gap-1.5">
+                  {isPlanningMode && (
+                    <span
+                      className="text-[9px] font-mono font-bold uppercase bg-green-700 text-white px-1.5 py-0.5 rounded tracking-wider shrink-0"
+                      title="Modo de seleção de cidades para montagem de rota"
+                    >
+                      Rota
+                    </span>
+                  )}
+                  <span>Cidade</span>
+                </div>
               </th>
               {dateGroups.map((g, gi) => (
                 <th
                   key={gi}
                   className={cn(
-                    "font-semibold text-foreground text-center capitalize whitespace-nowrap border-r border-border/40",
+                    "font-mono font-bold text-ink-900 text-center capitalize whitespace-nowrap border-r border-border",
                     compact || isMobileLandscape
                       ? "px-1 py-0.5 text-[10px]"
                       : "px-2 py-1.5 text-xs",
@@ -214,12 +224,12 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
                   style={{ minWidth: dateMinW }}
                 >
                   {pairMode ? (
-                    <div className="flex items-stretch divide-x divide-border/40">
+                    <div className="flex items-stretch divide-x divide-border">
                       {g.dates.map((d) => (
                         <div key={d.label} className="flex-1 px-0.5 leading-tight">
                           <div>{d.label}</div>
                           {d.offset === 0 && (
-                            <div className="text-primary font-bold text-[8px] leading-none mt-0.5">
+                            <div className="text-green-700 font-bold text-[8px] leading-none mt-0.5">
                               HOJE
                             </div>
                           )}
@@ -232,7 +242,7 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
                       {g.dates[0].offset === 0 && (
                         <div
                           className={cn(
-                            "text-primary font-bold leading-none mt-0.5",
+                            "text-green-700 font-bold leading-none mt-0.5",
                             compact ? "text-[8px]" : "text-[10px]",
                           )}
                         >
@@ -245,7 +255,7 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
               ))}
               <th
                 className={cn(
-                  "font-bold text-foreground text-center bg-muted/60 sticky right-0 z-20 border-l border-border",
+                  "font-mono font-bold text-ink-900 text-center bg-bg sticky right-0 z-20 border-l border-border",
                   compact || isMobileLandscape ? "px-2 py-1 text-xs" : "px-3 py-1.5",
                 )}
                 style={{ minWidth: compact ? 48 : 64 }}
@@ -255,111 +265,154 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
             </tr>
           </thead>
           <tbody>
-            {cities.map((city, ci) => (
-              <tr
-                key={city}
-                className="group/row border-b border-border/40 hover:bg-accent/20 transition-colors"
-              >
-                <td
+            {cities.map((city, ci) => {
+              const isSelected = isPlanningMode && selectedCities?.includes(city);
+              const assignedTech = isPlanningMode ? assignedTechByCity?.[city] : undefined;
+
+              return (
+                <tr
+                  key={city}
                   className={cn(
-                    "sticky left-0 z-10 bg-surface",
-                    "shadow-[inset_3px_0_0_#0B6E4F,inset_-1px_0_0_#DEE7E1]",
-                    "group-hover/row:bg-green-100/30",
-                    "transition-colors",
-                    compact || isMobileLandscape ? "px-2 py-1" : "px-3 py-1.5",
+                    "group/row border-b border-border/60 transition-colors",
+                    isSelected ? "bg-green-100/50 hover:bg-green-100/70" : "hover:bg-green-100/30",
                   )}
-                  style={{ minWidth: cityMinW }}
                 >
-                  <div
-                    className="font-semibold uppercase tracking-wide truncate text-foreground"
-                    style={{ fontSize: cityFontPx, maxWidth: cityMinW - 16 }}
-                    title={city}
-                  >
-                    {city}
-                  </div>
-                </td>
-                {dateGroups.map((g, gi) => (
                   <td
-                    key={gi}
                     className={cn(
-                      "text-center border-r border-border/30",
-                      compact || isMobileLandscape ? "px-0.5 py-0.5" : "px-1.5 py-1",
+                      "sticky left-0 z-10 border-r border-border transition-colors",
+                      isSelected
+                        ? "bg-green-100/80 ring-1 ring-inset ring-green-700/30"
+                        : "bg-surface group-hover/row:bg-green-100/40",
+                      compact || isMobileLandscape ? "px-2 py-1" : "px-3 py-1.5",
                     )}
-                    style={{ minWidth: dateMinW }}
+                    style={{ minWidth: cityMinW }}
                   >
-                    {pairMode ? (
-                      <div className="flex items-center justify-center gap-1">
-                        {g.dates.map((d) => {
-                          const items = matrix[city]?.[d.label] ?? [];
+                    <div className="flex items-center gap-2 min-w-0">
+                      {isPlanningMode && (
+                        <input
+                          type="checkbox"
+                          id={`city-select-${ci}`}
+                          checked={!!isSelected}
+                          onChange={() => onToggleCity?.(city)}
+                          aria-label={`Selecionar ${city} para rota`}
+                          className="h-4 w-4 rounded border-border text-green-700 focus:ring-green-700 cursor-pointer shrink-0 accent-green-700 touch-manipulation"
+                        />
+                      )}
+                      <button
+                        type="button"
+                        onClick={isPlanningMode ? () => onToggleCity?.(city) : undefined}
+                        className={cn(
+                          "font-sans font-semibold uppercase tracking-wide truncate text-left",
+                          isSelected ? "text-green-950 font-bold" : "text-ink-900",
+                          isPlanningMode
+                            ? "cursor-pointer hover:text-green-800 hover:underline decoration-green-700/50 underline-offset-2"
+                            : "cursor-default",
+                        )}
+                        style={{
+                          fontSize: cityFontPx,
+                          maxWidth: cityMinW - (isPlanningMode ? 32 : 16) - (assignedTech ? 75 : 0),
+                        }}
+                        title={city}
+                      >
+                        {city}
+                      </button>
+                      {assignedTech && (
+                        <span
+                          className="ml-auto inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-green-200/90 text-green-950 border border-green-400 shrink-0 truncate max-w-[95px]"
+                          title={`Cidade já na rota de ${assignedTech}`}
+                        >
+                          <span className="h-1.5 w-1.5 rounded-full bg-green-700 shrink-0" />
+                          <span className="truncate">{assignedTech}</span>
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  {dateGroups.map((g, gi) => (
+                    <td
+                      key={gi}
+                      className={cn(
+                        "text-center border-r border-border/40",
+                        compact || isMobileLandscape ? "px-0.5 py-0.5" : "px-1.5 py-1",
+                      )}
+                      style={{ minWidth: dateMinW }}
+                    >
+                      {pairMode ? (
+                        <div className="flex items-center justify-center gap-1">
+                          {g.dates.map((d) => {
+                            const items = matrix[city]?.[d.label] ?? [];
+                            const crit = cellCriticality(items);
+                            return items.length > 0 ? (
+                              <button
+                                key={d.label}
+                                type="button"
+                                onClick={() => onCellClick(city, d.label, items)}
+                                className={cn(
+                                  "rounded-sm font-bold tabular-nums transition-all touch-manipulation",
+                                  "min-w-[24px] min-h-[22px] px-1 py-0.5 text-[11px]",
+                                  critClasses[crit],
+                                  "hover:scale-[1.08] active:scale-95",
+                                )}
+                                title={`${city} · ${d.label}: ${items.length} OS (${crit})`}
+                              >
+                                {items.length}
+                              </button>
+                            ) : (
+                              <span
+                                key={d.label}
+                                className="text-ink-400 font-mono text-[10px] min-w-[24px] inline-block"
+                              >
+                                ·
+                              </span>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        (() => {
+                          const items = matrix[city]?.[g.dates[0].label] ?? [];
                           const crit = cellCriticality(items);
                           return items.length > 0 ? (
                             <button
-                              key={d.label}
                               type="button"
-                              onClick={() => onCellClick(city, d.label, items)}
+                              onClick={() => onCellClick(city, g.dates[0].label, items)}
                               className={cn(
-                                "rounded-md font-semibold tabular-nums transition-all touch-manipulation",
-                                "min-w-[24px] min-h-[22px] px-1 py-0.5 text-[11px]",
+                                "rounded-sm font-bold tabular-nums transition-all touch-manipulation",
+                                compact
+                                  ? "min-w-[26px] h-6 px-1 text-xs"
+                                  : "min-w-[32px] h-7 px-1.5 text-xs",
                                 critClasses[crit],
                                 "hover:scale-[1.08] active:scale-95",
                               )}
-                              title={`${items.length} OS — ${city} · ${d.label}`}
+                              title={`${city} · ${g.dates[0].label}: ${items.length} OS (${crit})`}
                             >
                               {items.length}
                             </button>
                           ) : (
-                            <span key={d.label} className="text-muted-foreground/30 min-w-[24px]">
-                              ·
-                            </span>
+                            <span className="text-ink-400 font-mono text-xs">·</span>
                           );
-                        })}
-                      </div>
-                    ) : (
-                      (() => {
-                        const d = g.dates[0];
-                        const items = matrix[city]?.[d.label] ?? [];
-                        const crit = cellCriticality(items);
-                        return items.length > 0 ? (
-                          <button
-                            type="button"
-                            onClick={() => onCellClick(city, d.label, items)}
-                            className={cn(
-                              "rounded-md font-semibold tabular-nums transition-all touch-manipulation",
-                              compact
-                                ? "min-w-[26px] min-h-[24px] px-1.5 py-0.5 text-[11px]"
-                                : "min-w-[34px] min-h-[28px] px-2 py-0.5 text-sm",
-                              critClasses[crit],
-                              "hover:scale-[1.08] active:scale-95",
-                            )}
-                            title={`${items.length} OS — ${city} · ${d.label}`}
-                          >
-                            {items.length}
-                          </button>
-                        ) : (
-                          <span className="text-muted-foreground/30">·</span>
-                        );
-                      })()
+                        })()
+                      )}
+                    </td>
+                  ))}
+                  <td
+                    className={cn(
+                      "text-center font-mono font-bold tabular-nums sticky right-0 z-[5] border-l border-border transition-colors",
+                      isSelected
+                        ? "bg-green-100 text-green-950 font-extrabold"
+                        : "text-ink-900 bg-bg/60 group-hover/row:bg-green-100/50",
+                      compact || isMobileLandscape ? "px-2 py-1 text-xs" : "px-3 py-1.5 text-sm",
                     )}
+                  >
+                    {totalsByCity[ci]}
                   </td>
-                ))}
-                <td
-                  className={cn(
-                    "text-center font-bold tabular-nums bg-muted/30 sticky right-0 z-[5] group-hover/row:bg-accent/30 border-l border-border/40",
-                    compact || isMobileLandscape ? "px-2 py-1 text-xs" : "px-3 py-1.5 text-sm",
-                  )}
-                >
-                  {totalsByCity[ci]}
-                </td>
-              </tr>
-            ))}
+                </tr>
+              );
+            })}
           </tbody>
           <tfoot className="sticky bottom-0 z-10">
-            <tr className="border-t-2 border-border bg-muted/80 backdrop-blur">
+            <tr className="border-t-2 border-border bg-bg">
               <td
                 className={cn(
-                  "font-bold sticky left-0 z-20 text-primary",
-                  "bg-[linear-gradient(135deg,oklch(0.7_0.2_148/0.18),oklch(0.82_0.21_148/0.1))] backdrop-blur-xl",
-                  "shadow-[inset_3px_0_0_oklch(0.7_0.2_148/0.7),inset_-1px_0_0_oklch(0.7_0.2_148/0.2),2px_0_8px_-4px_oklch(0.4_0.04_150/0.2)]",
+                  "font-sans font-bold sticky left-0 z-20 text-green-900 bg-green-100/90 border-r border-border",
                   compact || isMobileLandscape ? "px-2 py-1.5 text-xs" : "px-3 py-2 text-sm",
                 )}
                 style={{ minWidth: cityMinW }}
@@ -375,7 +428,7 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
                   <td
                     key={gi}
                     className={cn(
-                      "text-center font-bold tabular-nums text-foreground border-r border-border/40",
+                      "text-center font-mono font-bold tabular-nums text-ink-900 border-r border-border",
                       compact || isMobileLandscape ? "px-1 py-1.5 text-xs" : "px-2 py-2 text-sm",
                     )}
                   >
@@ -385,7 +438,7 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
               })}
               <td
                 className={cn(
-                  "text-center font-bold tabular-nums text-primary bg-muted/85 sticky right-0 z-20 border-l border-border",
+                  "text-center font-mono font-extrabold tabular-nums text-green-700 bg-bg sticky right-0 z-20 border-l border-border",
                   compact || isMobileLandscape ? "px-2 py-1.5 text-sm" : "px-3 py-2 text-base",
                 )}
               >
@@ -400,19 +453,16 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
 });
 
 function Legend({ color, label }: { color: string; label: string }) {
-  const dotColorClass =
-    color === "danger"
-      ? "bg-danger"
-      : color === "amber-600"
-        ? "bg-amber-600"
-        : color === "green-600"
-          ? "bg-green-600"
-          : "bg-green-700";
-
+  const bgMap: Record<string, string> = {
+    "status-critical": "bg-danger",
+    "status-warning": "bg-amber-500",
+    "status-attention": "bg-amber-500/60",
+    "status-healthy": "bg-green-700",
+  };
   return (
-    <div className="flex items-center gap-1.5 text-ink-600 whitespace-nowrap">
-      <span className={cn("h-2 w-2 rounded-full", dotColorClass)} />
-      {label}
+    <div className="flex items-center gap-1.5 text-ink-600 whitespace-nowrap font-mono text-[10px] md:text-xs">
+      <span className={cn("h-2.5 w-2.5 rounded-full shrink-0", bgMap[color] || `bg-${color}`)} />
+      <span>{label}</span>
     </div>
   );
 }

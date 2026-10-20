@@ -7,9 +7,23 @@ export interface KpiCardProps {
   delta?: number; // positive = up
   hint?: string;
   icon: LucideIcon;
-  tone?: "primary" | "featured" | "critical" | "warning" | "neutral";
+  tone?: "primary" | "critical" | "warning" | "neutral";
   invertDelta?: boolean; // when true, "up" is bad
 }
+
+const toneGlow: Record<NonNullable<KpiCardProps["tone"]>, string> = {
+  primary: "from-green-700/15 to-transparent",
+  critical: "from-danger/15 to-transparent",
+  warning: "from-amber-500/20 to-transparent",
+  neutral: "from-ink-400/10 to-transparent",
+};
+
+const toneIcon: Record<NonNullable<KpiCardProps["tone"]>, string> = {
+  primary: "bg-green-100 text-green-700",
+  critical: "bg-danger/10 text-danger",
+  warning: "bg-amber-500/20 text-ink-900",
+  neutral: "bg-muted text-ink-600",
+};
 
 export function KpiCard({
   label,
@@ -17,76 +31,44 @@ export function KpiCard({
   delta,
   hint,
   icon: Icon,
-  tone = "neutral",
+  tone = "primary",
   invertDelta = false,
 }: KpiCardProps) {
   const positive = (delta ?? 0) >= 0;
   const good = invertDelta ? !positive : positive;
-  const isFeatured = tone === "featured";
-
-  if (isFeatured) {
-    return (
-      <div className="group relative overflow-hidden rounded-lg bg-green-900 text-white p-5 shadow-card transition-all hover:-translate-y-0.5">
-        <div className="flex items-start justify-between">
-          <div className="font-mono text-[11px] font-semibold uppercase tracking-wider text-green-100/80">
-            {label}
-          </div>
-          <div className="h-8 w-8 grid place-items-center rounded-sm bg-white/15 text-white">
-            <Icon className="h-4 w-4" />
-          </div>
-        </div>
-        <div className="mt-4 flex items-end justify-between">
-          <div className="font-display text-3xl md:text-4xl font-extrabold tracking-tight tabular-nums text-white">
-            {value}
-          </div>
-          {typeof delta === "number" && (
-            <div
-              className={cn(
-                "flex items-center gap-1 text-xs font-mono font-semibold px-2 py-1 rounded-sm",
-                good ? "text-green-100 bg-white/15" : "text-amber-500 bg-black/30",
-              )}
-            >
-              {positive ? (
-                <TrendingUp className="h-3.5 w-3.5" />
-              ) : (
-                <TrendingDown className="h-3.5 w-3.5" />
-              )}
-              {Math.abs(delta).toFixed(1)}%
-            </div>
-          )}
-        </div>
-        {hint && <div className="mt-2 text-xs text-green-100/70 font-sans">{hint}</div>}
-      </div>
-    );
-  }
 
   return (
-    <div className="group relative overflow-hidden rounded-md border border-border bg-surface p-5 shadow-card transition-all hover:-translate-y-0.5">
-      <div className="flex items-start justify-between">
-        <div className="font-mono text-[11px] font-semibold uppercase tracking-wider text-ink-600">
+    <div className="group relative overflow-hidden rounded-md bg-surface p-4 border border-border shadow-card transition-all hover:-translate-y-0.5 hover:shadow-md">
+      {/* subtle radial glow */}
+      <div
+        className={cn(
+          "pointer-events-none absolute -top-12 -right-12 h-32 w-32 rounded-full blur-2xl opacity-60 bg-gradient-to-br",
+          toneGlow[tone],
+        )}
+      />
+
+      <div className="relative flex items-start justify-between gap-2">
+        <div className="text-[11px] font-mono font-bold uppercase tracking-[0.14em] text-ink-600 truncate">
           {label}
         </div>
         <div
           className={cn(
-            "h-8 w-8 grid place-items-center rounded-sm",
-            tone === "critical"
-              ? "bg-danger/10 text-danger"
-              : tone === "warning"
-                ? "bg-amber-500/20 text-amber-600"
-                : "bg-green-100 text-green-900",
+            "h-8 w-8 shrink-0 grid place-items-center rounded-sm transition-colors",
+            toneIcon[tone],
           )}
         >
           <Icon className="h-4 w-4" />
         </div>
       </div>
-      <div className="mt-3.5 flex items-end justify-between">
-        <div className="font-display text-3xl font-bold tracking-tight tabular-nums text-ink-900">
+
+      <div className="relative mt-3 flex items-baseline justify-between gap-2">
+        <div className="text-3xl font-display font-extrabold tracking-tight text-ink-900 tabular-nums">
           {value}
         </div>
         {typeof delta === "number" && (
           <div
             className={cn(
-              "flex items-center gap-1 text-xs font-mono font-semibold px-2 py-1 rounded-sm",
+              "flex items-center gap-1 text-xs font-mono font-semibold px-2 py-0.5 rounded-sm",
               good ? "text-green-700 bg-green-100" : "text-danger bg-danger/10",
             )}
           >
@@ -95,7 +77,8 @@ export function KpiCard({
           </div>
         )}
       </div>
-      {hint && <div className="mt-1.5 text-xs text-ink-600 font-sans">{hint}</div>}
+
+      {hint && <div className="relative mt-1 text-[11px] text-ink-600 font-sans">{hint}</div>}
     </div>
   );
 }

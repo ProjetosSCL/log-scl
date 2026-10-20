@@ -29,6 +29,7 @@ function MultiFilter({ label, options, value, onChange }: MultiProps) {
     if (selected.includes(v)) onChange(selected.filter((s) => s !== v));
     else onChange([...selected, v]);
   };
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -36,41 +37,48 @@ function MultiFilter({ label, options, value, onChange }: MultiProps) {
           variant="outline"
           size="sm"
           className={cn(
-            "h-8 gap-1.5 rounded-sm border border-border bg-surface hover:bg-green-100/60 px-3 text-ink-900 transition-colors",
-            selected.length > 0 && "border-green-600 bg-green-100 text-green-900 font-medium",
+            "min-h-[44px] h-11 sm:h-9 sm:min-h-0 gap-2 rounded-sm border border-border bg-bg hover:bg-green-100 hover:text-green-900 px-3.5 text-ink-900 font-sans touch-manipulation transition-colors",
+            selected.length > 0 && "border-green-700 bg-green-100/60 text-green-900 font-semibold",
           )}
         >
-          <span className="text-xs font-sans">{label}</span>
+          <span className="text-xs">{label}</span>
           {selected.length > 0 && (
-            <span className="text-[10px] px-1.5 py-0.2 rounded-sm bg-green-700 text-white font-mono font-semibold">
+            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-green-700 text-white font-mono font-bold">
               {selected.length}
             </span>
           )}
-          <ChevronDown className="h-3 w-3 opacity-60 text-ink-600" />
+          <ChevronDown className="h-3.5 w-3.5 opacity-60" />
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[240px] p-0 rounded-sm border border-border bg-surface shadow-card"
+        className="w-[260px] p-0 bg-surface border border-border shadow-card rounded-sm"
         align="start"
       >
         <Command>
-          <CommandInput placeholder={`Buscar ${label.toLowerCase()}...`} className="h-9" />
+          <CommandInput
+            placeholder={`Buscar ${label.toLowerCase()}...`}
+            className="min-h-[44px] h-11 text-sm"
+          />
           <CommandList>
             <CommandEmpty>Nenhum resultado.</CommandEmpty>
             <CommandGroup>
               {options.map((opt) => {
                 const sel = selected.includes(opt);
                 return (
-                  <CommandItem key={opt} onSelect={() => toggle(opt)}>
+                  <CommandItem
+                    key={opt}
+                    onSelect={() => toggle(opt)}
+                    className="min-h-[44px] py-2.5 px-3 text-sm cursor-pointer flex items-center"
+                  >
                     <div
                       className={cn(
-                        "mr-2 h-4 w-4 rounded-sm border border-border grid place-items-center",
-                        sel && "bg-green-700 border-green-700 text-white",
+                        "mr-2.5 h-4 w-4 rounded-sm border border-border grid place-items-center text-white shrink-0",
+                        sel && "bg-green-700 border-green-700",
                       )}
                     >
                       {sel && <Check className="h-3 w-3" />}
                     </div>
-                    <span className="text-ink-900 text-xs font-sans">{opt}</span>
+                    <span className="font-sans text-ink-900 leading-normal">{opt}</span>
                   </CommandItem>
                 );
               })}
@@ -118,8 +126,8 @@ export function FiltersBar({ filters, setFilters, only, dense = false }: Props) 
   return (
     <div
       className={cn(
-        "rounded-md border border-border bg-surface shadow-card flex flex-wrap items-center",
-        dense ? "p-2 gap-1.5" : "p-3.5 gap-2",
+        "rounded-md bg-surface border border-border shadow-card flex flex-wrap items-center",
+        dense ? "p-1.5 gap-1" : "p-3 gap-2",
       )}
     >
       {show("contratante") && (
@@ -200,8 +208,9 @@ export function FiltersBar({ filters, setFilters, only, dense = false }: Props) 
           size="sm"
           onClick={() => set("emergencial", filters.emergencial ? null : true)}
           className={cn(
-            "h-8 rounded-sm border border-border bg-surface hover:bg-green-100/60 px-3 text-xs gap-1.5 text-ink-900",
-            filters.emergencial && "border-danger text-danger bg-danger/10 font-semibold",
+            "min-h-[44px] h-11 sm:h-9 sm:min-h-0 rounded-sm border border-border bg-bg hover:bg-green-100 px-3.5 text-xs gap-2 font-sans touch-manipulation transition-colors",
+            filters.emergencial &&
+              "border-danger text-danger bg-danger/10 hover:bg-danger/15 font-semibold",
           )}
         >
           <span
@@ -216,9 +225,9 @@ export function FiltersBar({ filters, setFilters, only, dense = false }: Props) 
           variant="ghost"
           size="sm"
           onClick={() => setFilters({})}
-          className="h-8 rounded-sm px-3 text-xs text-ink-600 hover:text-ink-900 gap-1"
+          className="min-h-[44px] h-11 sm:h-9 sm:min-h-0 rounded-sm px-3.5 text-xs text-ink-600 hover:text-ink-900 hover:bg-green-100 gap-1.5 font-sans touch-manipulation"
         >
-          <X className="h-3 w-3" />
+          <X className="h-3.5 w-3.5" />
           Limpar ({totalActive})
         </Button>
       )}

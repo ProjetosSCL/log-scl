@@ -1,8 +1,11 @@
-/** Design tokens — sistema visual */
-export default {
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: ["class"],
+  content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
+        // Design System tokens
         green: {
           900: "#0B3D2C",
           700: "#0B6E4F",
@@ -22,6 +25,45 @@ export default {
         surface: "#FFFFFF",
         border: "#DEE7E1",
         danger: "#C4432B",
+
+        // Semantic & system tokens merged
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        card: {
+          DEFAULT: "var(--card)",
+          foreground: "var(--card-foreground)",
+        },
+        popover: {
+          DEFAULT: "var(--popover)",
+          foreground: "var(--popover-foreground)",
+        },
+        primary: {
+          DEFAULT: "#0B6E4F",
+          foreground: "#FFFFFF",
+          glow: "#128A61",
+        },
+        secondary: {
+          DEFAULT: "#E6F4EC",
+          foreground: "#0B3D2C",
+        },
+        muted: {
+          DEFAULT: "#F0F4F1",
+          foreground: "#4B5B54",
+        },
+        accent: {
+          DEFAULT: "#E6F4EC",
+          foreground: "#0B3D2C",
+        },
+        destructive: {
+          DEFAULT: "#C4432B",
+          foreground: "#FFFFFF",
+        },
+        status: {
+          critical: "#C4432B",
+          warning: "#FFC857",
+          attention: "#FFC857",
+          healthy: "#0B6E4F",
+        },
       },
       fontFamily: {
         display: ["Sora", "sans-serif"], // títulos e números de destaque

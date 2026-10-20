@@ -4,9 +4,9 @@ import { PlaceholderRoute } from "@/components/layout/Placeholder";
 export const Route = createFileRoute("/prestadores")({
   head: () => ({
     meta: [
-      { title: "Prestadores · FieldOps" },
+      { title: "Prestadores · Flow" },
       { name: "description", content: "Performance, backlog e ranking de prestadores ativos." },
-      { property: "og:title", content: "Prestadores · FieldOps" },
+      { property: "og:title", content: "Prestadores · Flow" },
       {
         property: "og:description",
         content: "Performance, backlog e ranking de prestadores ativos.",

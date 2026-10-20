@@ -66,9 +66,20 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
+import { handleDatasetApi, type ServerEnv } from "./server/dataset-service";
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const url = new URL(request.url);
+      if (
+        url.pathname === "/api/dataset" ||
+        url.pathname.startsWith("/api/dataset/") ||
+        url.pathname.startsWith("/api/dataset?")
+      ) {
+        return await handleDatasetApi(request, env as ServerEnv);
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);

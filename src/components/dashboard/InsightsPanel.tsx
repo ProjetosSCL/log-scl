@@ -8,51 +8,52 @@ interface Insight {
   hint: string;
 }
 
-const toneStyles: Record<Insight["tone"], { border: string; dot: string }> = {
-  primary: {
-    border: "border-l-4 border-l-green-700",
-    dot: "bg-green-700",
-  },
-  warning: {
-    border: "border-l-4 border-l-amber-500",
-    dot: "bg-amber-500",
-  },
-  critical: {
-    border: "border-l-4 border-l-danger",
-    dot: "bg-danger",
-  },
+const toneBorder: Record<Insight["tone"], string> = {
+  primary: "border-l-green-700",
+  warning: "border-l-amber-500",
+  critical: "border-l-danger",
+};
+
+const toneDot: Record<Insight["tone"], string> = {
+  primary: "bg-green-700",
+  warning: "bg-amber-500",
+  critical: "bg-danger",
 };
 
 export function InsightsPanel({ insights }: { insights: Insight[] }) {
   return (
-    <div className="rounded-md border border-border bg-surface p-5 shadow-card">
-      <div className="flex items-center gap-2.5 mb-4">
-        <div className="h-7 w-7 grid place-items-center rounded-sm bg-green-100 text-green-900">
+    <div className="rounded-md bg-surface p-4 border border-border shadow-card">
+      <div className="flex items-center gap-2 mb-3">
+        <div className="h-7 w-7 grid place-items-center rounded-sm bg-green-100 text-green-700">
           <Sparkles className="h-3.5 w-3.5" />
         </div>
         <div>
-          <div className="text-base font-display font-bold text-ink-900">Insights inteligentes</div>
-          <div className="text-xs text-ink-600 font-sans">Sinais operacionais em tempo real</div>
+          <div className="text-sm font-display font-bold text-ink-900">Insights Inteligentes</div>
+          <div className="text-[11px] text-ink-600 font-sans">
+            Sinais operacionais em tempo real
+          </div>
         </div>
       </div>
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         {insights.map((it, i) => (
           <div
             key={i}
             className={cn(
-              "rounded-sm border border-border bg-surface p-3.5 transition-colors hover:bg-green-100/25",
-              toneStyles[it.tone].border,
+              "rounded-sm bg-surface p-3 border border-border border-l-4 shadow-sm hover:translate-x-0.5 transition-transform",
+              toneBorder[it.tone],
             )}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <div className="text-[10px] font-mono font-semibold uppercase tracking-wider text-ink-600">
+                <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-ink-600">
                   {it.title}
                 </div>
-                <div className="text-sm font-semibold mt-0.5 truncate text-ink-900">{it.value}</div>
-                <div className="text-xs text-ink-600 mt-0.5 font-sans">{it.hint}</div>
+                <div className="text-sm font-display font-bold mt-0.5 truncate text-ink-900">
+                  {it.value}
+                </div>
+                <div className="text-[11px] text-ink-600 font-sans mt-0.5">{it.hint}</div>
               </div>
-              <span className={cn("h-2 w-2 rounded-full mt-2 shrink-0", toneStyles[it.tone].dot)} />
+              <span className={cn("h-2 w-2 rounded-full mt-1.5 shrink-0", toneDot[it.tone])} />
             </div>
           </div>
         ))}

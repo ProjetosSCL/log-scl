@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { toPng } from "html-to-image";
 import JSZip from "jszip";
 import { Camera, Check, Copy, Download, ExternalLink, Loader2, Share2, X } from "lucide-react";
 
@@ -12,9 +11,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { PivotTable } from "@/components/dashboard/PivotTable";
 import { applyFilters, useDataset, type Filters, type OS } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
+import { captureExpandedTable, CaptureCancelledError } from "@/lib/capture-table";
 
 interface Pair {
   contratante: string;
@@ -81,6 +91,12 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
   const [renderPair, setRenderPair] = useState<Pair | null>(null);
   const [shareStep, setShareStep] = useState<number | null>(null);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+  const [largeWarning, setLargeWarning] = useState<{
+    cityCount: number;
+    height: number;
+    pairName: string;
+    resolve: (cont: boolean) => void;
+  } | null>(null);
   const captureRef = useRef<HTMLDivElement>(null);
   const resolveRef = useRef<(() => void) | null>(null);
 
@@ -110,16 +126,27 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
     const el = captureRef.current;
     if (!el) return null;
     try {
-      const bg = getComputedStyle(document.body).backgroundColor || "#ffffff";
-      const dataUrl = await toPng(el, {
-        cacheBust: true,
+      const result = await captureExpandedTable(el, {
         pixelRatio: 2,
-        backgroundColor: bg,
+        maxSafeHeight: 30000,
+        onConfirmLargeHeight: ({ height, cityCount }) => {
+          return new Promise<boolean>((resolve) => {
+            setLargeWarning({
+              cityCount,
+              height,
+              pairName: `${pair.contratante} × ${pair.prestador}`,
+              resolve,
+            });
+          });
+        },
       });
-      const blob = await (await fetch(dataUrl)).blob();
-      return { ...pair, dataUrl, blob };
+      return { ...pair, dataUrl: result.dataUrl, blob: result.blob };
     } catch (e) {
-      console.error("Falha capturando", pair, e);
+      if (e instanceof CaptureCancelledError) {
+        console.warn("Captura cancelada pelo usuário:", pair);
+      } else {
+        console.error("Falha capturando", pair, e);
+      }
       return null;
     }
   };
@@ -216,11 +243,11 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
       <Dialog open={open} onOpenChange={(v) => !busy && onOpenChange(v)}>
         <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 font-display font-bold text-ink-900">
-              <Camera className="h-4 w-4 text-green-700" />
+            <DialogTitle className="flex items-center gap-2">
+              <Camera className="h-4 w-4" />
               Prints diários por Contratante × Prestador
             </DialogTitle>
-            <DialogDescription className="text-ink-600 font-sans text-xs">
+            <DialogDescription>
               {pairs.length} combinações detectadas nos dados filtrados. Desmarque as que não quiser
               exportar.
             </DialogDescription>
@@ -230,7 +257,7 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
             {shareStep === null ? (
               <div className="space-y-1.5">
                 {pairs.length === 0 && (
-                  <div className="text-sm text-ink-600 py-8 text-center font-sans">
+                  <div className="text-sm text-muted-foreground py-8 text-center">
                     Nenhuma combinação encontrada com os filtros atuais.
                   </div>
                 )}
@@ -241,23 +268,24 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
                     <label
                       key={p.key}
                       className={cn(
-                        "flex items-center gap-3 rounded-sm border border-border px-3 py-2 cursor-pointer transition-colors font-sans",
-                        sel ? "bg-green-100/50 border-green-700/30" : "bg-transparent opacity-60",
+                        "flex items-center gap-3 rounded-lg border border-border/60 px-3.5 py-3 min-h-[48px] cursor-pointer transition-colors touch-manipulation",
+                        sel ? "bg-secondary/60" : "bg-transparent opacity-60",
                         busy && "cursor-wait",
                       )}
                     >
                       <input
                         type="checkbox"
-                        className="h-4 w-4 accent-green-700"
+                        className="h-5 w-5 accent-primary shrink-0"
                         checked={sel}
                         disabled={busy}
                         onChange={(e) => setSelected((s) => ({ ...s, [p.key]: e.target.checked }))}
                       />
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium truncate text-ink-900">
-                          {p.contratante} <span className="text-ink-400">—</span> {p.prestador}
+                        <div className="text-sm font-medium truncate">
+                          {p.contratante} <span className="text-muted-foreground">—</span>{" "}
+                          {p.prestador}
                         </div>
-                        <div className="text-[11px] text-ink-600 font-mono tabular-nums">
+                        <div className="text-[11px] text-muted-foreground tabular-nums">
                           {p.count} OS · {p.filename}
                         </div>
                       </div>
@@ -265,7 +293,7 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
                         <img
                           src={g.dataUrl}
                           alt=""
-                          className="h-10 w-16 object-cover rounded-sm border border-border"
+                          className="h-10 w-16 object-cover rounded border border-border/60 shrink-0"
                         />
                       )}
                     </label>
@@ -284,10 +312,10 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
             )}
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap pt-3 border-t border-border">
+          <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-border/60">
             {progress ? (
-              <div className="flex items-center gap-2 text-sm text-ink-600 font-sans flex-1">
-                <Loader2 className="h-4 w-4 animate-spin text-green-700" />
+              <div className="flex items-center gap-2 text-sm text-muted-foreground flex-1">
+                <Loader2 className="h-4 w-4 animate-spin" />
                 Gerando {progress.i} de {progress.n}…
               </div>
             ) : shareStep !== null ? (
@@ -295,47 +323,47 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
                 variant="ghost"
                 size="sm"
                 onClick={() => setShareStep(null)}
-                className="gap-1.5 rounded-sm text-ink-600 hover:text-ink-900"
+                className="min-h-[44px] h-11 sm:h-9 gap-1.5 touch-manipulation"
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-4 w-4" />
                 Voltar
               </Button>
             ) : generated.length === 0 ? (
               <>
-                <div className="text-xs text-ink-600 font-sans flex-1">
+                <div className="text-xs text-muted-foreground flex-1">
                   {selectedPairs.length} selecionado(s)
                 </div>
                 <Button
                   onClick={runGenerate}
                   disabled={selectedPairs.length === 0}
-                  className="gap-1.5 rounded-sm bg-green-700 text-white hover:bg-green-800"
+                  className="min-h-[44px] h-11 sm:h-9 px-4 gap-2 touch-manipulation"
                   size="sm"
                 >
-                  <Camera className="h-3.5 w-3.5" />
+                  <Camera className="h-4 w-4" />
                   Gerar prints
                 </Button>
               </>
             ) : (
               <>
-                <div className="text-xs text-ink-600 font-sans flex-1">
+                <div className="text-xs text-muted-foreground flex-1">
                   {generated.length} imagem(ns) prontas
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={downloadZip}
-                  className="gap-1.5 rounded-sm border-border bg-surface text-ink-900 hover:bg-green-100/50"
+                  className="min-h-[44px] h-11 sm:h-9 px-3 gap-1.5 touch-manipulation"
                 >
-                  <Download className="h-3.5 w-3.5" />
+                  <Download className="h-4 w-4" />
                   Baixar .zip
                 </Button>
                 <Button
                   size="sm"
                   onClick={shareWhatsApp}
-                  className="gap-1.5 rounded-sm bg-green-700 text-white hover:bg-green-800"
+                  className="min-h-[44px] h-11 sm:h-9 px-3 gap-1.5 touch-manipulation"
                 >
-                  <Share2 className="h-3.5 w-3.5" />
-                  Compartilhar no WhatsApp
+                  <Share2 className="h-4 w-4" />
+                  WhatsApp
                 </Button>
               </>
             )}
@@ -378,6 +406,53 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
           </div>,
           document.body,
         )}
+
+      {largeWarning && (
+        <AlertDialog
+          open={true}
+          onOpenChange={(open) => {
+            if (!open && largeWarning) {
+              largeWarning.resolve(false);
+              setLargeWarning(null);
+            }
+          }}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Print com volume elevado ({largeWarning.pairName})
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-sm text-muted-foreground leading-relaxed pt-1">
+                Este print terá aproximadamente <strong>{largeWarning.cityCount} cidades</strong> e
+                pode ficar muito longo ({Math.round(largeWarning.height).toLocaleString("pt-BR")}px
+                de altura).
+                <br />
+                <br />
+                Deseja continuar ou prefere filtrar antes?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel
+                onClick={() => {
+                  largeWarning.resolve(false);
+                  setLargeWarning(null);
+                }}
+              >
+                Filtrar antes
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-green-700 hover:bg-green-600 text-white"
+                onClick={() => {
+                  largeWarning.resolve(true);
+                  setLargeWarning(null);
+                }}
+              >
+                Continuar mesmo assim
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
     </>
   );
 }
@@ -425,32 +500,42 @@ function ShareAssistant({
           size="sm"
           variant="outline"
           onClick={() => copyToClipboard(step)}
-          className="gap-1.5"
+          className="min-h-[44px] h-11 sm:h-9 px-3 gap-1.5 touch-manipulation"
         >
           {copiedIdx === step ? (
             <>
-              <Check className="h-3.5 w-3.5" /> Copiado
+              <Check className="h-4 w-4" /> Copiado
             </>
           ) : (
             <>
-              <Copy className="h-3.5 w-3.5" /> Copiar novamente
+              <Copy className="h-4 w-4" /> Copiar novamente
             </>
           )}
         </Button>
-        <Button size="sm" variant="outline" onClick={() => downloadOne(g)} className="gap-1.5">
-          <Download className="h-3.5 w-3.5" /> Baixar
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => downloadOne(g)}
+          className="min-h-[44px] h-11 sm:h-9 px-3 gap-1.5 touch-manipulation"
+        >
+          <Download className="h-4 w-4" /> Baixar
         </Button>
         <a
           href="https://web.whatsapp.com/"
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-sm text-xs font-medium bg-green-700 text-white hover:bg-green-800 transition-colors"
+          className="inline-flex items-center gap-1.5 min-h-[44px] h-11 sm:h-9 px-3 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:opacity-90 touch-manipulation"
         >
-          <ExternalLink className="h-3.5 w-3.5" /> Abrir WhatsApp Web
+          <ExternalLink className="h-4 w-4" /> WhatsApp Web
         </a>
-        <div className="flex-1" />
+        <div className="w-full sm:w-auto sm:flex-1" />
         {step > 0 && (
-          <Button size="sm" variant="ghost" onClick={() => setStep(step - 1)}>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => setStep(step - 1)}
+            className="min-h-[44px] h-11 sm:h-9 px-3 touch-manipulation"
+          >
             Anterior
           </Button>
         )}
@@ -461,11 +546,16 @@ function ShareAssistant({
               setStep(step + 1);
               copyToClipboard(step + 1);
             }}
+            className="min-h-[44px] h-11 sm:h-9 px-3 touch-manipulation"
           >
             Próxima →
           </Button>
         ) : (
-          <Button size="sm" onClick={() => setStep(null)}>
+          <Button
+            size="sm"
+            onClick={() => setStep(null)}
+            className="min-h-[44px] h-11 sm:h-9 px-3 touch-manipulation"
+          >
             Concluir
           </Button>
         )}

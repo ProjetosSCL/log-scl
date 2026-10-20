@@ -1,5 +1,5 @@
 {
-  "name": "FieldOps - Central Operacional de OS",
+  "name": "Flow - Central Operacional de OS",
   "description": "Dashboard operacional para gestão de Ordens de Serviço (OS), SLA e performance de campo.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
