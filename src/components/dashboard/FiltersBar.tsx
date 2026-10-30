@@ -127,7 +127,7 @@ export function FiltersBar({ filters, setFilters, only, dense = false }: Props) 
   return (
     <div
       className={cn(
-        "rounded-[28px] bg-[#FFFFFF] border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)] flex flex-wrap items-center",
+        "rounded-[28px] bg-[#FFFFFF] border border-[#DFE7E4] shadow-none flex flex-wrap items-center",
         dense ? "p-2 gap-1.5" : "p-3.5 gap-2",
       )}
     >

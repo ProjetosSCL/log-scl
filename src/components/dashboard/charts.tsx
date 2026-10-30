@@ -185,7 +185,7 @@ function ChartCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-[28px] bg-white p-5 border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)]">
+    <div className="rounded-[28px] bg-white p-5 border border-[#DFE7E4] shadow-none">
       <div className="mb-4">
         <div className="text-sm md:text-base font-display font-bold text-[#103024]">{title}</div>
         {subtitle && <div className="text-[11px] text-[#666D6A] font-sans mt-0.5">{subtitle}</div>}

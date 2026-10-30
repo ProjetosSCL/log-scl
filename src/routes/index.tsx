@@ -124,7 +124,7 @@ function DashboardPage() {
       {/* Banner de Sincronização e Atualização Central - StoneCo DS */}
       <div
         id="central-sync-banner"
-        className="rounded-[28px] bg-white border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)] p-3 sm:px-5 sm:py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+        className="rounded-[28px] bg-white border border-[#DFE7E4] shadow-none p-3 sm:px-5 sm:py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
       >
         <div className="flex items-center gap-3.5 min-w-0">
           <div className="h-9 w-9 rounded-full bg-[#DDFFE3] text-[#103024] grid place-items-center shrink-0">
@@ -318,7 +318,7 @@ function DashboardPage() {
         {!focusTable && (
           <div className="space-y-3">
             <InsightsPanel insights={insights} />
-            <div className="rounded-[28px] bg-white border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)] p-5">
+            <div className="rounded-[28px] bg-white border border-[#DFE7E4] shadow-none p-5">
               <div className="text-[11px] font-sans font-bold uppercase tracking-wider text-[#666D6A]">
                 Status do Turno
               </div>

@@ -150,7 +150,7 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
     <div
       ref={ref}
       className={cn(
-        "rounded-[28px] bg-white border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)] overflow-hidden flex flex-col",
+        "rounded-[28px] bg-white border border-[#DFE7E4] shadow-none overflow-hidden flex flex-col",
         fullHeight && "h-full",
       )}
     >

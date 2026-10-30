@@ -16,7 +16,7 @@ const toneBadge: Record<Insight["tone"], { bg: string; text: string; label: stri
 
 export function InsightsPanel({ insights }: { insights: Insight[] }) {
   return (
-    <div className="rounded-[28px] bg-white p-5 border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)]">
+    <div className="rounded-[28px] bg-white p-5 border border-[#DFE7E4] shadow-none">
       <div className="flex items-center gap-3 mb-4">
         <div className="h-9 w-9 grid place-items-center rounded-full bg-[#DDFFE3] text-[#103024]">
           <Sparkles className="h-4 w-4" />

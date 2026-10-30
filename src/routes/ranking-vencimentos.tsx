@@ -502,7 +502,7 @@ export function RankingVencimentosPage() {
       </div>
 
       {/* Seletor de Período - StoneCo DS */}
-      <div className="bg-white border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)] rounded-[28px] p-4 sm:p-5">
+      <div className="bg-white border border-[#DFE7E4] shadow-none rounded-[28px] p-4 sm:p-5">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
             <div className="flex items-center gap-1.5 mr-1 text-xs font-bold text-[#103024] font-display">

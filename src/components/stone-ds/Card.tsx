@@ -47,7 +47,7 @@ export function Card({
 
   return (
     <div
-      className={`rounded-[28px] border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)] ${toneStyles[tone] || toneStyles.surface} ${layoutStyles[layout] || ""} ${className}`}
+      className={`rounded-[28px] border border-[#DFE7E4] shadow-none ${toneStyles[tone] || toneStyles.surface} ${layoutStyles[layout] || ""} ${className}`}
       {...props}
     >
       {children}

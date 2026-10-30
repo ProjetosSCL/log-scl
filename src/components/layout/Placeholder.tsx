@@ -3,7 +3,7 @@ import { Construction } from "lucide-react";
 
 export function PlaceholderRoute({ title, description }: { title: string; description: string }) {
   return (
-    <div className="rounded-[28px] bg-white border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)] p-6 sm:p-12 text-center max-w-2xl mx-auto mt-4 sm:mt-10 animate-fade-in">
+    <div className="rounded-[28px] bg-white border border-[#DFE7E4] shadow-none p-6 sm:p-12 text-center max-w-2xl mx-auto mt-4 sm:mt-10 animate-fade-in">
       <div className="h-14 w-14 mx-auto rounded-full bg-[#DDFFE3] grid place-items-center text-[#103024] mb-4">
         <Construction className="h-6 w-6" />
       </div>

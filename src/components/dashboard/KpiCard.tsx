@@ -31,7 +31,7 @@ export function KpiCard({
   const good = invertDelta ? !positive : positive;
 
   return (
-    <div className="group relative overflow-hidden rounded-[28px] bg-[#FFFFFF] p-5 border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)] transition-all duration-200 hover:-translate-y-0.5">
+    <div className="group relative overflow-hidden rounded-[28px] bg-[#FFFFFF] p-5 border border-[#DFE7E4] shadow-none transition-all duration-200 hover:-translate-y-0.5">
       <div className="relative flex items-start justify-between gap-2">
         <div className="text-xs font-semibold uppercase tracking-wider text-[#666D6A] truncate">
           {label}

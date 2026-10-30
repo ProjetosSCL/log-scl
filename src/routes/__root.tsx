@@ -173,12 +173,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen w-full bg-q-page font-q text-q-ink">
-        <div className="flex min-h-screen w-full">
-          <AppSidebar />
-          <div className="flex-1 min-w-0 flex flex-col">
-            <AppHeader />
-            <main className="flex-1 p-2 pt-2 md:p-3 md:pt-3">
+      <div className="font-q text-q-ink">
+        <div className="qd-screen">
+          <AppHeader />
+          <div className="qd-board">
+            <AppSidebar />
+            <main className="qd-main">
               <Outlet />
             </main>
           </div>
