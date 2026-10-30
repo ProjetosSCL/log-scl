@@ -15,6 +15,9 @@ export default defineConfig({
     client: { entry: "client" },
     server: { entry: "server" },
   },
+  nitro: {
+    ...(process.env.VERCEL ? { preset: "vercel" } : {}),
+  },
   vite: {
     server: {
       host: "0.0.0.0",

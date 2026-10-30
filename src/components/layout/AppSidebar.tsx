@@ -8,7 +8,11 @@ export function AppSidebar() {
   return (
     <aside className="qd-rails" aria-label="Atalhos">
       {groups.map((group, i) => (
-        <nav key={i} className="rail" aria-label={i === 0 ? "Principal" : i === 1 ? "Mais" : "Conta"}>
+        <nav
+          key={i}
+          className="rail"
+          aria-label={i === 0 ? "Principal" : i === 1 ? "Mais" : "Conta"}
+        >
           {group.map((it) => {
             const Icon = it.icon;
             return (
