@@ -119,13 +119,32 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       {
-        rel: "preconnect",
-        href: "https://fonts.googleapis.com",
+        rel: "preload",
+        href: "/fonts/Gravity-Normal.woff2",
+        as: "font",
+        type: "font/woff2",
+        crossOrigin: "",
       },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
       {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Sora:wght@600;700;800&display=swap",
+        rel: "preload",
+        href: "/fonts/Roobert-Regular.otf",
+        as: "font",
+        type: "font/otf",
+        crossOrigin: "",
+      },
+      {
+        rel: "preload",
+        href: "/fonts/Roobert-Bold.otf",
+        as: "font",
+        type: "font/otf",
+        crossOrigin: "",
+      },
+      {
+        rel: "preload",
+        href: "/fonts/Inter-Variable.ttf",
+        as: "font",
+        type: "font/ttf",
+        crossOrigin: "",
       },
     ],
   }),
@@ -154,7 +173,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen w-full grid-bg">
+      <div className="min-h-screen w-full bg-q-page font-q text-q-ink">
         <div className="flex min-h-screen w-full">
           <AppSidebar />
           <div className="flex-1 min-w-0 flex flex-col">

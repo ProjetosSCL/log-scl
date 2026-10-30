@@ -119,12 +119,12 @@ export function DayRoutePlanner({
   return (
     <div
       id="day-route-planner-dock"
-      className="bg-surface border-2 border-green-700/60 rounded-md shadow-lg overflow-hidden transition-all shrink-0"
+      className="bg-surface border border-green-700/40 rounded-2xl shadow-card overflow-hidden transition-all shrink-0"
     >
       {/* Dock Header Bar */}
-      <div className="bg-green-100/90 border-b border-green-200 px-3 py-2 sm:px-4 sm:py-2.5 flex items-center justify-between gap-2 flex-wrap">
+      <div className="bg-green-100/90 border-b border-green-200/80 px-3.5 py-2.5 sm:px-4 sm:py-3 flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-          <span className="h-6 w-6 rounded-sm bg-green-700 text-white grid place-items-center shrink-0">
+          <span className="h-7 w-7 rounded-full bg-green-700 text-white grid place-items-center shrink-0 shadow-2xs">
             <MapPin className="h-3.5 w-3.5" />
           </span>
           <div className="min-w-0">
@@ -132,7 +132,7 @@ export function DayRoutePlanner({
               <span className="text-xs sm:text-sm font-display font-bold text-green-950 truncate">
                 Planejamento de Rota do Dia
               </span>
-              <span className="text-[10px] sm:text-[11px] font-mono font-bold bg-green-700 text-white px-2 py-0.5 rounded truncate">
+              <span className="text-[10px] sm:text-[11px] font-mono font-bold bg-green-700 text-white px-2.5 py-0.5 rounded-full truncate">
                 Operação: {prestador}
               </span>
               <span className="text-[11px] font-mono text-ink-600 hidden sm:inline-flex items-center gap-1">
@@ -150,7 +150,7 @@ export function DayRoutePlanner({
                 variant="outline"
                 size="sm"
                 onClick={handleCopyWhatsApp}
-                className="h-8 min-h-[32px] px-2.5 text-xs font-sans border-green-700/40 bg-surface text-green-900 hover:bg-green-100/80 gap-1.5 touch-manipulation shadow-2xs"
+                className="h-8 min-h-[32px] px-3 text-xs font-sans rounded-full border-green-700/40 bg-surface text-green-900 hover:bg-green-100/80 gap-1.5 touch-manipulation shadow-2xs"
                 title="Copiar resumo das rotas para o WhatsApp"
               >
                 <Copy className="h-3.5 w-3.5 text-green-700" />
@@ -161,7 +161,7 @@ export function DayRoutePlanner({
                 variant="outline"
                 size="sm"
                 onClick={() => setConfirmClearOpen(true)}
-                className="h-8 min-h-[32px] px-2 text-xs font-sans border-border bg-surface text-ink-600 hover:text-danger hover:border-danger/40 hover:bg-danger/10 gap-1 touch-manipulation"
+                className="h-8 min-h-[32px] px-2.5 text-xs font-sans rounded-full border-border bg-surface text-ink-600 hover:text-danger hover:border-danger/40 hover:bg-danger-bg gap-1 touch-manipulation"
                 title="Limpar todas as rotas montadas hoje nesta operação"
               >
                 <Trash2 className="h-3.5 w-3.5" />
@@ -174,7 +174,7 @@ export function DayRoutePlanner({
             variant="ghost"
             size="sm"
             onClick={() => setIsExpanded((v) => !v)}
-            className="h-8 w-8 min-h-[32px] p-0 text-green-900 hover:bg-green-200/60 touch-manipulation"
+            className="h-8 w-8 min-h-[32px] p-0 text-green-900 hover:bg-green-200/60 rounded-full touch-manipulation"
             aria-label={isExpanded ? "Recolher painel de rotas" : "Expandir painel de rotas"}
             title={isExpanded ? "Recolher painel" : "Expandir painel"}
           >
@@ -187,11 +187,11 @@ export function DayRoutePlanner({
       {isExpanded && (
         <div className="p-3 sm:p-4 space-y-3.5 max-h-[380px] overflow-y-auto">
           {/* Active Route Builder Area */}
-          <div className="bg-bg border border-border rounded-md p-3 sm:p-3.5 space-y-3 shadow-2xs">
+          <div className="bg-bg border border-border rounded-xl p-3 sm:p-3.5 space-y-3 shadow-2xs">
             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5">
               {/* Counter and Sum indicator */}
               <div className="flex items-center gap-2.5 flex-wrap">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded bg-surface border border-green-700/30 text-green-950 font-sans shadow-2xs">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-green-700/30 text-green-950 font-sans shadow-2xs">
                   <span className="text-xs font-semibold">
                     {selectedCount === 0
                       ? "Nenhuma cidade marcada"
@@ -208,7 +208,7 @@ export function DayRoutePlanner({
                     variant="ghost"
                     size="sm"
                     onClick={onClearCities}
-                    className="h-7 text-xs text-ink-600 hover:text-ink-900 hover:bg-ink-100 gap-1 px-2"
+                    className="h-7 text-xs text-ink-600 hover:text-ink-900 hover:bg-ink-100 gap-1 px-2.5 rounded-full"
                   >
                     <RotateCcw className="h-3 w-3" />
                     Desmarcar
@@ -219,7 +219,7 @@ export function DayRoutePlanner({
               {/* Technician Input & Save Action */}
               <div className="flex items-center gap-2 w-full lg:w-auto relative">
                 <div className="relative flex-1 lg:w-72">
-                  <User className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-400 pointer-events-none" />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-400 pointer-events-none" />
                   <input
                     id="technician-route-input"
                     type="text"
@@ -231,7 +231,7 @@ export function DayRoutePlanner({
                     onFocus={() => setShowTechDropdown(true)}
                     onKeyDown={handleKeyDown}
                     placeholder="Nome do técnico da rota..."
-                    className="w-full pl-8 pr-3 py-1.5 h-10 sm:h-9 text-xs sm:text-sm bg-surface border border-border rounded-sm focus:outline-none focus:ring-1 focus:ring-green-700 placeholder:text-ink-400 font-sans"
+                    className="w-full pl-9 pr-3.5 py-1.5 h-10 sm:h-9 text-xs sm:text-sm bg-surface border border-border rounded-full focus:outline-none focus:ring-1 focus:ring-green-700 placeholder:text-ink-400 font-sans"
                   />
 
                   {/* Autocomplete dropdown for technician suggestions */}
@@ -241,8 +241,8 @@ export function DayRoutePlanner({
                         className="fixed inset-0 z-40"
                         onClick={() => setShowTechDropdown(false)}
                       />
-                      <div className="absolute left-0 top-full mt-1 w-full bg-surface border border-border shadow-lg rounded-sm py-1 z-50 max-h-48 overflow-y-auto">
-                        <div className="px-2 py-1 text-[10px] font-mono uppercase text-ink-500 font-bold border-b border-border/60">
+                      <div className="absolute left-0 top-full mt-1.5 w-full bg-surface border border-border shadow-lg rounded-xl py-1 z-50 max-h-48 overflow-y-auto">
+                        <div className="px-3 py-1 text-[10px] font-mono uppercase text-ink-500 font-bold border-b border-border/60">
                           Técnicos sugeridos
                         </div>
                         {suggestedTechs.map((tech) => {
@@ -255,11 +255,11 @@ export function DayRoutePlanner({
                                 setTechInput(tech);
                                 setShowTechDropdown(false);
                               }}
-                              className="w-full text-left px-2.5 py-1.5 text-xs hover:bg-green-100 flex items-center justify-between font-sans transition-colors"
+                              className="w-full text-left px-3 py-1.5 text-xs hover:bg-green-100 flex items-center justify-between font-sans transition-colors"
                             >
                               <span className="text-ink-900 font-medium truncate">{tech}</span>
                               {isAssigned && (
-                                <span className="text-[10px] font-mono text-ink-600 bg-ink-100 px-1.5 py-0.5 rounded ml-2 shrink-0">
+                                <span className="text-[10px] font-mono text-ink-600 bg-ink-100 px-2 py-0.5 rounded-full ml-2 shrink-0">
                                   já possui rota
                                 </span>
                               )}
@@ -275,7 +275,7 @@ export function DayRoutePlanner({
                   id="btn-save-day-route"
                   onClick={handleSave}
                   disabled={selectedCount === 0 || !techInput.trim()}
-                  className="h-10 sm:h-9 px-3.5 text-xs sm:text-sm font-sans font-semibold bg-green-700 hover:bg-green-600 text-white gap-1.5 shrink-0 shadow-xs touch-manipulation disabled:opacity-50"
+                  className="h-10 sm:h-9 px-4 text-xs sm:text-sm font-sans font-semibold bg-green-700 hover:bg-green-600 text-white rounded-full gap-1.5 shrink-0 shadow-xs touch-manipulation disabled:opacity-50"
                   title="Salvar rota com as cidades marcadas para este técnico"
                 >
                   <Plus className="h-4 w-4" />
@@ -295,7 +295,7 @@ export function DayRoutePlanner({
                   return (
                     <span
                       key={city}
-                      className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-green-100 text-green-950 border border-green-300 text-xs font-sans font-medium"
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-950 border border-green-300 text-xs font-sans font-medium"
                     >
                       <span>{city}</span>
                       <span className="font-mono font-bold text-green-800 text-[11px]">
@@ -304,7 +304,7 @@ export function DayRoutePlanner({
                       <button
                         type="button"
                         onClick={() => onToggleCity(city)}
-                        className="text-green-800 hover:text-danger transition-colors p-0.5"
+                        className="text-green-800 hover:text-danger transition-colors p-0.5 rounded-full"
                         title={`Remover ${city} da seleção`}
                         aria-label={`Remover ${city}`}
                       >
@@ -330,7 +330,7 @@ export function DayRoutePlanner({
                   <span className="text-xs font-display font-bold text-ink-900">
                     Rotas Montadas Hoje na Operação
                   </span>
-                  <span className="text-[11px] font-mono font-bold bg-green-100 text-green-900 border border-green-300 px-2 py-0.5 rounded">
+                  <span className="text-[11px] font-mono font-bold bg-green-100 text-green-900 border border-green-300 px-2.5 py-0.5 rounded-full">
                     {savedRoutes.length} {savedRoutes.length === 1 ? "técnico" : "técnicos"} ·{" "}
                     {distinctCitiesAssigned} cidades · {grandTotalSavedOs} OS
                   </span>
@@ -344,7 +344,7 @@ export function DayRoutePlanner({
                 {savedRoutes.map((r, idx) => (
                   <div
                     key={r.id}
-                    className="bg-surface border border-border hover:border-green-700/40 rounded-sm p-3 flex flex-col justify-between gap-2 shadow-2xs transition-colors"
+                    className="bg-surface border border-border hover:border-green-700/40 rounded-xl p-3 flex flex-col justify-between gap-2 shadow-2xs transition-colors"
                   >
                     <div>
                       <div className="flex items-start justify-between gap-2">
@@ -356,7 +356,7 @@ export function DayRoutePlanner({
                             {r.tecnico}
                           </span>
                         </div>
-                        <span className="font-mono font-extrabold text-sm text-green-700 bg-green-100/70 border border-green-300/60 px-2 py-0.5 rounded shrink-0 tabular-nums">
+                        <span className="font-mono font-extrabold text-sm text-green-700 bg-green-100/70 border border-green-300/60 px-2.5 py-0.5 rounded-full shrink-0 tabular-nums">
                           {r.totalOs} OS
                         </span>
                       </div>
@@ -383,7 +383,7 @@ export function DayRoutePlanner({
                             onEditRoute(r);
                             setTechInput(r.tecnico);
                           }}
-                          className="h-7 px-2 text-[11px] text-ink-700 hover:text-green-900 hover:bg-green-100 gap-1 font-sans"
+                          className="h-7 px-2.5 text-[11px] text-ink-700 hover:text-green-900 hover:bg-green-100 gap-1 font-sans rounded-full"
                           title="Carregar cidades desta rota de volta para a seleção para editar"
                         >
                           <Edit2 className="h-3 w-3 text-green-700" />
@@ -393,7 +393,7 @@ export function DayRoutePlanner({
                           variant="ghost"
                           size="sm"
                           onClick={() => onDeleteRoute(r.id)}
-                          className="h-7 px-2 text-[11px] text-ink-600 hover:text-danger hover:bg-danger/10 gap-1 font-sans"
+                          className="h-7 px-2.5 text-[11px] text-ink-600 hover:text-danger hover:bg-danger-bg gap-1 font-sans rounded-full"
                           title="Excluir rota deste técnico"
                         >
                           <Trash2 className="h-3 w-3" />
@@ -406,7 +406,7 @@ export function DayRoutePlanner({
               </div>
             </div>
           ) : (
-            <div className="bg-green-50/60 border border-green-200/70 rounded p-2.5 text-center text-xs text-ink-600 font-sans flex items-center justify-center gap-2">
+            <div className="bg-green-50/60 border border-green-200/70 rounded-xl p-3 text-center text-xs text-ink-600 font-sans flex items-center justify-center gap-2">
               <Sparkles className="h-4 w-4 text-green-700 shrink-0" />
               <span>
                 Nenhuma rota salva hoje para <strong>{prestador}</strong>. Marque as cidades de cada
@@ -419,7 +419,7 @@ export function DayRoutePlanner({
 
       {/* Confirmation Dialog to Clear All Routes */}
       <AlertDialog open={confirmClearOpen} onOpenChange={setConfirmClearOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="rounded-2xl">
           <AlertDialogHeader>
             <AlertDialogTitle>Limpar rotas do dia desta operação?</AlertDialogTitle>
             <AlertDialogDescription className="text-sm text-ink-600 leading-relaxed pt-1">
@@ -429,9 +429,9 @@ export function DayRoutePlanner({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-full">Cancelar</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-danger hover:bg-danger/90 text-white"
+              className="bg-danger hover:bg-danger/90 text-white rounded-full"
               onClick={() => {
                 onClearAllRoutes();
                 setConfirmClearOpen(false);

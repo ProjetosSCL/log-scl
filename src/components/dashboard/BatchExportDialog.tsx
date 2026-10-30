@@ -314,8 +314,8 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
 
           <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-border/60">
             {progress ? (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground flex-1">
-                <Loader2 className="h-4 w-4 animate-spin" />
+              <div className="flex items-center gap-2 text-sm text-ink-600 flex-1">
+                <Loader2 className="h-4 w-4 animate-spin text-green-700" />
                 Gerando {progress.i} de {progress.n}…
               </div>
             ) : shareStep !== null ? (
@@ -323,20 +323,20 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
                 variant="ghost"
                 size="sm"
                 onClick={() => setShareStep(null)}
-                className="min-h-[44px] h-11 sm:h-9 gap-1.5 touch-manipulation"
+                className="min-h-[44px] h-11 sm:h-9 gap-1.5 touch-manipulation rounded-full"
               >
                 <X className="h-4 w-4" />
                 Voltar
               </Button>
             ) : generated.length === 0 ? (
               <>
-                <div className="text-xs text-muted-foreground flex-1">
+                <div className="text-xs text-ink-600 flex-1">
                   {selectedPairs.length} selecionado(s)
                 </div>
                 <Button
                   onClick={runGenerate}
                   disabled={selectedPairs.length === 0}
-                  className="min-h-[44px] h-11 sm:h-9 px-4 gap-2 touch-manipulation"
+                  className="min-h-[44px] h-11 sm:h-9 px-4 gap-2 touch-manipulation rounded-full bg-green-700 hover:bg-green-600 text-white font-semibold shadow-xs"
                   size="sm"
                 >
                   <Camera className="h-4 w-4" />
@@ -345,14 +345,14 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
               </>
             ) : (
               <>
-                <div className="text-xs text-muted-foreground flex-1">
+                <div className="text-xs text-ink-600 flex-1">
                   {generated.length} imagem(ns) prontas
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={downloadZip}
-                  className="min-h-[44px] h-11 sm:h-9 px-3 gap-1.5 touch-manipulation"
+                  className="min-h-[44px] h-11 sm:h-9 px-3.5 gap-1.5 touch-manipulation rounded-full border-border bg-bg text-ink-900 hover:bg-green-100 hover:text-green-900"
                 >
                   <Download className="h-4 w-4" />
                   Baixar .zip
@@ -360,7 +360,7 @@ export function BatchExportDialog({ open, onOpenChange, filters }: Props) {
                 <Button
                   size="sm"
                   onClick={shareWhatsApp}
-                  className="min-h-[44px] h-11 sm:h-9 px-3 gap-1.5 touch-manipulation"
+                  className="min-h-[44px] h-11 sm:h-9 px-3.5 gap-1.5 touch-manipulation rounded-full bg-green-700 hover:bg-green-600 text-white font-semibold shadow-xs"
                 >
                   <Share2 className="h-4 w-4" />
                   WhatsApp
@@ -477,21 +477,27 @@ function ShareAssistant({
   const isLast = step === generated.length - 1;
   return (
     <div className="space-y-4 py-2">
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm text-ink-600">
         Imagem {step + 1} de {generated.length} — copiada para a área de transferência. Abra o
         WhatsApp Web, entre no chat e cole com{" "}
-        <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">Ctrl</kbd>+
-        <kbd className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono">V</kbd>.
+        <kbd className="rounded bg-bg border border-border px-1.5 py-0.5 text-[10px] font-mono text-ink-900">
+          Ctrl
+        </kbd>
+        +
+        <kbd className="rounded bg-bg border border-border px-1.5 py-0.5 text-[10px] font-mono text-ink-900">
+          V
+        </kbd>
+        .
       </div>
 
-      <div className="rounded-lg border border-border/60 p-3 bg-secondary/40">
-        <div className="text-sm font-semibold mb-2">
+      <div className="rounded-xl border border-border/80 p-3 bg-bg">
+        <div className="text-sm font-semibold mb-2 font-display text-ink-900">
           {g.contratante} — {g.prestador}
         </div>
         <img
           src={g.dataUrl}
           alt={g.filename}
-          className="w-full rounded border border-border/60 bg-background"
+          className="w-full rounded-lg border border-border/60 bg-surface"
         />
       </div>
 
@@ -500,15 +506,15 @@ function ShareAssistant({
           size="sm"
           variant="outline"
           onClick={() => copyToClipboard(step)}
-          className="min-h-[44px] h-11 sm:h-9 px-3 gap-1.5 touch-manipulation"
+          className="min-h-[44px] h-11 sm:h-9 px-3.5 gap-1.5 touch-manipulation rounded-full border-border bg-surface text-ink-900 hover:bg-green-100"
         >
           {copiedIdx === step ? (
             <>
-              <Check className="h-4 w-4" /> Copiado
+              <Check className="h-4 w-4 text-green-700" /> Copiado
             </>
           ) : (
             <>
-              <Copy className="h-4 w-4" /> Copiar novamente
+              <Copy className="h-4 w-4 text-green-700" /> Copiar novamente
             </>
           )}
         </Button>
@@ -516,7 +522,7 @@ function ShareAssistant({
           size="sm"
           variant="outline"
           onClick={() => downloadOne(g)}
-          className="min-h-[44px] h-11 sm:h-9 px-3 gap-1.5 touch-manipulation"
+          className="min-h-[44px] h-11 sm:h-9 px-3.5 gap-1.5 touch-manipulation rounded-full border-border bg-surface text-ink-900 hover:bg-green-100"
         >
           <Download className="h-4 w-4" /> Baixar
         </Button>
@@ -524,7 +530,7 @@ function ShareAssistant({
           href="https://web.whatsapp.com/"
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 min-h-[44px] h-11 sm:h-9 px-3 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:opacity-90 touch-manipulation"
+          className="inline-flex items-center gap-1.5 min-h-[44px] h-11 sm:h-9 px-3.5 rounded-full text-xs font-semibold bg-green-700 text-white hover:bg-green-600 touch-manipulation shadow-xs"
         >
           <ExternalLink className="h-4 w-4" /> WhatsApp Web
         </a>
@@ -534,7 +540,7 @@ function ShareAssistant({
             size="sm"
             variant="ghost"
             onClick={() => setStep(step - 1)}
-            className="min-h-[44px] h-11 sm:h-9 px-3 touch-manipulation"
+            className="min-h-[44px] h-11 sm:h-9 px-3.5 touch-manipulation rounded-full"
           >
             Anterior
           </Button>
@@ -546,7 +552,7 @@ function ShareAssistant({
               setStep(step + 1);
               copyToClipboard(step + 1);
             }}
-            className="min-h-[44px] h-11 sm:h-9 px-3 touch-manipulation"
+            className="min-h-[44px] h-11 sm:h-9 px-4 touch-manipulation rounded-full bg-green-700 hover:bg-green-600 text-white font-semibold shadow-xs"
           >
             Próxima →
           </Button>
@@ -554,7 +560,7 @@ function ShareAssistant({
           <Button
             size="sm"
             onClick={() => setStep(null)}
-            className="min-h-[44px] h-11 sm:h-9 px-3 touch-manipulation"
+            className="min-h-[44px] h-11 sm:h-9 px-4 touch-manipulation rounded-full bg-green-700 hover:bg-green-600 text-white font-semibold shadow-xs"
           >
             Concluir
           </Button>

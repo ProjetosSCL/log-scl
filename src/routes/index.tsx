@@ -121,28 +121,30 @@ function DashboardPage() {
 
   return (
     <div className="space-y-3 animate-fade-in">
-      {/* Banner de Sincronização e Atualização Central */}
+      {/* Banner de Sincronização e Atualização Central - StoneCo DS */}
       <div
         id="central-sync-banner"
-        className="rounded-md bg-surface border border-border shadow-card p-3 sm:px-4 sm:py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5"
+        className="rounded-[28px] bg-white border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)] p-3 sm:px-5 sm:py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
       >
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="h-8 w-8 rounded-md bg-green-100 text-green-700 grid place-items-center shrink-0">
+        <div className="flex items-center gap-3.5 min-w-0">
+          <div className="h-9 w-9 rounded-full bg-[#DDFFE3] text-[#103024] grid place-items-center shrink-0">
             <Database className="h-4 w-4" />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs sm:text-sm font-display font-bold text-ink-900 tracking-tight">
+              <span className="text-xs sm:text-sm font-display font-bold text-[#103024] tracking-tight">
                 Dados atualizados em {formattedImportDate}
               </span>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-green-100 text-green-900 border border-green-200">
-                <span className="h-1.5 w-1.5 rounded-full bg-green-700 animate-pulse" />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-sans font-bold bg-[#DDFFE3] text-[#103024] border border-[#DFE7E4]">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#41D600] animate-pulse" />
                 {mounted && source === "import" ? "Armazenamento Central" : "Dataset Padrão"}
               </span>
             </div>
-            <p className="text-[11px] font-mono text-ink-600 truncate">
-              {all.length.toLocaleString("pt-BR")} ordens de serviço ativas · Dados compartilhados
-              para toda a equipe
+            <p className="text-[11px] text-[#666D6A] font-sans truncate">
+              <span className="num font-semibold text-[#103024]">
+                {all.length.toLocaleString("pt-BR")}
+              </span>{" "}
+              ordens de serviço ativas · StoneCo Design System
             </p>
           </div>
         </div>
@@ -153,18 +155,20 @@ function DashboardPage() {
             size="sm"
             onClick={handleSync}
             disabled={isSyncing}
-            className="h-8 px-2.5 gap-1.5 text-xs border-border bg-bg text-ink-900 hover:bg-green-100 hover:text-green-900 rounded-sm font-sans"
+            className="h-8.5 px-3.5 gap-1.5 text-xs rounded-full border-[#DFE7E4] bg-[#F4F7F6] text-[#2B2D2C] hover:bg-[#DDFFE3] hover:text-[#103024] font-sans"
             title="Sincronizar base central agora"
           >
-            <RefreshCcw className={`h-3 w-3 ${isSyncing ? "animate-spin text-green-700" : ""}`} />
+            <RefreshCcw
+              className={`h-3.5 w-3.5 ${isSyncing ? "animate-spin text-[#103024]" : ""}`}
+            />
             <span>{isSyncing ? "Sincronizando…" : "Sincronizar"}</span>
           </Button>
           <Link
             to="/relatorios"
-            className="inline-flex items-center justify-center h-8 px-3 gap-1.5 text-xs font-sans font-medium rounded-sm bg-green-700 hover:bg-green-600 text-white shadow-xs transition-colors"
+            className="inline-flex items-center justify-center h-8.5 px-4 gap-1.5 text-xs font-sans font-semibold rounded-full bg-[#103024] hover:bg-[#0b2219] text-white shadow-xs transition-colors"
             title="Importar novo CSV com senha de confirmação"
           >
-            <Upload className="h-3 w-3" />
+            <Upload className="h-3.5 w-3.5" />
             <span>Importar CSV</span>
           </Link>
         </div>
@@ -188,10 +192,10 @@ function DashboardPage() {
           size="sm"
           onClick={() => setFocusTable((v) => !v)}
           className={
-            "min-h-[44px] h-11 sm:h-9 sm:min-h-0 gap-1.5 rounded-sm px-3.5 shrink-0 sm:ml-auto font-sans touch-manipulation " +
+            "min-h-[40px] h-10 sm:h-9 sm:min-h-0 gap-1.5 rounded-full px-4 shrink-0 sm:ml-auto font-sans touch-manipulation " +
             (focusTable
-              ? "border-green-700 bg-green-100 text-green-900 font-semibold"
-              : "border-border bg-surface text-ink-900 hover:bg-green-100 hover:text-green-900")
+              ? "border-[#103024] bg-[#103024] text-white font-semibold"
+              : "border-[#DFE7E4] bg-white text-[#2B2D2C] hover:bg-[#F4F7F6] hover:text-[#103024]")
           }
           title="Foco na tabela: recolhe filtros e painéis laterais"
           aria-pressed={focusTable}
@@ -314,20 +318,20 @@ function DashboardPage() {
         {!focusTable && (
           <div className="space-y-3">
             <InsightsPanel insights={insights} />
-            <div className="rounded-md bg-surface border border-border shadow-card p-4">
-              <div className="text-[11px] font-mono font-bold uppercase tracking-wider text-ink-600">
-                Status do turno
+            <div className="rounded-[28px] bg-white border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)] p-5">
+              <div className="text-[11px] font-sans font-bold uppercase tracking-wider text-[#666D6A]">
+                Status do Turno
               </div>
-              <div className="mt-2 flex items-center gap-3">
-                <div className="relative h-12 w-12 rounded-full bg-green-100 text-green-700 grid place-items-center">
+              <div className="mt-3 flex items-center gap-3.5">
+                <div className="relative h-12 w-12 rounded-full bg-[#FFEAC0] text-[#8A5A00] grid place-items-center shrink-0">
                   <AlertTriangle className="h-5 w-5" />
-                  <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-amber-500 animate-pulse" />
+                  <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[#41D600] animate-pulse" />
                 </div>
                 <div>
-                  <div className="text-sm font-display font-bold text-ink-900">
+                  <div className="text-base font-display font-bold text-[#103024]">
                     {kpis.vencidas + kpis.venceHoje} ações prioritárias
                   </div>
-                  <div className="text-[11px] text-ink-600 font-sans">
+                  <div className="text-[11px] text-[#666D6A] font-sans">
                     Distribuídas em {new Set(filtered.map((o) => o.cidade)).size} cidades
                   </div>
                 </div>

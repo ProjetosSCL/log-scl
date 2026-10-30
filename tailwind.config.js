@@ -5,28 +5,54 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Design System tokens
+        // StoneCo Design System tokens (brand.stone.br)
+        stone: {
+          green: "#94EA62", // Verde principal (acento, tendência)
+          "green-strong": "#41D600", // Verde secundário (ação positiva, foco)
+          "green-light": "#BCE9A6",
+          "green-dark": "#103024", // Verde escuro (botões primários, ativo)
+          mint: "#DDFFE3", // Fundo de sucesso
+          lilac: "#DEDEFF", // Fundo de informação
+          rose: "#FFD6DE", // Fundo de erro
+          sand: "#FFEAC0", // Fundo de atenção
+          "gray-light": "#D7E1DE", // Superfícies neutras, divisores
+          "gray-dark": "#2B2D2C", // Texto principal
+          "gray-1": "#C7D5D1",
+          "gray-2": "#A3BBB6",
+          "gray-3": "#808683",
+          "gray-4": "#666D6A",
+          bg: "#ECF1EF", // Fundo da página
+          surface: "#FFFFFF",
+          "surface-2": "#F4F7F6",
+          border: "#DFE7E4",
+        },
+
         green: {
-          900: "#0B3D2C",
-          700: "#0B6E4F",
-          600: "#128A61",
-          100: "#E6F4EC",
+          900: "#103024",
+          800: "#0b2219",
+          700: "#103024",
+          600: "#1a4d3a",
+          500: "#41D600",
+          400: "#94EA62",
+          300: "#BCE9A6",
+          100: "#DDFFE3",
         },
         amber: {
-          500: "#FFC857",
-          600: "#F0AE2E",
+          500: "#8A5A00",
+          600: "#6B4600",
         },
         ink: {
-          900: "#10241D",
-          600: "#4B5B54",
-          400: "#8A968F",
+          900: "#2B2D2C",
+          600: "#666D6A",
+          400: "#808683",
         },
-        bg: "#F6F8F6",
+        bg: "#ECF1EF",
         surface: "#FFFFFF",
-        border: "#DEE7E1",
-        danger: "#C4432B",
+        "surface-2": "#F4F7F6",
+        border: "#DFE7E4",
+        danger: "#B3263F",
 
-        // Semantic & system tokens merged
+        // Semantic & system tokens
         background: "var(--background)",
         foreground: "var(--foreground)",
         card: {
@@ -38,45 +64,49 @@ module.exports = {
           foreground: "var(--popover-foreground)",
         },
         primary: {
-          DEFAULT: "#0B6E4F",
+          DEFAULT: "#103024",
           foreground: "#FFFFFF",
-          glow: "#128A61",
+          glow: "#41D600",
         },
         secondary: {
-          DEFAULT: "#E6F4EC",
-          foreground: "#0B3D2C",
+          DEFAULT: "#F4F7F6",
+          foreground: "#2B2D2C",
         },
         muted: {
-          DEFAULT: "#F0F4F1",
-          foreground: "#4B5B54",
+          DEFAULT: "#F4F7F6",
+          foreground: "#666D6A",
         },
         accent: {
-          DEFAULT: "#E6F4EC",
-          foreground: "#0B3D2C",
+          DEFAULT: "#94EA62",
+          foreground: "#103024",
         },
         destructive: {
-          DEFAULT: "#C4432B",
+          DEFAULT: "#B3263F",
           foreground: "#FFFFFF",
         },
         status: {
-          critical: "#C4432B",
-          warning: "#FFC857",
-          attention: "#FFC857",
-          healthy: "#0B6E4F",
+          critical: "#B3263F",
+          warning: "#8A5A00",
+          attention: "#8A5A00",
+          healthy: "#1F7A1F",
         },
       },
       fontFamily: {
-        display: ["Sora", "sans-serif"], // títulos e números de destaque
-        sans: ["Inter", "sans-serif"], // fonte predominante (corpo, UI)
-        mono: ["Manrope", "sans-serif"], // labels técnicas, valores tabulares
+        display: ['"ABC Gravity"', '"Roobert"', "system-ui", "sans-serif"],
+        sans: ['"Roobert"', '"Inter"', "system-ui", "sans-serif"],
+        mono: ['"Inter"', "monospace", "sans-serif"],
+        data: ['"Inter"', "system-ui", "sans-serif"],
       },
       borderRadius: {
-        sm: "8px",
-        md: "14px",
-        lg: "22px",
+        sm: "12px",
+        md: "20px",
+        lg: "28px",
+        xl: "28px",
+        pill: "999px",
       },
       boxShadow: {
-        card: "0 1px 2px rgba(16,36,29,.04), 0 8px 24px -12px rgba(16,36,29,.12)",
+        card: "0 1px 2px rgba(16,48,36,.04), 0 10px 28px rgba(16,48,36,.06)",
+        stone: "0 1px 2px rgba(16,48,36,.04), 0 10px 28px rgba(16,48,36,.06)",
       },
       spacing: {
         18: "72px",

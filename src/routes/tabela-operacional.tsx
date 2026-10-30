@@ -342,16 +342,16 @@ function TabelaOperacionalPage() {
                 only={isMobileLandscape ? ["contratante", "prestador", "cidade"] : undefined}
               />
             </div>
-            <div className="flex items-center gap-1 rounded-sm border border-border bg-surface shadow-card p-1 shrink-0 overflow-x-auto max-w-full touch-pan-x">
+            <div className="flex items-center gap-1 rounded-full border border-border bg-surface shadow-card p-1 shrink-0 overflow-x-auto max-w-full touch-pan-x">
               {([80, 90, 100, 110, 120] as const).map((z) => (
                 <button
                   key={z}
                   type="button"
                   onClick={() => handleZoom(z)}
                   className={
-                    "px-3 min-h-[44px] h-11 sm:h-8 sm:min-h-0 rounded-sm text-xs font-mono font-bold transition-colors shrink-0 touch-manipulation " +
+                    "px-3 min-h-[36px] h-9 sm:h-7 sm:min-h-0 rounded-full text-xs font-mono font-bold transition-colors shrink-0 touch-manipulation " +
                     (zoom === z
-                      ? "bg-green-700 text-white"
+                      ? "bg-green-800 text-white"
                       : "text-ink-600 hover:text-green-900 hover:bg-green-100")
                   }
                   title={`Zoom da tabela ${z}%`}
@@ -370,9 +370,9 @@ function TabelaOperacionalPage() {
               size="sm"
               onClick={() => setCompact((v) => !v)}
               className={
-                "min-h-[44px] h-11 sm:h-8 sm:min-h-0 gap-1.5 rounded-sm px-3 shrink-0 font-sans touch-manipulation " +
+                "min-h-[40px] h-10 sm:h-8 sm:min-h-0 gap-1.5 rounded-full px-3.5 shrink-0 font-sans touch-manipulation " +
                 (compact
-                  ? "border-green-700 bg-green-100/60 text-green-900 font-semibold"
+                  ? "border-green-700 bg-green-100 text-green-900 font-semibold"
                   : "border-border bg-surface text-ink-900 hover:bg-green-100 hover:text-green-900")
               }
               title="Modo compacto: reduz o tamanho dos elementos"
@@ -385,7 +385,7 @@ function TabelaOperacionalPage() {
               variant="outline"
               size="sm"
               onClick={() => setFocusTable(true)}
-              className="min-h-[44px] h-11 sm:h-8 sm:min-h-0 gap-1.5 rounded-sm border-border bg-surface text-ink-900 hover:bg-green-100 hover:text-green-900 px-3 shrink-0 font-sans touch-manipulation"
+              className="min-h-[40px] h-10 sm:h-8 sm:min-h-0 gap-1.5 rounded-full border-border bg-surface text-ink-900 hover:bg-green-100 hover:text-green-900 px-3.5 shrink-0 font-sans touch-manipulation"
               title="Foco na tabela: oculta filtros e barra superior"
             >
               <Focus className="h-4 w-4" />
@@ -396,7 +396,7 @@ function TabelaOperacionalPage() {
               size="sm"
               onClick={handleScreenshot}
               disabled={capturing}
-              className="min-h-[44px] h-11 sm:h-8 sm:min-h-0 gap-1.5 rounded-sm border-border bg-surface text-ink-900 hover:bg-green-100 hover:text-green-900 px-3 shrink-0 font-sans touch-manipulation"
+              className="min-h-[40px] h-10 sm:h-8 sm:min-h-0 gap-1.5 rounded-full border-border bg-surface text-ink-900 hover:bg-green-100 hover:text-green-900 px-3.5 shrink-0 font-sans touch-manipulation"
               title="Baixar print da tabela (PNG)"
             >
               <Camera className="h-4 w-4" />
@@ -405,7 +405,7 @@ function TabelaOperacionalPage() {
             <Button
               size="sm"
               onClick={() => setBatchOpen(true)}
-              className="min-h-[44px] h-11 sm:h-8 sm:min-h-0 gap-1.5 rounded-sm bg-green-700 hover:bg-green-600 text-white px-3 shrink-0 font-sans shadow-xs touch-manipulation"
+              className="min-h-[40px] h-10 sm:h-8 sm:min-h-0 gap-1.5 rounded-full bg-green-800 hover:bg-green-700 text-white px-4 shrink-0 font-sans font-semibold shadow-xs touch-manipulation"
               title="Gerar prints por Contratante × Prestador e compartilhar no WhatsApp"
             >
               <Share2 className="h-4 w-4" />
@@ -415,14 +415,14 @@ function TabelaOperacionalPage() {
               variant="outline"
               size="sm"
               onClick={toggleFullscreen}
-              className="min-h-[44px] h-11 sm:h-8 sm:min-h-0 gap-1.5 rounded-sm border-border bg-surface text-ink-900 hover:bg-green-100 hover:text-green-900 px-3 shrink-0 font-sans touch-manipulation"
+              className="min-h-[40px] h-10 sm:h-8 sm:min-h-0 gap-1.5 rounded-full border-border bg-surface text-ink-900 hover:bg-green-100 hover:text-green-900 px-3.5 shrink-0 font-sans touch-manipulation"
               title={isFullscreen ? "Sair da tela cheia (F)" : "Tela cheia (F)"}
             >
               {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
               <span className="text-xs">{isFullscreen ? "Sair" : "Tela cheia"}</span>
             </Button>
             {singlePrestador ? (
-              <div className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-green-100 text-green-950 border border-green-300 text-xs font-sans font-semibold">
+              <div className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-950 border border-green-300 text-xs font-sans font-semibold">
                 <MapPin className="h-3.5 w-3.5 text-green-700 shrink-0" />
                 <span>Operação: {singlePrestador}</span>
               </div>

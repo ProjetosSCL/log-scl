@@ -501,12 +501,12 @@ export function RankingVencimentosPage() {
         </div>
       </div>
 
-      {/* Seletor de Período */}
-      <div className="bg-surface border border-border shadow-card rounded-md p-3.5 sm:p-4">
+      {/* Seletor de Período - StoneCo DS */}
+      <div className="bg-white border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)] rounded-[28px] p-4 sm:p-5">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-1.5">
-            <div className="flex items-center gap-1.5 mr-1 text-xs font-semibold text-ink-900 font-display">
-              <Calendar className="h-3.5 w-3.5 text-primary" />
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-1.5 mr-1 text-xs font-bold text-[#103024] font-display">
+              <Calendar className="h-3.5 w-3.5 text-[#103024]" />
               <span>Período:</span>
             </div>
 
@@ -515,10 +515,10 @@ export function RankingVencimentosPage() {
               size="sm"
               onClick={() => setPreset("hoje")}
               className={cn(
-                "h-8 px-3 text-xs rounded-sm",
+                "h-8 px-4 text-xs rounded-full",
                 preset === "hoje"
-                  ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                  : "bg-bg text-ink-700 border-border hover:bg-surface",
+                  ? "bg-[#103024] text-white font-semibold shadow-xs"
+                  : "bg-[#F4F7F6] text-[#2B2D2C] border-[#DFE7E4] hover:bg-[#DDFFE3] hover:text-[#103024]",
               )}
             >
               Hoje
@@ -529,10 +529,10 @@ export function RankingVencimentosPage() {
               size="sm"
               onClick={() => setPreset("7d")}
               className={cn(
-                "h-8 px-3 text-xs rounded-sm",
+                "h-8 px-4 text-xs rounded-full",
                 preset === "7d"
-                  ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                  : "bg-bg text-ink-700 border-border hover:bg-surface",
+                  ? "bg-[#103024] text-white font-semibold shadow-xs"
+                  : "bg-[#F4F7F6] text-[#2B2D2C] border-[#DFE7E4] hover:bg-[#DDFFE3] hover:text-[#103024]",
               )}
             >
               Últimos 7 dias
@@ -543,10 +543,10 @@ export function RankingVencimentosPage() {
               size="sm"
               onClick={() => setPreset("30d")}
               className={cn(
-                "h-8 px-3 text-xs rounded-sm",
+                "h-8 px-4 text-xs rounded-full",
                 preset === "30d"
-                  ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                  : "bg-bg text-ink-700 border-border hover:bg-surface",
+                  ? "bg-[#103024] text-white font-semibold shadow-xs"
+                  : "bg-[#F4F7F6] text-[#2B2D2C] border-[#DFE7E4] hover:bg-[#DDFFE3] hover:text-[#103024]",
               )}
             >
               Últimos 30 dias
@@ -557,10 +557,10 @@ export function RankingVencimentosPage() {
               size="sm"
               onClick={() => setPreset("todos")}
               className={cn(
-                "h-8 px-3 text-xs rounded-sm",
+                "h-8 px-4 text-xs rounded-full",
                 preset === "todos"
-                  ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                  : "bg-bg text-ink-700 border-border hover:bg-surface",
+                  ? "bg-[#103024] text-white font-semibold shadow-xs"
+                  : "bg-[#F4F7F6] text-[#2B2D2C] border-[#DFE7E4] hover:bg-[#DDFFE3] hover:text-[#103024]",
               )}
             >
               Todo o período
@@ -571,10 +571,10 @@ export function RankingVencimentosPage() {
               size="sm"
               onClick={() => setPreset("custom")}
               className={cn(
-                "h-8 px-3 text-xs rounded-sm",
+                "h-8 px-4 text-xs rounded-full",
                 preset === "custom"
-                  ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                  : "bg-bg text-ink-700 border-border hover:bg-surface",
+                  ? "bg-[#103024] text-white font-semibold shadow-xs"
+                  : "bg-[#F4F7F6] text-[#2B2D2C] border-[#DFE7E4] hover:bg-[#DDFFE3] hover:text-[#103024]",
               )}
             >
               Customizado

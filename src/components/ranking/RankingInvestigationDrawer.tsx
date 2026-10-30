@@ -71,7 +71,7 @@ function getDelayBadge(o: OS) {
     );
     return {
       label: `Vencida em aberto (+${diff}d)`,
-      color: "bg-red-100 text-red-800 border-red-200 dark:bg-red-950/40 dark:text-red-300",
+      color: "bg-danger-bg text-danger border-danger/30 font-semibold",
       icon: AlertTriangle,
     };
   }
@@ -87,22 +87,20 @@ function getDelayBadge(o: OS) {
     }
     return {
       label: `Concluída c/ atraso (+${diffDays}d)`,
-      color:
-        "bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950/40 dark:text-amber-300",
+      color: "bg-warning-bg text-warning border-warning/40 font-semibold",
       icon: Clock,
     };
   }
   if (o.cumpriuPrazo === true) {
     return {
       label: "Concluída no prazo",
-      color:
-        "bg-green-100 text-green-900 border-green-200 dark:bg-green-950/40 dark:text-green-300",
+      color: "bg-success-bg text-success border-success/30 font-semibold",
       icon: CheckCircle2,
     };
   }
   return {
     label: o.status,
-    color: "bg-slate-100 text-slate-700 border-slate-200",
+    color: "bg-bg text-ink-700 border-border font-medium",
     icon: Clock,
   };
 }
@@ -269,7 +267,7 @@ export function RankingInvestigationDrawer({
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-sm bg-primary/10 text-primary border border-primary/20">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-green-100 text-green-900 border border-green-700/20">
                   {entity.type === "prestador" ? "Prestador" : "Técnico"}
                 </span>
                 <span className="text-xs text-ink-600 font-sans truncate">{periodLabel}</span>
@@ -285,48 +283,48 @@ export function RankingInvestigationDrawer({
               variant="outline"
               size="sm"
               onClick={exportCsv}
-              className="h-8 gap-1.5 text-xs border-border bg-surface hover:bg-bg shrink-0 shadow-xs"
+              className="h-8 min-h-[32px] px-3 gap-1.5 text-xs rounded-full border-border bg-surface text-ink-900 hover:bg-green-100 hover:text-green-900 shrink-0 shadow-2xs font-semibold"
               title="Exportar dados filtrados deste prestador/técnico"
             >
-              <Download className="h-3.5 w-3.5" />
+              <Download className="h-3.5 w-3.5 text-green-700" />
               <span className="hidden sm:inline">Exportar CSV</span>
             </Button>
           </div>
 
           {/* Cards de Resumo Rápido da Entidade */}
           <div className="grid grid-cols-4 gap-2 mt-4">
-            <div className="rounded-md border border-border bg-surface p-2.5 text-center shadow-2xs">
+            <div className="rounded-xl border border-border bg-surface p-2.5 text-center shadow-2xs">
               <div className="text-[10px] uppercase font-mono font-semibold text-ink-600 leading-none">
                 Total OS
               </div>
-              <div className="text-base sm:text-lg font-bold font-display text-ink-900 mt-1">
+              <div className="text-base sm:text-lg font-bold font-display text-ink-900 mt-1 tabular-nums">
                 {counts.total}
               </div>
             </div>
 
-            <div className="rounded-md border border-red-200 bg-red-50/60 dark:bg-red-950/20 p-2.5 text-center shadow-2xs">
-              <div className="text-[10px] uppercase font-mono font-semibold text-red-700 dark:text-red-400 leading-none">
+            <div className="rounded-xl border border-danger/30 bg-danger-bg p-2.5 text-center shadow-2xs">
+              <div className="text-[10px] uppercase font-mono font-semibold text-danger leading-none">
                 Em Aberto
               </div>
-              <div className="text-base sm:text-lg font-bold font-display text-red-700 dark:text-red-400 mt-1">
+              <div className="text-base sm:text-lg font-bold font-display text-danger mt-1 tabular-nums">
                 {counts.vencidas}
               </div>
             </div>
 
-            <div className="rounded-md border border-amber-200 bg-amber-50/60 dark:bg-amber-950/20 p-2.5 text-center shadow-2xs">
-              <div className="text-[10px] uppercase font-mono font-semibold text-amber-800 dark:text-amber-400 leading-none">
+            <div className="rounded-xl border border-warning/30 bg-warning-bg p-2.5 text-center shadow-2xs">
+              <div className="text-[10px] uppercase font-mono font-semibold text-warning leading-none">
                 Fora Prazo
               </div>
-              <div className="text-base sm:text-lg font-bold font-display text-amber-800 dark:text-amber-400 mt-1">
+              <div className="text-base sm:text-lg font-bold font-display text-warning mt-1 tabular-nums">
                 {counts.atrasadas}
               </div>
             </div>
 
-            <div className="rounded-md border border-rose-300 bg-rose-50/70 dark:bg-rose-950/30 p-2.5 text-center shadow-2xs">
-              <div className="text-[10px] uppercase font-mono font-bold text-rose-800 dark:text-rose-300 leading-none">
+            <div className="rounded-xl border border-rose-300/60 bg-danger-bg/60 p-2.5 text-center shadow-2xs">
+              <div className="text-[10px] uppercase font-mono font-bold text-danger leading-none">
                 % Falha
               </div>
-              <div className="text-base sm:text-lg font-bold font-display text-rose-800 dark:text-rose-300 mt-1">
+              <div className="text-base sm:text-lg font-bold font-display text-danger mt-1 tabular-nums">
                 {entity.pctProblemas.toFixed(1)}%
               </div>
             </div>
@@ -335,30 +333,30 @@ export function RankingInvestigationDrawer({
           {/* Filtros rápidos & Busca */}
           <div className="mt-3.5 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink-600 pointer-events-none" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink-400 pointer-events-none" />
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Buscar por OS, cliente, cidade..."
-                className="h-8.5 pl-8 text-xs bg-surface border-border rounded-sm focus-visible:ring-1 focus-visible:ring-primary"
+                className="h-9 pl-8.5 pr-8 text-xs bg-surface border-border rounded-full focus-visible:ring-1 focus-visible:ring-green-700"
               />
               {search && (
                 <button
                   onClick={() => setSearch("")}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-ink-600 hover:text-ink-900"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-400 hover:text-ink-900"
                 >
                   <X className="h-3 w-3" />
                 </button>
               )}
             </div>
 
-            <div className="flex items-center gap-1 bg-surface border border-border p-0.5 rounded-sm overflow-x-auto text-[11px] font-sans shrink-0">
+            <div className="flex items-center gap-1 bg-surface border border-border p-1 rounded-full overflow-x-auto text-[11px] font-sans shrink-0">
               <button
                 onClick={() => setFilterType("problemas")}
                 className={cn(
-                  "px-2.5 py-1 rounded-xs transition-colors whitespace-nowrap font-medium",
+                  "px-3 py-1 rounded-full transition-colors whitespace-nowrap font-medium",
                   filterType === "problemas"
-                    ? "bg-primary text-primary-foreground font-semibold shadow-2xs"
+                    ? "bg-green-700 text-white font-semibold shadow-2xs"
                     : "text-ink-600 hover:text-ink-900 hover:bg-bg",
                 )}
               >
@@ -367,9 +365,9 @@ export function RankingInvestigationDrawer({
               <button
                 onClick={() => setFilterType("vencidas")}
                 className={cn(
-                  "px-2 py-1 rounded-xs transition-colors whitespace-nowrap font-medium",
+                  "px-2.5 py-1 rounded-full transition-colors whitespace-nowrap font-medium",
                   filterType === "vencidas"
-                    ? "bg-red-600 text-white font-semibold shadow-2xs"
+                    ? "bg-danger text-white font-semibold shadow-2xs"
                     : "text-ink-600 hover:text-ink-900 hover:bg-bg",
                 )}
               >
@@ -378,9 +376,9 @@ export function RankingInvestigationDrawer({
               <button
                 onClick={() => setFilterType("atrasadas")}
                 className={cn(
-                  "px-2 py-1 rounded-xs transition-colors whitespace-nowrap font-medium",
+                  "px-2.5 py-1 rounded-full transition-colors whitespace-nowrap font-medium",
                   filterType === "atrasadas"
-                    ? "bg-amber-600 text-white font-semibold shadow-2xs"
+                    ? "bg-warning text-white font-semibold shadow-2xs"
                     : "text-ink-600 hover:text-ink-900 hover:bg-bg",
                 )}
               >
@@ -389,9 +387,9 @@ export function RankingInvestigationDrawer({
               <button
                 onClick={() => setFilterType("todas")}
                 className={cn(
-                  "px-2 py-1 rounded-xs transition-colors whitespace-nowrap font-medium",
+                  "px-2.5 py-1 rounded-full transition-colors whitespace-nowrap font-medium",
                   filterType === "todas"
-                    ? "bg-slate-700 text-white font-semibold shadow-2xs"
+                    ? "bg-ink-900 text-white font-semibold shadow-2xs"
                     : "text-ink-600 hover:text-ink-900 hover:bg-bg",
                 )}
               >
@@ -423,11 +421,11 @@ export function RankingInvestigationDrawer({
                 <div
                   key={os.id || os.numero}
                   className={cn(
-                    "rounded-md border p-3.5 transition-all bg-surface hover:shadow-sm",
+                    "rounded-xl border p-3.5 transition-all bg-surface hover:shadow-card",
                     os.criticidade === "vencido"
-                      ? "border-red-200/80 bg-red-50/15"
+                      ? "border-danger/30 bg-danger-bg/20"
                       : os.cumpriuPrazo === false
-                        ? "border-amber-200/80 bg-amber-50/15"
+                        ? "border-warning/30 bg-warning-bg/20"
                         : "border-border",
                   )}
                 >
@@ -436,27 +434,33 @@ export function RankingInvestigationDrawer({
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => copyNumero(os.numero)}
-                        className="inline-flex items-center gap-1 font-mono text-xs font-bold text-ink-900 hover:text-primary transition-colors group bg-bg px-2 py-0.5 rounded-sm border border-border"
+                        className="inline-flex items-center gap-1 font-mono text-xs font-bold text-ink-900 hover:text-green-700 transition-colors group bg-bg px-2.5 py-0.5 rounded-full border border-border"
                         title="Clique para copiar o número da OS"
                       >
                         <span>#{os.numero}</span>
                         {isCopied ? (
                           <Check className="h-3 w-3 text-green-700" />
                         ) : (
-                          <Copy className="h-3 w-3 text-ink-600 group-hover:text-primary transition-colors opacity-70" />
+                          <Copy className="h-3 w-3 text-ink-400 group-hover:text-green-700 transition-colors opacity-70" />
                         )}
                       </button>
 
                       <Badge
                         variant="outline"
-                        className={cn("text-[10px] gap-1 py-0.5 px-2 font-medium", delayInfo.color)}
+                        className={cn(
+                          "text-[10px] gap-1 py-0.5 px-2.5 rounded-full",
+                          delayInfo.color,
+                        )}
                       >
                         <DelayIcon className="h-3 w-3 shrink-0" />
                         <span>{delayInfo.label}</span>
                       </Badge>
                     </div>
 
-                    <Badge variant="secondary" className="text-[10px] font-mono">
+                    <Badge
+                      variant="secondary"
+                      className="text-[10px] font-mono rounded-full px-2.5 py-0.5 bg-bg text-ink-700 border border-border"
+                    >
                       {os.status}
                     </Badge>
                   </div>
@@ -467,29 +471,29 @@ export function RankingInvestigationDrawer({
                       {os.cliente || "Cliente não informado"}
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-ink-600 mt-0.5">
-                      <MapPin className="h-3.5 w-3.5 shrink-0 text-ink-600" />
+                      <MapPin className="h-3.5 w-3.5 shrink-0 text-green-700" />
                       <span>
                         {os.cidade} · {os.estado}
                       </span>
                       {os.bairro && os.bairro !== "—" && (
-                        <span className="text-ink-600">({os.bairro})</span>
+                        <span className="text-ink-400">({os.bairro})</span>
                       )}
                     </div>
                   </div>
 
                   {/* Datas Críticas de Prazo */}
-                  <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 p-2.5 rounded-sm bg-bg border border-border text-xs">
+                  <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 p-2.5 rounded-xl bg-bg border border-border text-xs">
                     <div>
                       <div className="text-[10px] font-mono uppercase text-ink-600 font-semibold">
                         Prazo Limite (SLA)
                       </div>
                       <div
                         className={cn(
-                          "font-mono font-medium mt-0.5 flex items-center gap-1.5",
-                          os.criticidade === "vencido" ? "text-red-700 font-bold" : "text-ink-900",
+                          "font-mono font-medium mt-0.5 flex items-center gap-1.5 tabular-nums",
+                          os.criticidade === "vencido" ? "text-danger font-bold" : "text-ink-900",
                         )}
                       >
-                        <Calendar className="h-3 w-3 text-ink-600 shrink-0" />
+                        <Calendar className="h-3 w-3 text-ink-400 shrink-0" />
                         <span>{fmtDate(os.dataLimite)}</span>
                       </div>
                     </div>
@@ -500,15 +504,15 @@ export function RankingInvestigationDrawer({
                       </div>
                       <div
                         className={cn(
-                          "font-mono font-medium mt-0.5 flex items-center gap-1.5",
+                          "font-mono font-medium mt-0.5 flex items-center gap-1.5 tabular-nums",
                           os.cumpriuPrazo === false
-                            ? "text-amber-800 font-bold"
+                            ? "text-warning font-bold"
                             : os.dataAtendimento
                               ? "text-green-700"
                               : "text-ink-600",
                         )}
                       >
-                        <Clock className="h-3 w-3 text-ink-600 shrink-0" />
+                        <Clock className="h-3 w-3 text-ink-400 shrink-0" />
                         <span>{fmtDate(os.dataAtendimento)}</span>
                       </div>
                     </div>
@@ -517,7 +521,7 @@ export function RankingInvestigationDrawer({
                   {/* Detalhes operacionais: Prestador, Técnico, Serviço */}
                   <div className="mt-2.5 pt-2.5 border-t border-border/70 flex flex-wrap items-center justify-between gap-y-1 gap-x-4 text-[11px] text-ink-600">
                     <div className="flex items-center gap-1.5">
-                      <User className="h-3 w-3 text-ink-600 shrink-0" />
+                      <User className="h-3 w-3 text-ink-400 shrink-0" />
                       <span>
                         {entity.type === "prestador" ? (
                           <>
@@ -536,7 +540,7 @@ export function RankingInvestigationDrawer({
                     </div>
 
                     <div className="flex items-center gap-1.5">
-                      <Wrench className="h-3 w-3 text-ink-600 shrink-0" />
+                      <Wrench className="h-3 w-3 text-ink-400 shrink-0" />
                       <span className="truncate max-w-[200px]">
                         {os.servico} {os.modelo ? `· ${os.modelo}` : ""}
                       </span>
@@ -545,7 +549,7 @@ export function RankingInvestigationDrawer({
 
                   {/* Observações se houver */}
                   {os.observacoes && os.observacoes !== "Sem observações registradas." && (
-                    <div className="mt-2 text-[11px] text-ink-600 bg-surface border border-border/80 p-2 rounded-sm line-clamp-2">
+                    <div className="mt-2 text-[11px] text-ink-600 bg-surface border border-border/80 p-2.5 rounded-xl line-clamp-2">
                       {os.observacoes}
                     </div>
                   )}

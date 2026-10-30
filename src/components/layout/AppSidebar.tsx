@@ -8,7 +8,6 @@ import {
   FileBarChart,
   Activity,
   Settings,
-  Zap,
   Trophy,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -36,28 +35,29 @@ export function AppSidebar() {
   const path = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <aside className="hidden md:flex w-[260px] h-[529.317px] shrink-0 flex-col bg-surface border border-border shadow-card rounded-md m-3 mr-0 p-4 sticky top-3 self-start">
-      {/* Brand */}
-      <div className="flex items-center gap-3 px-2 py-3 mt-[7px]">
-        <div className="relative h-[45px] w-[44px] -mt-[12px] ml-0 leading-[60px] text-[28px] rounded-sm bg-green-700 grid place-items-center text-white">
-          <Zap className="h-6 w-6" strokeWidth={2.5} />
+    <aside className="hidden md:flex w-[260px] min-h-[calc(100vh-24px)] shrink-0 flex-col bg-[#FFFFFF] border border-[#DFE7E4] rounded-[28px] m-3 mr-0 p-4 sticky top-3 self-start shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)]">
+      {/* Brand - StoneCo DS styling */}
+      <div className="flex items-center gap-3 px-2 py-3">
+        <div className="relative h-10 w-10 rounded-full bg-[#103024] grid place-items-center text-[#94EA62] shadow-sm shrink-0">
+          {/* Stone brand-inspired insignia mark */}
+          <span className="block h-3.5 w-3.5 rounded-full bg-[#94EA62]" />
         </div>
-        <div className="leading-tight">
-          <div className="text-[30px] -mt-[15px] ml-0 font-display font-bold tracking-tight text-ink-900">
+        <div className="leading-tight min-w-0">
+          <div className="text-2xl font-display font-extrabold tracking-tight text-[#103024] truncate">
             Flow
           </div>
-          <div className="-mt-[4px] text-[11px] text-ink-600 font-sans">
-            Sertão, Cerrado e Litoral
+          <div className="text-[11px] text-[#666D6A] font-sans truncate">
+            StoneCo Operations · SCL
           </div>
         </div>
       </div>
 
-      <div className="mt-2 h-px bg-border" />
+      <div className="mt-2 h-px bg-[#DFE7E4]" />
 
-      {/* Nav */}
-      <nav className="mt-4 flex-1 space-y-1">
-        <div className="px-2 pb-2 text-[10px] font-mono font-bold uppercase tracking-[0.14em] text-ink-600">
-          Operação
+      {/* Nav items */}
+      <nav className="mt-4 flex-1 space-y-1.5 overflow-y-auto pr-1">
+        <div className="px-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-[#666D6A]">
+          Navegação Principal
         </div>
         {items.map((it) => {
           const active = it.exact ? path === it.to : path.startsWith(it.to);
@@ -67,33 +67,33 @@ export function AppSidebar() {
               key={it.to}
               to={it.to as "/"}
               className={cn(
-                "group relative flex items-center gap-3 rounded-sm px-3 py-2.5 text-sm transition-all font-sans",
-                "hover:bg-green-100 hover:text-green-900",
-                active ? "bg-green-100 text-green-900 font-semibold" : "text-ink-600",
+                "group relative flex items-center gap-3 rounded-full px-4 py-2.5 text-xs font-semibold transition-all duration-200 font-sans",
+                active
+                  ? "bg-[#103024] text-[#94EA62] font-bold shadow-sm"
+                  : "text-[#2B2D2C] hover:bg-[#F4F7F6] hover:text-[#103024]",
               )}
             >
-              {active && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] rounded-r-full bg-green-700" />
-              )}
               <Icon
                 className={cn(
-                  "h-4 w-4 transition-colors",
-                  active ? "text-green-700" : "text-ink-600 group-hover:text-green-900",
+                  "h-4 w-4 transition-colors shrink-0",
+                  active ? "text-[#94EA62]" : "text-[#666D6A] group-hover:text-[#103024]",
                 )}
               />
-              <span>{it.label}</span>
+              <span className="truncate">{it.label}</span>
             </Link>
           );
         })}
       </nav>
 
-      {/* Footer */}
-      <div className="rounded-sm bg-bg border border-border p-3 mt-3">
+      {/* Footer status card */}
+      <div className="rounded-[20px] bg-[#F4F7F6] border border-[#DFE7E4] p-3.5 mt-4">
         <div className="flex items-center gap-2 text-xs">
-          <span className="h-2 w-2 rounded-full bg-green-700" />
-          <span className="text-ink-900 font-semibold font-sans">Sistema operacional</span>
+          <span className="h-2 w-2 rounded-full bg-[#41D600] animate-pulse" />
+          <span className="text-[#103024] font-bold font-sans">StoneCo DS Ativo</span>
         </div>
-        <div className="mt-1 text-[11px] text-ink-600 font-sans">Todos os serviços online</div>
+        <div className="mt-1 text-[11px] text-[#666D6A] font-sans">
+          brand.stone.br · ABC Gravity & Roobert
+        </div>
       </div>
     </aside>
   );

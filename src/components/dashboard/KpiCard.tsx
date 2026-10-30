@@ -11,18 +11,11 @@ export interface KpiCardProps {
   invertDelta?: boolean; // when true, "up" is bad
 }
 
-const toneGlow: Record<NonNullable<KpiCardProps["tone"]>, string> = {
-  primary: "from-green-700/15 to-transparent",
-  critical: "from-danger/15 to-transparent",
-  warning: "from-amber-500/20 to-transparent",
-  neutral: "from-ink-400/10 to-transparent",
-};
-
 const toneIcon: Record<NonNullable<KpiCardProps["tone"]>, string> = {
-  primary: "bg-green-100 text-green-700",
-  critical: "bg-danger/10 text-danger",
-  warning: "bg-amber-500/20 text-ink-900",
-  neutral: "bg-muted text-ink-600",
+  primary: "bg-[#DDFFE3] text-[#103024]",
+  critical: "bg-[#FFD6DE] text-[#B3263F]",
+  warning: "bg-[#FFEAC0] text-[#8A5A00]",
+  neutral: "bg-[#F4F7F6] text-[#666D6A]",
 };
 
 export function KpiCard({
@@ -38,38 +31,28 @@ export function KpiCard({
   const good = invertDelta ? !positive : positive;
 
   return (
-    <div className="group relative overflow-hidden rounded-md bg-surface p-4 border border-border shadow-card transition-all hover:-translate-y-0.5 hover:shadow-md">
-      {/* subtle radial glow */}
-      <div
-        className={cn(
-          "pointer-events-none absolute -top-12 -right-12 h-32 w-32 rounded-full blur-2xl opacity-60 bg-gradient-to-br",
-          toneGlow[tone],
-        )}
-      />
-
+    <div className="group relative overflow-hidden rounded-[28px] bg-[#FFFFFF] p-5 border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)] transition-all duration-200 hover:-translate-y-0.5">
       <div className="relative flex items-start justify-between gap-2">
-        <div className="text-[11px] font-mono font-bold uppercase tracking-[0.14em] text-ink-600 truncate">
+        <div className="text-xs font-semibold uppercase tracking-wider text-[#666D6A] truncate">
           {label}
         </div>
         <div
           className={cn(
-            "h-8 w-8 shrink-0 grid place-items-center rounded-sm transition-colors",
+            "size-10 shrink-0 grid place-items-center rounded-full transition-transform duration-200 group-hover:scale-105",
             toneIcon[tone],
           )}
         >
-          <Icon className="h-4 w-4" />
+          <Icon className="h-5 w-5" />
         </div>
       </div>
 
       <div className="relative mt-3 flex items-baseline justify-between gap-2">
-        <div className="text-3xl font-display font-extrabold tracking-tight text-ink-900 tabular-nums">
-          {value}
-        </div>
+        <div className="text-3xl font-bold tracking-tight text-[#103024] num">{value}</div>
         {typeof delta === "number" && (
           <div
             className={cn(
-              "flex items-center gap-1 text-xs font-mono font-semibold px-2 py-0.5 rounded-sm",
-              good ? "text-green-700 bg-green-100" : "text-danger bg-danger/10",
+              "flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-full num",
+              good ? "text-[#1F7A1F] bg-[#DDFFE3]" : "text-[#B3263F] bg-[#FFD6DE]",
             )}
           >
             {positive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
@@ -78,7 +61,7 @@ export function KpiCard({
         )}
       </div>
 
-      {hint && <div className="relative mt-1 text-[11px] text-ink-600 font-sans">{hint}</div>}
+      {hint && <div className="relative mt-1.5 text-xs text-[#666D6A] font-sans">{hint}</div>}
     </div>
   );
 }

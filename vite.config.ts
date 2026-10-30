@@ -12,6 +12,7 @@ import { createDatasetVitePlugin } from "./src/server/vite-dataset-plugin";
 export default defineConfig({
   plugins: [createDatasetVitePlugin()],
   tanstackStart: {
+    client: { entry: "client" },
     server: { entry: "server" },
   },
   vite: {

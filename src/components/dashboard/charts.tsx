@@ -15,27 +15,27 @@ import {
 
 const tooltipStyle: React.CSSProperties = {
   background: "#FFFFFF",
-  border: "1px solid #DEE7E1",
-  borderRadius: 8,
-  padding: "8px 10px",
+  border: "1px solid #DFE7E4",
+  borderRadius: 16,
+  padding: "8px 12px",
   fontSize: 12,
-  fontFamily: "Inter, sans-serif",
-  color: "#10241D",
-  boxShadow: "0 1px 2px rgba(16,36,29,.04), 0 8px 24px -12px rgba(16,36,29,.12)",
+  fontFamily: "Roobert, Inter, sans-serif",
+  color: "#103024",
+  boxShadow: "0 10px 28px rgba(16, 48, 36, 0.08)",
 };
 
-const axisTick = { fill: "#4B5B54", fontFamily: "Manrope, sans-serif", fontSize: 10 };
-const gridStroke = "#DEE7E1";
+const axisTick = { fill: "#666D6A", fontFamily: "Inter, sans-serif", fontSize: 11 };
+const gridStroke = "#DFE7E4";
 
 export function OsByCityBar({ data }: { data: { name: string; value: number }[] }) {
   return (
-    <ChartCard title="OS por Cidade" subtitle="Distribuição de volume">
+    <ChartCard title="OS por Cidade" subtitle="Distribuição de volume operacional">
       <ResponsiveContainer width="100%" height={220}>
         <BarChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
           <defs>
-            <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#0B6E4F" stopOpacity={1} />
-              <stop offset="100%" stopColor="#128A61" stopOpacity={0.7} />
+            <linearGradient id="stoneBarGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#103024" stopOpacity={1} />
+              <stop offset="100%" stopColor="#1a4d3a" stopOpacity={0.8} />
             </linearGradient>
           </defs>
           <CartesianGrid stroke={gridStroke} vertical={false} />
@@ -50,8 +50,8 @@ export function OsByCityBar({ data }: { data: { name: string; value: number }[] 
             height={50}
           />
           <YAxis tick={axisTick} axisLine={false} tickLine={false} />
-          <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "rgba(11, 110, 79, 0.05)" }} />
-          <Bar dataKey="value" fill="url(#barGrad)" radius={[4, 4, 0, 0]} />
+          <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "rgba(16, 48, 36, 0.04)" }} />
+          <Bar dataKey="value" fill="url(#stoneBarGrad)" radius={[6, 6, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </ChartCard>
@@ -60,7 +60,7 @@ export function OsByCityBar({ data }: { data: { name: string; value: number }[] 
 
 export function DueByDayLine({ data }: { data: { name: string; value: number }[] }) {
   return (
-    <ChartCard title="Vencimentos por Dia" subtitle="Linha temporal · 7 dias">
+    <ChartCard title="Vencimentos por Dia" subtitle="Linha temporal · Próximos 7 dias">
       <ResponsiveContainer width="100%" height={220}>
         <LineChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
           <CartesianGrid stroke={gridStroke} vertical={false} />
@@ -70,10 +70,10 @@ export function DueByDayLine({ data }: { data: { name: string; value: number }[]
           <Line
             type="monotone"
             dataKey="value"
-            stroke="#0B6E4F"
-            strokeWidth={2.5}
-            dot={{ fill: "#0B6E4F", r: 4, strokeWidth: 0 }}
-            activeDot={{ r: 6, fill: "#0B6E4F" }}
+            stroke="#41D600"
+            strokeWidth={3}
+            dot={{ fill: "#103024", r: 4, strokeWidth: 2, stroke: "#94EA62" }}
+            activeDot={{ r: 6, fill: "#41D600", stroke: "#103024", strokeWidth: 2 }}
           />
         </LineChart>
       </ResponsiveContainer>
@@ -82,16 +82,17 @@ export function DueByDayLine({ data }: { data: { name: string; value: number }[]
 }
 
 const PIE_COLORS = [
-  "#0B6E4F", // green-700
-  "#FFC857", // amber-500
-  "#128A61", // green-600
-  "#C4432B", // danger
-  "#0B3D2C", // green-900
+  "#103024", // Stone verde escuro (primário)
+  "#94EA62", // Stone verde principal (destaque)
+  "#41D600", // Stone verde forte
+  "#B3263F", // Stone perigo / erro
+  "#8A5A00", // Stone atenção / amarelo
+  "#BCE9A6", // Stone verde claro
 ];
 
 export function StatusDonut({ data }: { data: { name: string; value: number }[] }) {
   return (
-    <ChartCard title="Distribuição por Status" subtitle="Estado atual das OS">
+    <ChartCard title="Distribuição por Status" subtitle="Estado atual das Ordens de Serviço">
       <ResponsiveContainer width="100%" height={220}>
         <PieChart>
           <Tooltip contentStyle={tooltipStyle} />
@@ -111,15 +112,15 @@ export function StatusDonut({ data }: { data: { name: string; value: number }[] 
           </Pie>
         </PieChart>
       </ResponsiveContainer>
-      <div className="mt-2 flex flex-wrap gap-2 justify-center">
+      <div className="mt-2 flex flex-wrap gap-2.5 justify-center">
         {data.map((d, i) => (
           <div key={d.name} className="flex items-center gap-1.5 text-[11px]">
             <span
-              className="h-2 w-2 rounded-full shrink-0"
+              className="h-2.5 w-2.5 rounded-full shrink-0"
               style={{ background: PIE_COLORS[i % PIE_COLORS.length] }}
             />
-            <span className="text-ink-600 font-sans">{d.name}</span>
-            <span className="text-ink-900 font-mono font-bold tabular-nums">{d.value}</span>
+            <span className="text-[#666D6A] font-sans">{d.name}</span>
+            <span className="text-[#103024] font-bold num">{d.value}</span>
           </div>
         ))}
       </div>
@@ -139,27 +140,30 @@ export function RankingList({
   const max = Math.max(...data.map((d) => d.total), 1);
   return (
     <ChartCard title={title} subtitle={subtitle}>
-      <div className="space-y-2.5">
+      <div className="space-y-3">
         {data.map((d, i) => {
           const pct = (d.total / max) * 100;
           const critPct = d.total > 0 ? (d.criticas / d.total) * 100 : 0;
           return (
             <div key={d.name}>
-              <div className="flex items-center justify-between text-xs mb-1">
+              <div className="flex items-center justify-between text-xs mb-1.5">
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-ink-400 font-mono tabular-nums w-4">{i + 1}</span>
-                  <span className="truncate text-ink-900 font-medium font-sans">{d.name}</span>
+                  <span className="text-[#808683] font-bold num w-4">{i + 1}</span>
+                  <span className="truncate text-[#2B2D2C] font-semibold font-sans">{d.name}</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[11px] font-mono">
-                  <span className="text-danger font-bold tabular-nums">{d.criticas}</span>
-                  <span className="text-ink-400">/</span>
-                  <span className="tabular-nums font-bold text-ink-900">{d.total}</span>
+                <div className="flex items-center gap-1.5 text-[11px] font-sans">
+                  <span className="text-[#B3263F] font-bold num">{d.criticas}</span>
+                  <span className="text-[#808683]">/</span>
+                  <span className="num font-bold text-[#103024]">{d.total}</span>
                 </div>
               </div>
-              <div className="h-1.5 rounded-full bg-green-100 overflow-hidden flex">
-                <div className="h-full bg-danger" style={{ width: `${(critPct / 100) * pct}%` }} />
+              <div className="h-2 rounded-full bg-[#F4F7F6] overflow-hidden flex border border-[#DFE7E4]">
                 <div
-                  className="h-full bg-green-700"
+                  className="h-full bg-[#B3263F]"
+                  style={{ width: `${(critPct / 100) * pct}%` }}
+                />
+                <div
+                  className="h-full bg-[#103024]"
                   style={{ width: `${pct - (critPct / 100) * pct}%` }}
                 />
               </div>
@@ -181,10 +185,10 @@ function ChartCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-md bg-surface p-4 border border-border shadow-card">
-      <div className="mb-3">
-        <div className="text-sm font-display font-bold text-ink-900">{title}</div>
-        {subtitle && <div className="text-[11px] text-ink-600 font-sans mt-0.5">{subtitle}</div>}
+    <div className="rounded-[28px] bg-white p-5 border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)]">
+      <div className="mb-4">
+        <div className="text-sm md:text-base font-display font-bold text-[#103024]">{title}</div>
+        {subtitle && <div className="text-[11px] text-[#666D6A] font-sans mt-0.5">{subtitle}</div>}
       </div>
       {children}
     </div>

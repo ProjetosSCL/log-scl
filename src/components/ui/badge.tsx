@@ -4,15 +4,18 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-sm border px-2.5 py-0.5 text-xs font-mono font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-green-700/40 focus:ring-offset-2",
+  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-sans font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-[#41D600] focus:ring-offset-2",
   {
     variants: {
       variant: {
-        default: "border-transparent bg-green-700 text-white shadow-sm hover:bg-green-600",
-        secondary: "border-transparent bg-green-100 text-green-900 hover:bg-green-100/80",
-        destructive: "border-transparent bg-danger text-white shadow-sm hover:bg-danger/90",
-        warning: "border-transparent bg-amber-500 text-ink-900 shadow-sm hover:bg-amber-600",
-        outline: "border-border text-ink-600 bg-bg",
+        default: "border-transparent bg-[#103024] text-white",
+        accent: "border-transparent bg-[#94EA62] text-[#103024] font-bold",
+        secondary: "border-[#DFE7E4] bg-[#F4F7F6] text-[#2B2D2C]",
+        destructive: "border-transparent bg-[#FFD6DE] text-[#B3263F] font-bold",
+        warning: "border-transparent bg-[#FFEAC0] text-[#8A5A00] font-bold",
+        outline: "border-[#DFE7E4] text-[#666D6A] bg-white",
+        success: "border-transparent bg-[#DDFFE3] text-[#1F7A1F] font-bold",
+        info: "border-transparent bg-[#DEDEFF] text-[#4B35B8] font-bold",
       },
     },
     defaultVariants: {

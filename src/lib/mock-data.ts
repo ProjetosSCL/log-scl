@@ -221,6 +221,9 @@ export interface Filters {
   criticidade?: Criticality[];
   status?: Status[];
   emergencial?: boolean | null;
+  tipoEquipamento?: string[];
+  grupoServico?: string[];
+  servico?: string[];
 }
 
 export function applyFilters(data: OS[], f: Filters): OS[] {
@@ -235,6 +238,9 @@ export function applyFilters(data: OS[], f: Filters): OS[] {
     if (f.criticidade?.length && !f.criticidade.includes(o.criticidade)) return false;
     if (f.status?.length && !f.status.includes(o.status)) return false;
     if (f.emergencial === true && !o.emergencial) return false;
+    if (f.tipoEquipamento?.length && !f.tipoEquipamento.includes(o.tipoEquipamento)) return false;
+    if (f.grupoServico?.length && !f.grupoServico.includes(o.grupoServico)) return false;
+    if (f.servico?.length && !f.servico.includes(o.servico)) return false;
     return true;
   });
 }
@@ -425,6 +431,9 @@ export interface Facets {
   regioes: string[];
   tecnicos: string[];
   status: string[];
+  tiposEquipamento: string[];
+  gruposServico: string[];
+  servicos: string[];
 }
 
 export function computeFacets(all: OS[]): Facets {
@@ -439,6 +448,9 @@ export function computeFacets(all: OS[]): Facets {
       all.map((o) => o.tecnico).filter((t) => t && t !== "Não atribuído" && t !== "Não Atribuído"),
     ),
     status: uniq(all.map((o) => o.status)),
+    tiposEquipamento: uniq(all.map((o) => o.tipoEquipamento)),
+    gruposServico: uniq(all.map((o) => o.grupoServico)),
+    servicos: uniq(all.map((o) => o.servico)),
   };
 }
 
@@ -477,7 +489,7 @@ function buildSnapshot(
     rowCount: rows.length,
     isSyncing,
     syncError,
-    lastSyncedAt: lastSyncedAt ?? (typeof window !== "undefined" ? new Date().toISOString() : null),
+    lastSyncedAt: lastSyncedAt ?? null,
   };
 }
 

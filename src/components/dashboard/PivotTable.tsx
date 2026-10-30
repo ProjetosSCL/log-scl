@@ -12,13 +12,14 @@ import {
 } from "@/lib/mock-data";
 
 const critClasses: Record<Criticality, string> = {
-  vencido: "bg-danger/15 text-danger hover:bg-danger/25 ring-1 ring-danger/30 font-mono font-bold",
+  vencido:
+    "bg-[#FFD6DE] text-[#B3263F] hover:bg-[#ffc2cf] ring-1 ring-[#B3263F]/30 font-data font-bold",
   vence_hoje:
-    "bg-amber-500 text-ink-900 hover:bg-amber-600 ring-1 ring-amber-600/40 font-mono font-bold shadow-sm",
+    "bg-[#FFEAC0] text-[#8A5A00] hover:bg-[#ffe1a6] ring-1 ring-[#8A5A00]/40 font-data font-bold",
   proximo:
-    "bg-amber-500/20 text-ink-900 hover:bg-amber-500/30 ring-1 ring-amber-500/40 font-mono font-semibold",
+    "bg-[#FFEAC0]/80 text-[#8A5A00] hover:bg-[#FFEAC0] ring-1 ring-[#8A5A00]/30 font-data font-semibold",
   saudavel:
-    "bg-green-100 text-green-900 hover:bg-green-100/80 ring-1 ring-green-700/20 font-mono font-semibold",
+    "bg-[#DDFFE3] text-[#1F7A1F] hover:bg-[#cbf7d3] ring-1 ring-[#1F7A1F]/20 font-data font-semibold",
 };
 
 interface Props {
@@ -149,20 +150,20 @@ export const PivotTable = forwardRef<HTMLDivElement, Props>(function PivotTable(
     <div
       ref={ref}
       className={cn(
-        "rounded-md bg-surface border border-border shadow-card overflow-hidden flex flex-col",
+        "rounded-[28px] bg-white border border-[#DFE7E4] shadow-[0_1px_2px_rgba(16,48,36,0.04),0_10px_28px_rgba(16,48,36,0.06)] overflow-hidden flex flex-col",
         fullHeight && "h-full",
       )}
     >
-      <div className="flex items-center justify-between gap-2 px-3 md:px-4 py-2.5 border-b border-border flex-wrap">
+      <div className="flex items-center justify-between gap-2 px-4 md:px-5 py-3 border-b border-[#DFE7E4] bg-white flex-wrap">
         <div className="min-w-0">
-          <div className="text-sm font-display font-bold text-ink-900 leading-tight">
+          <div className="text-sm font-display font-bold text-[#103024] leading-tight">
             Tabela Operacional
           </div>
-          <div className="text-[11px] md:text-xs text-ink-600 font-sans leading-tight mt-0.5">
-            Volume de OS por cidade × data · clique para detalhes
+          <div className="text-[11px] md:text-xs text-[#666D6A] font-sans leading-tight mt-0.5">
+            Volume de OS por cidade × data · clique na célula para detalhes
           </div>
         </div>
-        <div className="flex items-center gap-2 md:gap-3 text-[10px] md:text-xs flex-wrap">
+        <div className="flex items-center gap-2 md:gap-3 text-[10px] md:text-xs flex-wrap font-sans">
           <Legend color="status-critical" label="Vencido" />
           <Legend color="status-warning" label="Vence hoje" />
           <Legend color="status-attention" label="Próximo" />

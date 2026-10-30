@@ -158,7 +158,7 @@ function RelatoriosPage() {
   return (
     <div className="space-y-4 animate-fade-in">
       {/* Header */}
-      <div className="rounded-md bg-surface border border-border shadow-card p-4 sm:p-5 flex flex-wrap items-start gap-4 justify-between">
+      <div className="rounded-2xl bg-surface border border-border shadow-card p-4 sm:p-5 flex flex-wrap items-start gap-4 justify-between">
         <div>
           <div className="text-[11px] font-mono font-bold uppercase tracking-[0.14em] text-ink-600">
             Relatórios & Integração
@@ -196,8 +196,8 @@ function RelatoriosPage() {
       </div>
 
       {/* Informativo de Centralização */}
-      <div className="rounded-md border border-green-700/30 bg-green-100/40 p-3.5 flex items-start gap-3">
-        <div className="h-6 w-6 rounded-full bg-green-700 text-white grid place-items-center shrink-0 mt-0.5">
+      <div className="rounded-2xl border border-green-700/30 bg-green-100/40 p-4 flex items-start gap-3 shadow-2xs">
+        <div className="h-7 w-7 rounded-full bg-green-700 text-white grid place-items-center shrink-0 mt-0.5 shadow-2xs">
           <Users className="h-3.5 w-3.5" />
         </div>
         <div className="text-xs font-sans text-ink-900 leading-relaxed">
@@ -224,11 +224,11 @@ function RelatoriosPage() {
             if (f) handleFile(f);
           }}
           className={
-            "rounded-md bg-surface p-6 sm:p-10 text-center transition-all border-2 border-dashed shadow-card " +
+            "rounded-2xl bg-surface p-6 sm:p-10 text-center transition-all border-2 border-dashed shadow-card " +
             (dragOver ? "border-green-700 bg-green-100/30 shadow-md" : "border-border")
           }
         >
-          <div className="mx-auto h-14 w-14 rounded-md bg-green-100 text-green-700 grid place-items-center">
+          <div className="mx-auto h-14 w-14 rounded-full bg-green-100 text-green-700 grid place-items-center shadow-2xs">
             <Upload className="h-6 w-6" strokeWidth={2.5} />
           </div>
           <div className="mt-4 text-base font-display font-bold text-ink-900">
@@ -242,7 +242,7 @@ function RelatoriosPage() {
               size="sm"
               onClick={() => inputRef.current?.click()}
               disabled={busy}
-              className="min-h-[44px] h-11 px-5 gap-2 bg-green-700 hover:bg-green-600 text-white rounded-sm font-sans touch-manipulation shadow-xs"
+              className="min-h-[44px] h-11 px-5 gap-2 bg-green-700 hover:bg-green-600 text-white rounded-full font-sans font-semibold touch-manipulation shadow-xs"
             >
               <FileSpreadsheet className="h-4 w-4" />
               Selecionar arquivo CSV
@@ -264,7 +264,7 @@ function RelatoriosPage() {
           </div>
         </div>
 
-        <div className="rounded-md bg-surface border border-border shadow-card p-5 space-y-3">
+        <div className="rounded-2xl bg-surface border border-border shadow-card p-5 space-y-3">
           <div className="flex items-center gap-2">
             <Database className="h-4 w-4 text-green-700" />
             <div className="text-sm font-display font-bold text-ink-900">Base central ativa</div>
@@ -283,7 +283,7 @@ function RelatoriosPage() {
               variant="outline"
               size="sm"
               onClick={() => openConfirmModal("reset")}
-              className="w-full min-h-[44px] h-11 gap-2 mt-2 border-border bg-bg text-ink-900 hover:bg-red-50 hover:text-red-700 hover:border-red-300 rounded-sm font-sans touch-manipulation"
+              className="w-full min-h-[44px] h-11 gap-2 mt-2 border-border bg-bg text-ink-900 hover:bg-danger-bg hover:text-danger hover:border-danger/30 rounded-full font-sans font-semibold touch-manipulation"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               Restaurar dataset padrão
@@ -294,12 +294,12 @@ function RelatoriosPage() {
 
       {/* Pending preview */}
       {pending && (
-        <div className="rounded-md bg-surface border border-border shadow-card p-4 sm:p-5 space-y-4">
+        <div className="rounded-2xl bg-surface border border-border shadow-card p-4 sm:p-5 space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
               <div className="text-sm font-display font-bold text-ink-900 flex items-center gap-2">
                 {pending.parsed.errors.length ? (
-                  <AlertCircle className="h-4 w-4 text-amber-500" />
+                  <AlertCircle className="h-4 w-4 text-warning" />
                 ) : (
                   <CheckCircle2 className="h-4 w-4 text-green-700" />
                 )}
@@ -315,7 +315,7 @@ function RelatoriosPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => setPending(null)}
-                className="flex-1 sm:flex-initial min-h-[44px] h-11 px-4 border-border bg-bg text-ink-900 hover:bg-green-100 hover:text-green-900 rounded-sm font-sans touch-manipulation"
+                className="flex-1 sm:flex-initial min-h-[44px] h-11 px-4 border-border bg-bg text-ink-900 hover:bg-green-100 hover:text-green-900 rounded-full font-sans font-semibold touch-manipulation"
               >
                 Cancelar
               </Button>
@@ -323,7 +323,7 @@ function RelatoriosPage() {
                 size="sm"
                 disabled={!pending.parsed.rows.length}
                 onClick={() => openConfirmModal("apply")}
-                className="flex-1 sm:flex-initial min-h-[44px] h-11 px-5 gap-2 bg-green-700 hover:bg-green-600 text-white rounded-sm font-sans touch-manipulation shadow-xs"
+                className="flex-1 sm:flex-initial min-h-[44px] h-11 px-5 gap-2 bg-green-700 hover:bg-green-600 text-white rounded-full font-sans font-semibold touch-manipulation shadow-xs"
               >
                 <Lock className="h-4 w-4" />
                 Aplicar e Atualizar para Todos
@@ -332,7 +332,7 @@ function RelatoriosPage() {
           </div>
 
           {pending.parsed.errors.length > 0 && (
-            <div className="rounded-sm border border-amber-500/40 bg-amber-500/10 p-3 text-xs text-amber-600 font-sans">
+            <div className="rounded-xl border border-warning/40 bg-warning-bg p-3 text-xs text-warning font-sans">
               {pending.parsed.errors.map((e, i) => (
                 <div key={i}>· {e}</div>
               ))}
@@ -419,16 +419,16 @@ function RelatoriosPage() {
       {confirmModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-950/60 backdrop-blur-xs animate-fade-in">
           <div
-            className="w-full max-w-md rounded-lg bg-surface border border-border shadow-2xl p-5 sm:p-6 space-y-4"
+            className="w-full max-w-md rounded-2xl bg-surface border border-border shadow-2xl p-5 sm:p-6 space-y-4"
             role="dialog"
             aria-modal="true"
           >
             <div className="flex items-start gap-3">
               <div
-                className={`h-10 w-10 rounded-md grid place-items-center shrink-0 ${
+                className={`h-11 w-11 rounded-full grid place-items-center shrink-0 shadow-2xs ${
                   confirmModal === "apply"
                     ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
+                    : "bg-danger-bg text-danger"
                 }`}
               >
                 {confirmModal === "apply" ? (
@@ -452,7 +452,7 @@ function RelatoriosPage() {
             </div>
 
             {confirmModal === "apply" && pending && (
-              <div className="rounded bg-bg border border-border p-3 text-xs font-mono space-y-1">
+              <div className="rounded-xl bg-bg border border-border p-3.5 text-xs font-mono space-y-1">
                 <div className="text-ink-600">
                   Arquivo: <span className="text-ink-900 font-semibold">{pending.fileName}</span>
                 </div>
@@ -481,7 +481,7 @@ function RelatoriosPage() {
                     }}
                     placeholder="Digite a senha para autorizar"
                     disabled={submitting}
-                    className="pr-10 min-h-[44px] h-11 bg-bg border-border text-sm text-ink-900 focus-visible:ring-green-700/40 rounded-sm"
+                    className="pr-10 min-h-[44px] h-11 bg-bg border-border text-sm text-ink-900 focus-visible:ring-green-700/40 rounded-full"
                     autoComplete="current-password"
                   />
                   <button
@@ -496,7 +496,7 @@ function RelatoriosPage() {
                   </button>
                 </div>
                 {passwordError && (
-                  <p className="text-xs text-red-600 font-sans mt-1.5 flex items-center gap-1">
+                  <p className="text-xs text-danger font-sans mt-1.5 flex items-center gap-1">
                     <AlertCircle className="h-3.5 w-3.5 shrink-0" />
                     <span>{passwordError}</span>
                   </p>
@@ -509,17 +509,17 @@ function RelatoriosPage() {
                   variant="outline"
                   onClick={closeConfirmModal}
                   disabled={submitting}
-                  className="flex-1 min-h-[44px] h-11 border-border bg-bg text-ink-900 hover:bg-green-100 hover:text-green-900 rounded-sm font-sans touch-manipulation"
+                  className="flex-1 min-h-[44px] h-11 border-border bg-bg text-ink-900 hover:bg-green-100 hover:text-green-900 rounded-full font-sans font-semibold touch-manipulation"
                 >
                   Cancelar
                 </Button>
                 <Button
                   type="submit"
                   disabled={submitting || !password.trim()}
-                  className={`flex-1 min-h-[44px] h-11 gap-2 text-white rounded-sm font-sans touch-manipulation shadow-xs ${
+                  className={`flex-1 min-h-[44px] h-11 gap-2 text-white rounded-full font-sans font-semibold touch-manipulation shadow-xs ${
                     confirmModal === "apply"
                       ? "bg-green-700 hover:bg-green-600"
-                      : "bg-red-700 hover:bg-red-600"
+                      : "bg-danger hover:bg-danger/90"
                   }`}
                 >
                   {submitting ? (

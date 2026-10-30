@@ -33,10 +33,10 @@ interface Props {
 }
 
 const critBadge: Record<OS["criticidade"], string> = {
-  vencido: "bg-danger/15 text-danger border-danger/30 font-mono font-semibold",
-  vence_hoje: "bg-amber-500/25 text-ink-900 border-amber-500 font-mono font-semibold",
-  proximo: "bg-amber-500/15 text-ink-900 border-amber-500/40 font-mono font-semibold",
-  saudavel: "bg-green-100 text-green-900 border-green-700/25 font-mono font-semibold",
+  vencido: "bg-[#FFD6DE] text-[#B3263F] border-transparent font-bold rounded-full",
+  vence_hoje: "bg-[#FFEAC0] text-[#8A5A00] border-transparent font-bold rounded-full",
+  proximo: "bg-[#FFEAC0]/80 text-[#8A5A00] border-transparent font-semibold rounded-full",
+  saudavel: "bg-[#DDFFE3] text-[#1F7A1F] border-transparent font-semibold rounded-full",
 };
 
 const critLabel: Record<OS["criticidade"], string> = {
